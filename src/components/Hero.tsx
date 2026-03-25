@@ -95,7 +95,7 @@ export default function Hero() {
 
   return (
     <section className="w-full bg-[#FFF] pt-32 pb-12 px-4 md:px-6">
-      <div className="mx-auto grid grid-cols-1 gap-8 xl:grid-cols-12 xl:items-stretch">
+      <div className="mx-auto max-w-[1400px] grid grid-cols-1 gap-8 xl:grid-cols-12 xl:items-stretch">
         {/* 4/12 */}
         <div className="xl:col-span-4 flex">
           <div className="flex w-full flex-col justify-center rounded-3xl bg-[#f5ecd7] p-8 shadow-md md:p-10">
@@ -118,7 +118,7 @@ export default function Hero() {
               una experiencia tranquila cerca de todo lo importante.
             </p>
 
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+            <div className="mt-8 flex flex-col gap-4 sm:flex-col">
               <Link
                 href={whatsappHref}
                 target="_blank"

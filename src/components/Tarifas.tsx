@@ -70,7 +70,7 @@ export default function Tarifas() {
 
   return (
     <section id="tarifas" className="py-20 px-4 md:px-6 bg-white">
-      <div className="mx-auto max-w-300">
+      <div className="mx-auto max-w-[1400px]">
         {/* Encabezado */}
         <div className="text-center mb-12">
           <h2 className="text-5xl md:text-6xl font-light tracking-[0.15em] uppercase  text-neutral-900">
