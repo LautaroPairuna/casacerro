@@ -344,7 +344,7 @@ export default function Habitaciones() {
           transition={{ duration: 0.55, ease: "easeOut" }}
           className="mb-12 text-center"
         >
-          <h2 className="text-5xl md:text-6xl font-light tracking-[0.15em] uppercase text-neutral-900">
+          <h2 className="text-4xl md:text-6xl font-light tracking-[0.15em] uppercase text-neutral-900">
             Habitaciones
           </h2>
           <div className="mt-5 mb-5 mx-auto w-32 h-0.5 bg-[#FCB040]" />

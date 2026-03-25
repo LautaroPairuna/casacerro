@@ -54,7 +54,7 @@ export default function Contacto() {
                       Instagram
                     </p>
                   </div>
-                  <p className="mt-2">@casacerro.salta</p>
+                  <a href="https://www.instagram.com/casacerro.salta/" target="_blank" rel="noopener noreferrer" className="mt-2">@casacerro.salta</a>
                 </div>
 
                 <div>
