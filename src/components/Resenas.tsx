@@ -243,7 +243,7 @@ export default function Resenas() {
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
   return (
-    <section id="resenas" className="py-20 px-4 md:px-6 bg-[#ededed]">
+    <section id="resenas" className="py-20 px-4 md:px-6 bg-resenas-bg">
       <div className="mx-auto max-w-[1400px]">
         {/* Header */}
         <motion.div
