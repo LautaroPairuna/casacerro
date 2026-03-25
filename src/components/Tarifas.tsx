@@ -70,7 +70,7 @@ export default function Tarifas() {
   }, []);
 
   return (
-    <section id="tarifas" className="py-20 px-4 md:px-6 bg-[#dedede]">
+    <section id="tarifas" className="py-20 px-4 md:px-6 bg-[#eee]">
       <div className="mx-auto max-w-[1400px]">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
