@@ -60,9 +60,9 @@ const ROOM_CATEGORIES: RoomCategory[] = [
     bedsLabel: "Configuración single / doble",
     cardImage: "/image/habitaciones/monoambiente-single-doble.jpeg",
     images: [
-      "/image/habitaciones/monoambiente-single-doble/1.jpg",
-      "/image/habitaciones/monoambiente-single-doble/2.jpg",
-      "/image/habitaciones/monoambiente-single-doble/3.jpg",
+      "/image/habitaciones/monoambiente-single-doble/monoambiente-single-doble-1.jpeg",
+      "/image/habitaciones/monoambiente-single-doble/monoambiente-single-doble-2.jpeg",
+      "/image/habitaciones/monoambiente-single-doble/monoambiente-single-doble-3.jpeg",
     ],
     cardSummary: "Ideal para una estadía cómoda, práctica y tranquila.",
     modalDescription:
@@ -77,9 +77,9 @@ const ROOM_CATEGORIES: RoomCategory[] = [
     bedsLabel: "Configuración triple",
     cardImage: "/image/habitaciones/monoambiente-triple.jpeg",
     images: [
-      "/image/habitaciones/monoambiente-triple/1.jpg",
-      "/image/habitaciones/monoambiente-triple/2.jpg",
-      "/image/habitaciones/monoambiente-triple/3.jpg",
+      "/image/habitaciones/monoambiente-triple/monoambiente-triple-1.jpeg",
+      "/image/habitaciones/monoambiente-triple/monoambiente-triple-2.jpeg",
+      "/image/habitaciones/monoambiente-triple/monoambiente-triple-3.jpeg",
     ],
     cardSummary: "Una opción versátil para grupos pequeños o familias.",
     modalDescription:
@@ -94,9 +94,9 @@ const ROOM_CATEGORIES: RoomCategory[] = [
     bedsLabel: "Configuración para 4 personas",
     cardImage: "/image/habitaciones/monoambiente-4-personas.jpeg",
     images: [
-      "/image/habitaciones/monoambiente-4-personas/1.jpg",
-      "/image/habitaciones/monoambiente-4-personas/2.jpg",
-      "/image/habitaciones/monoambiente-4-personas/3.jpg",
+      "/image/habitaciones/monoambiente-4-personas/monoambiente-4-personas-1.jpeg",
+      "/image/habitaciones/monoambiente-4-personas/monoambiente-4-personas-2.jpeg",
+      "/image/habitaciones/monoambiente-4-personas/monoambiente-4-personas-3.jpeg",
     ],
     cardSummary: "Amplio y cómodo para compartir en un solo ambiente.",
     modalDescription:
@@ -111,9 +111,9 @@ const ROOM_CATEGORIES: RoomCategory[] = [
     bedsLabel: "Ambientes separados",
     cardImage: "/image/habitaciones/dos-ambientes-4-personas.jpeg",
     images: [
-      "/image/habitaciones/dos-ambientes-4-personas/1.jpg",
-      "/image/habitaciones/dos-ambientes-4-personas/2.jpg",
-      "/image/habitaciones/dos-ambientes-4-personas/3.jpg",
+      "/image/habitaciones/dos-ambientes-4-personas/dos-ambientes-4-personas-1.jpeg",
+      "/image/habitaciones/dos-ambientes-4-personas/dos-ambientes-4-personas-2.jpeg",
+      "/image/habitaciones/dos-ambientes-4-personas/dos-ambientes-4-personas-3.jpeg",
     ],
     cardSummary: "Más amplitud, privacidad y comodidad para la estadía.",
     modalDescription:
