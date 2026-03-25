@@ -16,7 +16,7 @@ export default function Contacto() {
   }, []);
 
   return (
-    <section id="contacto" className="w-full bg-[#dedede] px-4 py-20 md:px-6">
+    <section id="contacto" className="w-full bg-[#eee] px-4 py-20 md:px-6">
       <div className="mx-auto w-full max-w-[1400px]">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
