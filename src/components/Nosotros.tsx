@@ -13,12 +13,13 @@ export default function Nosotros() {
           <h2 className="text-center text-4xl font-medium text-neutral-900 md:text-5xl">
             ACERCA DE NOSOTROS
           </h2>
+          <div className="mt-5 mx-auto w-14 h-0.5 bg-[#FCB040]" />
         </div>
 
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-12 xl:items-stretch xl:gap-8">
           {/* Texto - 4/12 */}
           <div className="xl:col-span-4">
-            <div className="h-full rounded-[32px] bg-[#f5ecd7] p-8 shadow-sm md:p-10">
+            <div className="h-full rounded-4xl bg-[#f5ecd7] p-8 shadow-sm md:p-10">
               <p className="text-base leading-8 text-neutral-700 md:text-lg">
                 A 50 metros del Shopping Alto Noa, <strong>CasaCerro</strong> le
                 ofrece 7 apartamentos espaciosos, muy cómodos y con todos los
@@ -43,7 +44,7 @@ export default function Nosotros() {
 
           {/* Imagen - 8/12 */}
           <div className="xl:col-span-8">
-            <div className="relative h-full min-h-[420px] w-full overflow-hidden rounded-[32px] shadow-md xl:min-h-[100%]">
+            <div className="relative h-full min-h-105 w-full overflow-hidden rounded-4xl shadow-md xl:min-h-full">
               <Image
                 src="/image/nosotros/foto-nosotros.jpeg"
                 alt="CasaCerro - apartamentos y estadía en Salta"
