@@ -9,7 +9,6 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-resenas-bg: var(--resenas-bg);
   --font-sans: var(--font-raleway);
   --font-mono: var(--font-geist-mono);
   --font-cormorant: var(--font-cormorant);

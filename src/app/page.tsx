@@ -13,6 +13,8 @@ export default function Home() {
       <Header />
       <Hero />
       <Nosotros />
+      <Resenas />
+      <Habitaciones />
       <Tarifas />
       <Contacto />
       <WhatsappLink />
