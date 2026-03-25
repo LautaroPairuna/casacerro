@@ -65,7 +65,7 @@ export default function Header() {
                       className="relative group py-1 font-sans font-medium text-base transition-colors duration-300 hover:text-gray-800 uppercase"
                     >
                       {item.label}
-                      <span className="absolute left-1/2 bottom-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full group-hover:left-0" />
+                      <span className="absolute left-1/2 bottom-0 h-[1px] w-0 bg-black transition-all duration-300 group-hover:w-full group-hover:left-0" />
                     </a>
                   </li>
                   {index < menuItems.length - 1 && (
