@@ -7,7 +7,7 @@ type WhatsappLinkProps = {
 };
 
 export default function WhatsappLink({
-  phone = "5493875655951",
+  phone = "5493874029160",
   text = "¡Hola! Me gustaría contactar con Casacerro Salta.",
   className = "",
 }: WhatsappLinkProps) {
