@@ -342,7 +342,7 @@ export default function Habitaciones() {
           <h2 className="text-4xl font-medium uppercase text-neutral-900 md:text-5xl">
             Habitaciones
           </h2>
-          <div className="mx-auto mt-4 h-[2px] w-14 bg-[#d49a2a]" />
+          <div className="mt-5 mb-5 mx-auto w-32 h-0.5 bg-[#FCB040]" />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 xl:grid-cols-4">

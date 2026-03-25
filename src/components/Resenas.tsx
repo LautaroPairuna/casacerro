@@ -261,7 +261,7 @@ export default function Resenas() {
           <h2 className="text-5xl md:text-6xl font-light tracking-[0.15em] uppercase text-neutral-900">
             Reseñas
           </h2>
-          <div className="mt-5 mb-5 mx-auto w-14 h-0.5 bg-[#FCB040]" />
+          <div className="mt-5 mb-5 mx-auto w-32 h-0.5 bg-[#FCB040]" />
           <p className="text-xs uppercase tracking-[0.3em] text-[#A87B51]">
             Lo que dicen nuestros huéspedes
           </p>
