@@ -1,11 +1,15 @@
-import Image from "next/image";
 import WhatsappLink from "@/components/WhatsappLink";
+import Header from "@/components/Header";
+
 
 
 
 export default function Home() {
   return (
-    
-    <WhatsappLink />
+      
+    <main>
+      <Header />
+      <WhatsappLink />
+    </main>
   );
 }
