@@ -29,3 +29,21 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-cormorant), serif;
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+#nosotros,
+#resenas,
+#habitaciones,
+#tarifas,
+#contacto {
+  scroll-margin-top: 7.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

@@ -31,6 +31,20 @@ export default function Header() {
 
   const isExternal = (href: string) => href.startsWith("http");
 
+  const handleSectionNavigation = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    if (!href.startsWith("#")) return;
+    event.preventDefault();
+    const target = document.querySelector(href);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.history.pushState(null, "", href);
+    }
+    setMenuOpen(false);
+  };
+
   return (
     <nav
       className="fixed top-0 left-0 w-full bg-[#FFF8e7] text-black py-4 px-4 md:px-6 z-40 shadow-md"
@@ -62,6 +76,7 @@ export default function Header() {
                       href={item.href}
                       target={isExternal(item.href) ? "_blank" : undefined}
                       rel={isExternal(item.href) ? "noopener noreferrer" : undefined}
+                      onClick={(event) => handleSectionNavigation(event, item.href)}
                       className="relative group py-1 font-sans font-medium text-base transition-colors duration-300 hover:text-gray-800 uppercase"
                     >
                       {item.label}
@@ -116,8 +131,8 @@ export default function Header() {
                     href={item.href}
                     target={isExternal(item.href) ? "_blank" : undefined}
                     rel={isExternal(item.href) ? "noopener noreferrer" : undefined}
+                    onClick={(event) => handleSectionNavigation(event, item.href)}
                     className="relative group font-sans transition-colors duration-300 hover:text-gray-800 uppercase"
-                    onClick={() => setMenuOpen(false)}
                   >
                     {item.label}
                     <span className="absolute left-1/2 bottom-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full group-hover:left-0" />
