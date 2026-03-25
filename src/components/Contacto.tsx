@@ -28,7 +28,7 @@ export default function Contacto() {
           <h2 className="text-5xl md:text-6xl font-light tracking-[0.15em] uppercase text-neutral-900">
             Contacto
           </h2>
-          <div className="mt-5 mb-4 mx-auto w-14 h-0.5 bg-[#FCB040]" />
+          <div className="mt-5 mb-5 mx-auto w-32 h-0.5 bg-[#FCB040]" />
         </motion.div>
 
         <div className="grid grid-cols-1 gap-8 xl:grid-cols-12 xl:items-stretch">

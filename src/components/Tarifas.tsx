@@ -162,7 +162,7 @@ export default function Tarifas() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
-          className="mt-7 rounded-2xl border border-[#e8d9c0] bg-[#f5ecd7]/50 px-6 py-5 space-y-3"
+          className="mt-7 rounded-2xl border border-[#e8d9c0] bg-[#f5ecd7]/80 px-6 py-5 space-y-3"
         >
           <div className="flex items-start gap-2.5 text-sm text-neutral-600">
             <Car size={15} className="mt-0.5 shrink-0 text-[#A87B51]" />
