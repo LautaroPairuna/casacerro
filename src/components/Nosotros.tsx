@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 export default function Nosotros() {
   return (
@@ -9,16 +10,27 @@ export default function Nosotros() {
       className="w-full bg-white px-4 py-12 md:px-6"
     >
       <div className="mx-auto max-w-[1400px]">
-        <div className="mb-10">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.7 }}
+          transition={{ duration: 0.55, ease: "easeOut" }}
+          className="mb-10"
+        >
           <h2 className="text-center text-4xl font-medium text-neutral-900 md:text-5xl">
             ACERCA DE NOSOTROS
           </h2>
           <div className="mt-5 mx-auto w-14 h-0.5 bg-[#FCB040]" />
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-12 xl:items-stretch xl:gap-8">
-          {/* Texto - 4/12 */}
-          <div className="xl:col-span-4">
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="xl:col-span-4"
+          >
             <div className="h-full rounded-4xl bg-[#f5ecd7] p-8 shadow-sm md:p-10">
               <p className="text-base leading-8 text-neutral-700 md:text-lg">
                 A 50 metros del Shopping Alto Noa, <strong>CasaCerro</strong> le
@@ -40,10 +52,15 @@ export default function Nosotros() {
                 primer momento.
               </p>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Imagen - 8/12 */}
-          <div className="xl:col-span-8">
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
+            className="xl:col-span-8"
+          >
             <div className="relative h-full min-h-105 w-full overflow-hidden rounded-4xl shadow-md xl:min-h-full">
               <Image
                 src="/image/nosotros/foto-nosotros.jpeg"
@@ -52,7 +69,7 @@ export default function Nosotros() {
                 className="object-cover"
               />
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

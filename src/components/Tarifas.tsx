@@ -3,6 +3,7 @@
 import { User, Car, Info, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
+import { motion } from "framer-motion";
 
 const WHATSAPP_NUMBER =
   process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5493876138620";
@@ -71,8 +72,13 @@ export default function Tarifas() {
   return (
     <section id="tarifas" className="py-20 px-4 md:px-6 bg-white">
       <div className="mx-auto max-w-[1400px]">
-        {/* Encabezado */}
-        <div className="text-center mb-12">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.7 }}
+          transition={{ duration: 0.55, ease: "easeOut" }}
+          className="text-center mb-12"
+        >
           <h2 className="text-5xl md:text-6xl font-light tracking-[0.15em] uppercase  text-neutral-900">
             Tarifas
           </h2>
@@ -81,16 +87,18 @@ export default function Tarifas() {
           <p className="text-xs uppercase tracking-[0.3em] text-[#A87B51] mb-3">
             Precios por noche · en pesos argentinos
           </p>
-        </div>
+        </motion.div>
 
-        {/* Cards de habitaciones */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-          {HABITACIONES.map((hab) => (
-            <div
+          {HABITACIONES.map((hab, index) => (
+            <motion.div
               key={hab.tipo}
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.35 }}
+              transition={{ duration: 0.6, delay: index * 0.08, ease: "easeOut" }}
               className="rounded-2xl overflow-hidden border border-[#e8d9c0] shadow-sm bg-white flex flex-col"
             >
-              {/* Cabecera de la card */}
               <div className="bg-[#f5ecd7] px-6 pt-6 pb-5 border-b border-[#e8d9c0]">
                 <div className="flex items-start justify-between gap-3">
                   <h3 className="text-2xl font-semibold tracking-wide uppercase  text-neutral-900">
@@ -105,7 +113,6 @@ export default function Tarifas() {
                 </p>
               </div>
 
-              {/* Grilla de precios */}
               <div className="px-6 pt-5 pb-4 flex-1">
                 <p className="text-[11px] uppercase tracking-[0.2em] text-neutral-400 mb-3">
                   Opciones disponibles
@@ -131,7 +138,6 @@ export default function Tarifas() {
                 </div>
               </div>
 
-              {/* CTA */}
               <div className="px-6 pb-6 pt-2">
                 <Link
                   href={whatsappHref}
@@ -143,12 +149,17 @@ export default function Tarifas() {
                   Consultar disponibilidad
                 </Link>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 
-        {/* Notas */}
-        <div className="mt-7 rounded-2xl border border-[#e8d9c0] bg-[#f5ecd7]/50 px-6 py-5 space-y-3">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+          className="mt-7 rounded-2xl border border-[#e8d9c0] bg-[#f5ecd7]/50 px-6 py-5 space-y-3"
+        >
           <div className="flex items-start gap-2.5 text-sm text-neutral-600">
             <Car size={15} className="mt-0.5 shrink-0 text-[#A87B51]" />
             <span>
@@ -170,7 +181,7 @@ export default function Tarifas() {
               <strong className="text-neutral-700">31 de marzo de 2026</strong>.
             </span>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
