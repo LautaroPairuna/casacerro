@@ -336,7 +336,7 @@ export default function Habitaciones() {
   const [selectedRoom, setSelectedRoom] = useState<RoomCategory | null>(null);
 
   return (
-    <section id="habitaciones" className="w-full bg-white px-4 py-20 md:px-6">
+    <section id="habitaciones" className="w-full bg-[#eee] px-4 py-20 md:px-6">
       <div className="mx-auto w-full max-w-[1400px]">
         <div className="mb-12 text-center">
           <h2 className="text-4xl font-medium uppercase text-neutral-900 md:text-5xl">
