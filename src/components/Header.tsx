@@ -62,7 +62,7 @@ export default function Header() {
                       href={item.href}
                       target={isExternal(item.href) ? "_blank" : undefined}
                       rel={isExternal(item.href) ? "noopener noreferrer" : undefined}
-                      className="relative group py-1 font-medium text-base transition-colors duration-300 hover:text-gray-800 uppercase"
+                      className="relative group py-1 font-sans font-medium text-base transition-colors duration-300 hover:text-gray-800 uppercase"
                     >
                       {item.label}
                       <span className="absolute left-1/2 bottom-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full group-hover:left-0" />
@@ -116,7 +116,7 @@ export default function Header() {
                     href={item.href}
                     target={isExternal(item.href) ? "_blank" : undefined}
                     rel={isExternal(item.href) ? "noopener noreferrer" : undefined}
-                    className="relative group transition-colors duration-300 hover:text-gray-800 uppercase"
+                    className="relative group font-sans transition-colors duration-300 hover:text-gray-800 uppercase"
                     onClick={() => setMenuOpen(false)}
                   >
                     {item.label}
