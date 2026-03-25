@@ -17,10 +17,10 @@ export default function Nosotros() {
           transition={{ duration: 0.55, ease: "easeOut" }}
           className="mb-10"
         >
-          <h2 className="text-center text-4xl font-medium text-neutral-900 md:text-5xl">
-            ACERCA DE NOSOTROS
+          <h2 className="text-center text-5xl md:text-6xl font-light tracking-[0.15em] uppercase text-neutral-900">
+            Acerca de Nosotros
           </h2>
-          <div className="mt-5 mx-auto w-14 h-0.5 bg-[#FCB040]" />
+          <div className="mt-5 mb-4 mx-auto w-14 h-0.5 bg-[#FCB040]" />
         </motion.div>
 
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-12 xl:items-stretch xl:gap-8">

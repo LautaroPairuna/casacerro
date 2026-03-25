@@ -40,7 +40,7 @@ html {
 #habitaciones,
 #tarifas,
 #contacto {
-  scroll-margin-top: 7.5rem;
+  scroll-margin-top: 5.0rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
