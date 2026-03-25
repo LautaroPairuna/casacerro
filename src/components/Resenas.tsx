@@ -181,7 +181,7 @@ function ReviewCard({ review }: { review: Review }) {
           strokeWidth={1.5}
         />
         <p className="text-sm text-neutral-600 leading-relaxed pl-6 italic">
-          "{review.text}"
+          &quot;{review.text}&quot;
         </p>
       </div>
 

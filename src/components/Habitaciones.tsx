@@ -186,7 +186,6 @@ function RoomModal({ room, onClose }: RoomModalProps) {
   useEffect(() => {
     if (!emblaApi) return;
 
-    onSelect();
     emblaApi.on("select", onSelect);
     emblaApi.on("reInit", onSelect);
 
@@ -338,17 +337,27 @@ export default function Habitaciones() {
   return (
     <section id="habitaciones" className="w-full bg-[#eee] px-4 py-20 md:px-6">
       <div className="mx-auto w-full max-w-[1400px]">
-        <div className="mb-12 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.7 }}
+          transition={{ duration: 0.55, ease: "easeOut" }}
+          className="mb-12 text-center"
+        >
           <h2 className="text-5xl md:text-6xl font-light tracking-[0.15em] uppercase text-neutral-900">
             Habitaciones
           </h2>
           <div className="mx-auto mt-4 h-[2px] w-14 bg-[#d49a2a]" />
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 xl:grid-cols-4">
-          {ROOM_CATEGORIES.map((room) => (
-            <article
+          {ROOM_CATEGORIES.map((room, index) => (
+            <motion.article
               key={room.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6, delay: index * 0.08, ease: "easeOut" }}
               className="overflow-hidden rounded-[32px] border border-[#e7dcc8] bg-white shadow-sm"
             >
                 <div className="relative aspect-[16/10] w-full overflow-hidden">
@@ -387,7 +396,7 @@ export default function Habitaciones() {
                         Ver más
                     </button>
                 </div>
-            </article>
+            </motion.article>
           ))}
         </div>
       </div>
