@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Nosotros from "@/components/Nosotros";
 import Tarifas from "@/components/Tarifas";
-// import Contacto from "@/components/Contacto";
+import Contacto from "@/components/Contacto";
 
 export default function Home() {
   return (
@@ -12,7 +12,7 @@ export default function Home() {
       <Hero />
       <Nosotros />
       <Tarifas />
-      {/* <Contacto /> */}
+      <Contacto />
       <WhatsappLink />
     </main>
   );

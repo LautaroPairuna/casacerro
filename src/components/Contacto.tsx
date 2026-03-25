@@ -1,100 +1,100 @@
-// "use client";
+"use client";
 
-// import { useMemo } from "react";
-// import Link from "next/link";
+import { useMemo } from "react";
+import Link from "next/link";
+import { AtSign, MessageCircle, MapPin } from "lucide-react";
 
-// const WHATSAPP_NUMBER =
-//   process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5493874029160";
+const WHATSAPP_NUMBER =
+  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5493874029160";
 
-// export default function Contacto() {
-//   const whatsappHref = useMemo(() => {
-//     const message =
-//       "Hola, me gustaría consultar por disponibilidad, tarifas y más información sobre Casa Cerro.";
-//     return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-//   }, []);
+export default function Contacto() {
+  const whatsappHref = useMemo(() => {
+    const message =
+      "Hola, quisiera consultar por disponibilidad y tarifas en CasaCerro.";
+    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  }, []);
 
-//   return (
-//     <section
-//       id="contacto"
-//       className="w-full bg-[#f5ecd7] px-4 py-16 md:px-6 md:py-24"
-//     >
-//       <div className="mx-auto w-full">
-//         <div className="grid grid-cols-1 gap-8 xl:grid-cols-12">
-//           {/* Texto principal */}
-//           <div className="xl:col-span-5">
-//             <span className="mb-4 inline-block text-sm uppercase tracking-[0.25em] text-neutral-500">
-//               Contacto
-//             </span>
+  return (
+    <section id="contacto" className="w-full bg-white px-4 py-20 md:px-6">
+      <div className="mx-auto w-full max-w-[1400px]">
+        <div className="mb-12 text-center">
+          <h2 className="text-4xl font-medium uppercase text-neutral-900 md:text-5xl">
+            Contacto
+          </h2>
+          <div className="mx-auto mt-4 h-[2px] w-14 bg-[#d49a2a]" />
+        </div>
 
-//             <h2 className="text-3xl font-semibold leading-tight text-neutral-900 md:text-5xl">
-//               Estamos para ayudarte
-//               <br />
-//               con tu próxima estadía
-//             </h2>
+        <div className="grid grid-cols-1 gap-8 xl:grid-cols-12 xl:items-stretch">
+          {/* Info - 4/12 */}
+          <div className="xl:col-span-4">
+            <div className="h-full rounded-[32px] bg-[#f5ecd7] p-8 shadow-sm md:p-10">
+              <p className="text-base leading-8 text-neutral-700 md:text-lg">
+                Estamos a disposición para ayudarte con tu reserva, resolver
+                dudas sobre disponibilidad y brindarte la información que
+                necesites para tu estadía.
+              </p>
 
-//             <p className="mt-6 max-w-xl text-base leading-8 text-neutral-700 md:text-lg">
-//               Si querés consultar disponibilidad, tarifas o cualquier detalle
-//               sobre tu visita, podés escribirnos directamente y te responderemos
-//               a la brevedad.
-//             </p>
-//           </div>
+              <div className="mt-8 space-y-6 text-base text-neutral-700 md:text-lg">
+                <div>
+                  <div className="flex items-center gap-3">
+                    <AtSign size={18} className="text-neutral-500" />
+                    <p className="text-sm uppercase tracking-[0.18em] text-neutral-500">
+                      Instagram
+                    </p>
+                  </div>
+                  <p className="mt-2">@casacerro.salta</p>
+                </div>
 
-//           {/* Tarjetas de contacto */}
-//           <div className="xl:col-span-7">
-//             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-//               <div className="rounded-3xl bg-[#FFF8E7] p-6 shadow-sm">
-//                 <h3 className="text-lg font-semibold text-neutral-900">
-//                   WhatsApp
-//                 </h3>
-//                 <p className="mt-3 text-neutral-700">
-//                   Contactanos de forma rápida y directa para recibir información
-//                   sobre reservas y estadía.
-//                 </p>
+                <div>
+                  <div className="flex items-center gap-3">
+                    <MessageCircle size={18} className="text-neutral-500" />
+                    <p className="text-sm uppercase tracking-[0.18em] text-neutral-500">
+                      WhatsApp
+                    </p>
+                  </div>
+                  <p className="mt-2">+54 9 387 402 9160</p>
+                </div>
 
-//                 <Link
-//                   href={whatsappHref}
-//                   target="_blank"
-//                   rel="noopener noreferrer"
-//                   className="mt-6 inline-flex rounded-full bg-black px-5 py-3 text-sm font-medium uppercase tracking-wide text-white transition hover:opacity-90"
-//                 >
-//                   Hablar por WhatsApp
-//                 </Link>
-//               </div>
+                <div>
+                  <div className="flex items-center gap-3">
+                    <MapPin size={18} className="text-neutral-500" />
+                    <p className="text-sm uppercase tracking-[0.18em] text-neutral-500">
+                      Ubicación
+                    </p>
+                  </div>
+                  <p className="mt-2">Av. Uruguay 691, A4400 Salta</p>
+                </div>
+              </div>
 
-//               <div className="rounded-3xl bg-[#FFF8E7] p-6 shadow-sm">
-//                 <h3 className="text-lg font-semibold text-neutral-900">
-//                   Información general
-//                 </h3>
-//                 <p className="mt-3 text-neutral-700">
-//                   También podés sumar acá dirección, correo electrónico, horario
-//                   de atención o cualquier otro dato de contacto importante.
-//                 </p>
+              <div className="mt-10">
+                <Link
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex w-full items-center justify-center rounded-full border border-[#8d2c16] px-6 py-4 text-sm font-medium uppercase tracking-[0.08em] text-[#8d2c16] transition hover:bg-[#8d2c16] hover:text-white"
+                >
+                  Consultar por WhatsApp
+                </Link>
+              </div>
+            </div>
+          </div>
 
-//                 <div className="mt-6 space-y-2 text-sm text-neutral-700">
-//                   <p>
-//                     <span className="font-medium text-neutral-900">
-//                       Ubicación:
-//                     </span>{" "}
-//                     Salta, Argentina
-//                   </p>
-//                   <p>
-//                     <span className="font-medium text-neutral-900">
-//                       Email:
-//                     </span>{" "}
-//                     info@casacerro.com
-//                   </p>
-//                   <p>
-//                     <span className="font-medium text-neutral-900">
-//                       Atención:
-//                     </span>{" "}
-//                     Todos los días
-//                   </p>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </section>
-//   );
-// }
+          {/* Mapa - 8/12 */}
+          <div className="xl:col-span-8">
+            <div className="overflow-hidden rounded-[32px] shadow-md">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3622.3938671779433!2d-65.40379382374566!3d-24.781963207568836!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x941bc39432107a25%3A0x78c00de00add8673!2sCasacerro!5e0!3m2!1ses-419!2sar!4v1774445836355!5m2!1ses-419!2sar"
+                className="h-[420px] w-full md:h-[520px]"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Mapa de ubicación de CasaCerro"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
