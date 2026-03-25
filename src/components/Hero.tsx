@@ -95,7 +95,7 @@ export default function Hero() {
   }, [emblaApi, onSelect]);
 
   return (
-    <section className="w-full bg-[#FFF] pt-32 pb-12 px-4 md:px-6">
+    <section className="w-full bg-[#dedede] pt-32 pb-12 px-4 md:px-6">
       <div className="mx-auto max-w-[1400px] grid grid-cols-1 gap-8 xl:grid-cols-12 xl:items-stretch">
         <motion.div
           initial={{ opacity: 0, y: 32 }}

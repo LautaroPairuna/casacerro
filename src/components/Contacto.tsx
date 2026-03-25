@@ -16,7 +16,7 @@ export default function Contacto() {
   }, []);
 
   return (
-    <section id="contacto" className="w-full bg-white px-4 py-20 md:px-6">
+    <section id="contacto" className="w-full bg-[#dedede] px-4 py-20 md:px-6">
       <div className="mx-auto w-full max-w-[1400px]">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -101,7 +101,7 @@ export default function Contacto() {
             <div className="overflow-hidden rounded-[32px] shadow-md">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3622.3938671779433!2d-65.40379382374566!3d-24.781963207568836!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x941bc39432107a25%3A0x78c00de00add8673!2sCasacerro!5e0!3m2!1ses-419!2sar!4v1774445836355!5m2!1ses-419!2sar"
-                className="h-[420px] w-full md:h-[520px]"
+                className="h-[420px] w-full md:h-[560px]"
                 style={{ border: 0 }}
                 allowFullScreen
                 loading="lazy"

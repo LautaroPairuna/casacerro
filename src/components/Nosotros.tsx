@@ -7,7 +7,7 @@ export default function Nosotros() {
   return (
     <section
       id="nosotros"
-      className="w-full bg-white px-4 py-12 md:px-6"
+      className="w-full bg-[#dedede] px-4 py-12 md:px-6"
     >
       <div className="mx-auto max-w-[1400px]">
         <motion.div
