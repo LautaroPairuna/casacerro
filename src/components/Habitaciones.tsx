@@ -339,7 +339,7 @@ export default function Habitaciones() {
     <section id="habitaciones" className="w-full bg-[#eee] px-4 py-20 md:px-6">
       <div className="mx-auto w-full max-w-[1400px]">
         <div className="mb-12 text-center">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-light tracking-[0.15em] uppercase text-neutral-900">
+          <h2 className="text-5xl md:text-6xl font-light tracking-[0.06em] md:tracking-[0.15em] uppercase text-neutral-900">
             Habitaciones
           </h2>
           <div className="mx-auto mt-4 h-[2px] w-14 bg-[#d49a2a]" />
