@@ -25,10 +25,10 @@ export default function Contacto() {
           transition={{ duration: 0.55, ease: "easeOut" }}
           className="mb-12 text-center"
         >
-          <h2 className="text-4xl font-medium uppercase text-neutral-900 md:text-5xl">
+          <h2 className="text-5xl md:text-6xl font-light tracking-[0.15em] uppercase text-neutral-900">
             Contacto
           </h2>
-          <div className="mx-auto mt-4 h-[2px] w-14 bg-[#d49a2a]" />
+          <div className="mt-5 mb-4 mx-auto w-14 h-0.5 bg-[#FCB040]" />
         </motion.div>
 
         <div className="grid grid-cols-1 gap-8 xl:grid-cols-12 xl:items-stretch">

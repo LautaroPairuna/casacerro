@@ -28,7 +28,7 @@ const HABITACIONES: Habitacion[] = [
     badge: "Hasta 4 personas",
     descripcion:
       "Ambiente integrado con todo lo necesario para una estadía cómoda y agradable.",
-    gridCols: "grid-cols-3",
+    gridCols: "grid-cols-2 sm:grid-cols-3",
     precios: [
       { personas: 2, label: "Single / Doble", precio: 59000 },
       { personas: 3, label: "Triple", precio: 69000 },
@@ -100,11 +100,11 @@ export default function Tarifas() {
               className="rounded-2xl overflow-hidden border border-[#e8d9c0] shadow-sm bg-white flex flex-col"
             >
               <div className="bg-[#f5ecd7] px-6 pt-6 pb-5 border-b border-[#e8d9c0]">
-                <div className="flex items-start justify-between gap-3">
-                  <h3 className="text-2xl font-semibold tracking-wide uppercase  text-neutral-900">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                  <h3 className="text-2xl font-semibold tracking-wide uppercase text-neutral-900">
                     {hab.tipo}
                   </h3>
-                  <span className="shrink-0 mt-1 rounded-full bg-[#6c1710]/10 px-3 py-0.5 text-[11px] font-medium uppercase tracking-wide text-[#6c1710]">
+                  <span className="self-start sm:mt-1 shrink-0 rounded-full bg-[#6c1710]/10 px-3 py-0.5 text-[11px] font-medium uppercase tracking-wide text-[#6c1710]">
                     {hab.badge}
                   </span>
                 </div>
@@ -118,10 +118,14 @@ export default function Tarifas() {
                   Opciones disponibles
                 </p>
                 <div className={`grid ${hab.gridCols} gap-3`}>
-                  {hab.precios.map((p) => (
+                  {hab.precios.map((p, idx) => (
                     <div
                       key={p.label}
-                      className="rounded-xl border border-[#e8d9c0] bg-[#FFFAF3] px-4 py-3 hover:border-[#FCB040] hover:bg-[#FFF5E5] transition-colors duration-200 cursor-default"
+                      className={`rounded-xl border border-[#e8d9c0] bg-[#FFFAF3] px-4 py-3 hover:border-[#FCB040] hover:bg-[#FFF5E5] transition-colors duration-200 cursor-default${
+                        hab.precios.length === 3 && idx === 2
+                          ? " col-span-2 w-1/2 mx-auto sm:col-span-1 sm:w-auto sm:mx-0"
+                          : ""
+                      }`}
                     >
                       <PersonasIcons count={p.personas} />
                       <p className="text-[11px] text-neutral-500 mt-1.5 uppercase tracking-wide leading-tight">

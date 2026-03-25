@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -233,11 +234,15 @@ function PlatformBadge({ platform }: { platform: Platform }) {
 // ── Main section ──────────────────────────────────────────────────────────────
 
 export default function Resenas() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: true,
-    align: "start",
-    slidesToScroll: 1,
-  });
+  const autoplay = useMemo(
+    () => Autoplay({ delay: 6000, stopOnInteraction: false, stopOnMouseEnter: true }),
+    []
+  );
+
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: true, align: "center", slidesToScroll: 1, duration: 50 },
+    [autoplay]
+  );
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
@@ -287,7 +292,7 @@ export default function Resenas() {
               {REVIEWS.map((review) => (
                 <div
                   key={review.id}
-                  className="flex-none w-[min(100%,320px)] md:w-[min(50%,400px)] xl:w-[min(33.333%,420px)]"
+                  className="flex-none w-full md:w-[min(50%,400px)] xl:w-[min(33.333%,420px)]"
                 >
                   <ReviewCard review={review} />
                 </div>
