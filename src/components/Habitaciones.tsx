@@ -88,7 +88,7 @@ const ROOM_CATEGORIES: RoomCategory[] = [
   },
   {
     id: "monoambiente-4-personas",
-    name: "Monoambiente",
+    name: "Monoambientes",
     quantityLabel: "3 habitaciones",
     capacityLabel: "Hasta 4 huéspedes",
     bedsLabel: "Configuración para 4 personas",
