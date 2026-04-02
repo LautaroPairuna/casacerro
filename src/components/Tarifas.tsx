@@ -24,7 +24,7 @@ type Habitacion = {
 
 const HABITACIONES: Habitacion[] = [
   {
-    tipo: "Monoambiente",
+    tipo: "Monoambientes",
     badge: "Hasta 4 personas",
     descripcion:
       "Ambiente integrado con todo lo necesario para una estadía cómoda y agradable.",
