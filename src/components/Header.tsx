@@ -24,6 +24,7 @@ export default function Header() {
       { href: "#resenas", label: "Reseñas" },
       { href: "#habitaciones", label: "Habitaciones" },
       { href: "#tarifas", label: "Tarifas" },
+      {href: "#empresas", label: "Empresas"},
       { href: "#contacto", label: "Contacto" },
     ],
     []
@@ -39,7 +40,9 @@ export default function Header() {
     event.preventDefault();
     const target = document.querySelector(href);
     if (target) {
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      const headerHeight = 88;
+      const top = target.getBoundingClientRect().top + window.scrollY - headerHeight;
+      window.scrollTo({ top, behavior: "smooth" });
       window.history.pushState(null, "", href);
     }
     setMenuOpen(false);

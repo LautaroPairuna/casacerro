@@ -7,6 +7,7 @@ import Tarifas from "@/components/Tarifas";
 import Contacto from "@/components/Contacto";
 import Resenas from "@/components/Resenas";
 import Habitaciones from "@/components/Habitaciones";
+import Empresas from "@/components/Empresas";
 
 const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
 const siteUrl =
@@ -101,6 +102,7 @@ export default function Home() {
       <Resenas />
       <Habitaciones />
       <Tarifas />
+      <Empresas />
       <Contacto />
       <WhatsappLink />
     </main>
