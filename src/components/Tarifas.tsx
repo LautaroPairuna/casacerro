@@ -2,7 +2,7 @@
 
 import { User, Car, Info, MessageCircle } from "lucide-react";
 import Link from "next/link";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 
 const WHATSAPP_NUMBER =
@@ -15,6 +15,7 @@ type PrecioItem = {
 };
 
 type Habitacion = {
+  id: number;
   tipo: string;
   badge: string;
   descripcion: string;
@@ -22,8 +23,9 @@ type Habitacion = {
   precios: PrecioItem[];
 };
 
-const HABITACIONES: Habitacion[] = [
+const INITIAL_HABITACIONES: Habitacion[] = [
   {
+    id: 1,
     tipo: "Monoambientes",
     badge: "Hasta 4 personas",
     descripcion:
@@ -36,6 +38,7 @@ const HABITACIONES: Habitacion[] = [
     ],
   },
   {
+    id: 2,
     tipo: "Dos Ambientes",
     badge: "Hasta 4 personas",
     descripcion:
@@ -63,10 +66,57 @@ function PersonasIcons({ count }: { count: number }) {
 }
 
 export default function Tarifas() {
+  const [habitaciones, setHabitaciones] = useState<Habitacion[]>(INITIAL_HABITACIONES);
+
   const whatsappHref = useMemo(() => {
     const message =
       "Hola, me gustaría consultar por disponibilidad y tarifas en Casa Cerro.";
     return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  }, []);
+
+  useEffect(() => {
+    const fetchTarifas = async () => {
+      try {
+        const response = await fetch("/api/tarifas", { cache: "no-store" });
+        if (!response.ok) return;
+
+        const payload = (await response.json()) as {
+          roomTypes: Array<{
+            id: number;
+            name: string;
+            badge: string;
+            description: string;
+            rates: Array<{
+              id: number;
+              label: string;
+              people: number;
+              price: number;
+            }>;
+          }>;
+        };
+
+        const next = payload.roomTypes.map((roomType) => ({
+          id: roomType.id,
+          tipo: roomType.name,
+          badge: roomType.badge,
+          descripcion: roomType.description,
+          gridCols: roomType.rates.length === 3 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2",
+          precios: roomType.rates.map((rate) => ({
+            personas: rate.people,
+            label: rate.label,
+            precio: rate.price,
+          })),
+        }));
+
+        if (next.length > 0) {
+          setHabitaciones(next);
+        }
+      } catch {
+        return;
+      }
+    };
+
+    void fetchTarifas();
   }, []);
 
   return (
@@ -90,9 +140,9 @@ export default function Tarifas() {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-          {HABITACIONES.map((hab, index) => (
+          {habitaciones.map((hab, index) => (
             <motion.div
-              key={hab.tipo}
+              key={hab.id}
               initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.35 }}

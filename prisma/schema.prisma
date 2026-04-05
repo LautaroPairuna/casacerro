@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model AdminUser {
+  id           Int       @id @default(autoincrement()) @map("id")
+  email        String    @unique @map("correo_electronico") @db.VarChar(191)
+  passwordHash String    @map("contrasena_hash") @db.VarChar(255)
+  lastLoginAt  DateTime? @map("ultimo_acceso_en")
+  createdAt    DateTime  @default(now()) @map("creado_en")
+  updatedAt    DateTime  @updatedAt @map("actualizado_en")
+
+  @@map("usuarios_administradores")
+}
+
+model RoomType {
+  id           Int        @id @default(autoincrement()) @map("id")
+  code         String     @unique @map("codigo") @db.VarChar(64)
+  name         String     @map("nombre") @db.VarChar(120)
+  badge        String     @map("etiqueta") @db.VarChar(120)
+  description  String     @map("descripcion") @db.VarChar(500)
+  displayOrder Int        @map("orden_visual")
+  createdAt    DateTime   @default(now()) @map("creado_en")
+  updatedAt    DateTime   @updatedAt @map("actualizado_en")
+  rates        RoomRate[]
+
+  @@index([displayOrder])
+  @@map("tipos_habitacion")
+}
+
+model RoomRate {
+  id           Int      @id @default(autoincrement()) @map("id")
+  roomTypeId   Int      @map("tipo_habitacion_id")
+  label        String   @map("etiqueta") @db.VarChar(100)
+  people       Int      @map("cantidad_personas")
+  price        Int      @map("precio")
+  displayOrder Int      @map("orden_visual")
+  createdAt    DateTime @default(now()) @map("creado_en")
+  updatedAt    DateTime @updatedAt @map("actualizado_en")
+  roomType     RoomType @relation(fields: [roomTypeId], references: [id], onDelete: Cascade)
+
+  @@unique([roomTypeId, label])
+  @@index([roomTypeId])
+  @@index([roomTypeId, displayOrder])
+  @@map("tarifas_habitacion")
+}
+
+model AuditLog {
+  id           Int      @id @default(autoincrement()) @map("id")
+  actorEmail   String   @map("correo_actor") @db.VarChar(191)
+  action       String   @map("accion") @db.VarChar(32)
+  entity       String   @map("entidad") @db.VarChar(64)
+  entityId     String?  @map("entidad_id") @db.VarChar(64)
+  previousData Json?    @map("datos_anteriores")
+  nextData     Json?    @map("datos_nuevos")
+  createdAt    DateTime @default(now()) @map("creado_en")
+
+  @@index([createdAt])
+  @@index([entity, entityId])
+  @@index([actorEmail])
+  @@map("registros_auditoria")
+}

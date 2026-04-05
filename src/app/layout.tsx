@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Cormorant_Garamond, Raleway } from "next/font/google";
+import { Geist, Geist_Mono, Cormorant_Garamond, Mulish } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -18,8 +18,8 @@ const cormorant = Cormorant_Garamond({
   weight: ["300", "400", "500", "600", "700"],
 });
 
-const raleway = Raleway({
-  variable: "--font-raleway",
+const mulish = Mulish({
+  variable: "--font-mulish",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
 });
@@ -101,7 +101,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable} ${raleway.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable} ${mulish.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

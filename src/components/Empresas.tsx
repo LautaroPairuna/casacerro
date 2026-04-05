@@ -56,15 +56,6 @@ const BENEFICIOS = [
   },
 ];
 
-type TarifaCorporativa = {
-  label: string;
-  sublabel: string;
-  descuento: string;
-  precio: string;
-  nota: string;
-  destacado?: boolean;
-};
-
 export default function Empresas() {
   const whatsappHref = useMemo(() => {
     const message =
