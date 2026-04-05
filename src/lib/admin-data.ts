@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 
@@ -99,7 +100,7 @@ export async function ensureTariffBootstrap(): Promise<void> {
   const existing = await prisma.roomType.count();
   if (existing > 0) return;
 
-  await prisma.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     for (const roomType of DEFAULT_ROOM_TYPES) {
       await tx.roomType.create({
         data: {
@@ -158,7 +159,7 @@ export async function getRoomTypesWithRates() {
 }
 
 export async function updateRatePrice(input: UpdateRatePayload, actorEmail: string) {
-  return prisma.$transaction(async (tx) => {
+  return prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     const rate = await tx.roomRate.findUnique({
       where: { id: input.rateId },
       select: {
