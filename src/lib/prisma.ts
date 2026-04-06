@@ -6,7 +6,7 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 const databaseUrl =
-  process.env.DATABASE_URL ?? "mysql://root:password@localhost:3306/casacerro_admin";
+  process.env.DATABASE_URL ?? "mysql://casacerro:soslmyexoaumija9@casacerro-database-nxoer9:3306/casacerro";
 const adapter = new PrismaMariaDb(databaseUrl);
 
 export const prisma =
