@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import {
@@ -53,19 +52,26 @@ export async function POST(request: Request) {
 
     console.log(`[AUTH][${requestId}] Token JWT generado exitosamente`);
 
-    const cookieStore = await cookies();
-    cookieStore.set(getSessionCookieName(), token, {
+    const forwardedProto = request.headers.get("x-forwarded-proto");
+    const isHttpsRequest =
+      forwardedProto?.split(",")[0]?.trim() === "https" || new URL(request.url).protocol === "https:";
+    const secureCookie = process.env.NODE_ENV === "production" ? isHttpsRequest : false;
+
+    const response = NextResponse.json({ ok: true }, { status: 200 });
+    response.cookies.set(getSessionCookieName(), token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: secureCookie,
       sameSite: "lax",
       path: "/",
       maxAge: getSessionDurationSeconds(),
     });
 
     const duration = Date.now() - start;
-    console.log(`[AUTH][${requestId}] Login exitoso para ${email} en ${duration}ms`);
+    console.log(
+      `[AUTH][${requestId}] Login exitoso para ${email} en ${duration}ms (secureCookie=${String(secureCookie)})`
+    );
 
-    return NextResponse.json({ ok: true }, { status: 200 });
+    return response;
   } catch (error) {
     const duration = Date.now() - start;
     
