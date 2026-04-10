@@ -34,7 +34,7 @@ const BENEFICIOS = [
     icon: Car,
     titulo: "Cochera privada",
     descripcion:
-      "Contamos con cochera privada y segura para tus vehículos o los de tu equipo.",
+      "Contamos con cochera privada y segura para tus vehículos o los de tu equipo, sujeta a disponibilidad.",
   },
   {
     icon: Users,
@@ -103,7 +103,7 @@ export default function Empresas() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.55, delay: index * 0.07, ease: "easeOut" }}
-                className="rounded-2xl border border-[#e8d9c0] bg-[#FFFAF3] px-6 py-6 flex gap-4 hover:border-[#FCB040] transition-colors duration-200"
+                className="rounded-2xl border border-[#e8d9c0] bg-white px-6 py-6 flex gap-4 shadow-sm hover:border-[#FCB040] transition-colors duration-200"
               >
                 <div className="shrink-0 mt-0.5">
                   <div className="w-9 h-9 rounded-full bg-[#6c1710]/10 flex items-center justify-center">

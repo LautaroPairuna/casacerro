@@ -65,6 +65,7 @@ export default function Contacto() {
                     </p>
                   </div>
                   <p className="mt-2">+54 9 387 402 9160</p>
+                  <p className="mt-2">+54 9 387 402 5892</p>
                 </div>
 
                 <div>

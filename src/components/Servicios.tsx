@@ -29,9 +29,9 @@ const SERVICIOS = [
   },
   {
     icon: Car,
-    titulo: "Cochera sujeta a disponibilidad",
+    titulo: "Cochera",
     descripcion:
-      "Espacio de estacionamiento para mayor comodidad durante tu estadía.",
+      "Espacio de estacionamiento para mayor comodidad durante tu estadía, sujeta a disponibilidad.",
   },
   {
     icon: Clock,
@@ -52,17 +52,17 @@ const SERVICIOS = [
       "Configuraciones de alojamiento para distintas cantidades de personas.",
   },
   {
-    icon: Sparkles,
-    titulo: "Apartamentos listos para usar",
+    icon: Shield,
+    titulo: "Seguridad",
     descripcion:
-      "Incluyen ropa de cama y toallas para que puedas instalarte sin preparativos adicionales.",
+      "Rapidez y facilidad en el check-in a través de códigos, cámaras de seguridad.",
   },
 ];
 
 const SERVICIOS_HABITACIONES = [
   {
     icon: Sparkles,
-    label: "Ropa de cama y toallas incluidas",
+    label: "Ropa de cama y ropa de baño incluida",
     detail: "Cada apartamento se entrega listo para usar, sin necesidad de traer blanquería.",
   },
   {
