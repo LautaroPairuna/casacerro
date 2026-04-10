@@ -22,6 +22,7 @@ export default function Header() {
     () => [
       { href: "#nosotros", label: "Nosotros" },
       { href: "#resenas", label: "Reseñas" },
+      { href: "#servicios", label: "Servicios" },
       { href: "#habitaciones", label: "Habitaciones" },
       { href: "#tarifas", label: "Tarifas" },
       {href: "#empresas", label: "Empresas"},
@@ -54,7 +55,7 @@ export default function Header() {
       role="navigation"
       aria-label="Main Navigation"
     >
-      <div className="mx-auto w-full max-w-[1200px] flex items-center justify-between">
+      <div className="mx-auto w-full max-w-[1400px] flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center shrink-0">
           <Link href="/">

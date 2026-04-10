@@ -8,6 +8,7 @@ import Contacto from "@/components/Contacto";
 import Resenas from "@/components/Resenas";
 import Habitaciones from "@/components/Habitaciones";
 import Empresas from "@/components/Empresas";
+import Servicios from "@/components/Servicios";
 
 const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
 const siteUrl =
@@ -100,6 +101,7 @@ export default function Home() {
       <Hero />
       <Nosotros />
       <Resenas />
+      <Servicios />
       <Habitaciones />
       <Tarifas />
       <Empresas />

@@ -54,7 +54,8 @@ export const ModelName = {
   AdminUser: 'AdminUser',
   RoomType: 'RoomType',
   RoomRate: 'RoomRate',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  TariffInfo: 'TariffInfo'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -125,6 +126,19 @@ export const AuditLogScalarFieldEnum = {
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const TariffInfoScalarFieldEnum = {
+  id: 'id',
+  parkingNote: 'parkingNote',
+  seasonalNote: 'seasonalNote',
+  validityNote: 'validityNote',
+  extraNotes: 'extraNotes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TariffInfoScalarFieldEnum = (typeof TariffInfoScalarFieldEnum)[keyof typeof TariffInfoScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -201,4 +215,13 @@ export const AuditLogOrderByRelevanceFieldEnum = {
 } as const
 
 export type AuditLogOrderByRelevanceFieldEnum = (typeof AuditLogOrderByRelevanceFieldEnum)[keyof typeof AuditLogOrderByRelevanceFieldEnum]
+
+
+export const TariffInfoOrderByRelevanceFieldEnum = {
+  parkingNote: 'parkingNote',
+  seasonalNote: 'seasonalNote',
+  validityNote: 'validityNote'
+} as const
+
+export type TariffInfoOrderByRelevanceFieldEnum = (typeof TariffInfoOrderByRelevanceFieldEnum)[keyof typeof TariffInfoOrderByRelevanceFieldEnum]
 

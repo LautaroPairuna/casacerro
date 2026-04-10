@@ -23,6 +23,13 @@ type Habitacion = {
   precios: PrecioItem[];
 };
 
+type TariffInfo = {
+  parkingNote: string;
+  seasonalNote: string;
+  validityNote: string;
+  extraNotes: string[];
+};
+
 const INITIAL_HABITACIONES: Habitacion[] = [
   {
     id: 1,
@@ -51,6 +58,13 @@ const INITIAL_HABITACIONES: Habitacion[] = [
   },
 ];
 
+const INITIAL_TARIFF_INFO: TariffInfo = {
+  parkingNote: "Cochera $9.000 por día. Sujeta a disponibilidad.",
+  seasonalNote: "Los precios pueden variar sin previo aviso en temporada alta y fines de semana largos.",
+  validityNote: "Valores vigentes hasta el 31 de marzo de 2026.",
+  extraNotes: [],
+};
+
 function formatPrecio(precio: number): string {
   return `$${precio.toLocaleString("es-AR")}`;
 }
@@ -67,6 +81,7 @@ function PersonasIcons({ count }: { count: number }) {
 
 export default function Tarifas() {
   const [habitaciones, setHabitaciones] = useState<Habitacion[]>(INITIAL_HABITACIONES);
+  const [tariffInfo, setTariffInfo] = useState<TariffInfo>(INITIAL_TARIFF_INFO);
 
   const whatsappHref = useMemo(() => {
     const message =
@@ -93,6 +108,7 @@ export default function Tarifas() {
               price: number;
             }>;
           }>;
+          tariffInfo?: TariffInfo | null;
         };
 
         const next = payload.roomTypes.map((roomType) => ({
@@ -110,6 +126,10 @@ export default function Tarifas() {
 
         if (next.length > 0) {
           setHabitaciones(next);
+        }
+
+        if (payload.tariffInfo) {
+          setTariffInfo(payload.tariffInfo);
         }
       } catch {
         return;
@@ -216,25 +236,22 @@ export default function Tarifas() {
         >
           <div className="flex items-start gap-2.5 text-sm text-neutral-600">
             <Car size={15} className="mt-0.5 shrink-0 text-[#A87B51]" />
-            <span>
-              Cochera <strong className="text-neutral-700">$9.000</strong> por
-              día. Sujeta a disponibilidad.
-            </span>
+            <span>{tariffInfo.parkingNote}</span>
           </div>
           <div className="flex items-start gap-2.5 text-sm text-neutral-600">
             <Info size={15} className="mt-0.5 shrink-0 text-[#A87B51]" />
-            <span>
-              Los precios pueden variar sin previo aviso en temporada alta y
-              fines de semana largos.
-            </span>
+            <span>{tariffInfo.seasonalNote}</span>
           </div>
           <div className="flex items-start gap-2.5 text-sm text-neutral-600">
             <Info size={15} className="mt-0.5 shrink-0 text-[#A87B51]" />
-            <span>
-              Valores vigentes hasta el{" "}
-              <strong className="text-neutral-700">31 de marzo de 2026</strong>.
-            </span>
+            <span>{tariffInfo.validityNote}</span>
           </div>
+          {tariffInfo.extraNotes.map((note, index) => (
+            <div key={`${note}-${index}`} className="flex items-start gap-2.5 text-sm text-neutral-600">
+              <Info size={15} className="mt-0.5 shrink-0 text-[#A87B51]" />
+              <span>{note}</span>
+            </div>
+          ))}
         </motion.div>
       </div>
     </section>

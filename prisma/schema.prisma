@@ -65,3 +65,15 @@ model AuditLog {
   @@index([actorEmail])
   @@map("registros_auditoria")
 }
+
+model TariffInfo {
+  id           Int      @id @default(1) @map("id")
+  parkingNote  String   @map("nota_cochera") @db.VarChar(220)
+  seasonalNote String   @map("nota_temporada") @db.VarChar(320)
+  validityNote String   @map("nota_vigencia") @db.VarChar(220)
+  extraNotes   Json?    @map("notas_adicionales")
+  createdAt    DateTime @default(now()) @map("creado_en")
+  updatedAt    DateTime @updatedAt @map("actualizado_en")
+
+  @@map("informacion_tarifas")
+}

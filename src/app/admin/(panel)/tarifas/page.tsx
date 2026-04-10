@@ -21,10 +21,22 @@ type AdminRoomType = {
 
 type ApiResponse = {
   roomTypes: AdminRoomType[];
+  tariffInfo: TariffInfo | null;
 };
 
 type UpdateRateResponse = {
   rate: AdminRate;
+};
+
+type TariffInfo = {
+  parkingNote: string;
+  seasonalNote: string;
+  validityNote: string;
+  extraNotes: string[];
+};
+
+type UpdateTariffInfoResponse = {
+  tariffInfo: TariffInfo;
 };
 
 type ToastState = {
@@ -34,6 +46,12 @@ type ToastState = {
 } | null;
 
 const TOAST_DURATION_MS = 3200;
+const INITIAL_TARIFF_INFO: TariffInfo = {
+  parkingNote: "",
+  seasonalNote: "",
+  validityNote: "",
+  extraNotes: [],
+};
 
 function formatCurrency(value: number): string {
   return value.toLocaleString("es-AR");
@@ -45,6 +63,8 @@ export default function AdminTarifasPage() {
   const [savingRateId, setSavingRateId] = useState<number | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [toast, setToast] = useState<ToastState>(null);
+  const [tariffInfo, setTariffInfo] = useState<TariffInfo>(INITIAL_TARIFF_INFO);
+  const [savingTariffInfo, setSavingTariffInfo] = useState(false);
 
   const showToast = (type: "success" | "error", message: string) => {
     setToast({ id: Date.now(), type, message });
@@ -62,6 +82,9 @@ export default function AdminTarifasPage() {
       }
       const payload = (await response.json()) as ApiResponse;
       setRoomTypes(payload.roomTypes);
+      if (payload.tariffInfo) {
+        setTariffInfo(payload.tariffInfo);
+      }
     } catch {
       setLoadError("No se pudieron cargar las tarifas.");
     } finally {
@@ -151,6 +174,65 @@ export default function AdminTarifasPage() {
     }
   };
 
+  const onChangeTariffInfo = (field: keyof TariffInfo, value: string) => {
+    setTariffInfo((current) => ({
+      ...current,
+      [field]: value,
+    }));
+  };
+
+  const onAddExtraNote = () => {
+    setTariffInfo((current) => ({
+      ...current,
+      extraNotes: [...current.extraNotes, ""],
+    }));
+  };
+
+  const onChangeExtraNote = (index: number, value: string) => {
+    setTariffInfo((current) => ({
+      ...current,
+      extraNotes: current.extraNotes.map((note, noteIndex) =>
+        noteIndex === index ? value : note
+      ),
+    }));
+  };
+
+  const onRemoveExtraNote = (index: number) => {
+    setTariffInfo((current) => ({
+      ...current,
+      extraNotes: current.extraNotes.filter((_, noteIndex) => noteIndex !== index),
+    }));
+  };
+
+  const saveTariffInfo = async () => {
+    setSavingTariffInfo(true);
+    setToast(null);
+    try {
+      const response = await fetch("/api/admin/tarifas", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(tariffInfo),
+      });
+
+      if (!response.ok) {
+        const body = (await response.json()) as { message?: string };
+        throw new Error(body.message ?? "No se pudo guardar la información general.");
+      }
+
+      const payload = (await response.json()) as UpdateTariffInfoResponse;
+      setTariffInfo(payload.tariffInfo);
+      showToast("success", "Información general de tarifas actualizada.");
+    } catch (saveError) {
+      const message =
+        saveError instanceof Error
+          ? saveError.message
+          : "No se pudo guardar la información general.";
+      showToast("error", message);
+    } finally {
+      setSavingTariffInfo(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="rounded-3xl border border-[#dccdaf] bg-white/95 p-8 shadow-[0_8px_22px_rgba(71,41,10,0.06)]">
@@ -177,6 +259,100 @@ export default function AdminTarifasPage() {
           {loadError}
         </div>
       )}
+
+      <article className="overflow-hidden rounded-3xl border border-[#dccdaf] bg-white shadow-[0_8px_22px_rgba(71,41,10,0.05)]">
+        <div className="border-b border-[#eadcc2] bg-[#f8f2e4] px-6 py-6 md:px-7">
+          <h3 className="text-2xl text-[#22150a] md:text-3xl">Información del bloque inferior</h3>
+          <p className="mt-2 max-w-3xl text-sm text-neutral-600 md:text-base">
+            Este contenido se muestra al público debajo de las tarjetas de tarifas.
+          </p>
+        </div>
+        <div className="space-y-4 px-5 py-5 md:px-6">
+          <label className="block space-y-1.5">
+            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#9d7b58]">
+              Nota de cochera
+            </span>
+            <textarea
+              rows={2}
+              value={tariffInfo.parkingNote}
+              onChange={(event) => onChangeTariffInfo("parkingNote", event.target.value)}
+              className="w-full rounded-xl border border-[#d9cdb6] bg-[#fffdf8] px-3 py-2.5 text-sm outline-none ring-[#6c1710] transition focus:ring-2"
+            />
+          </label>
+          <label className="block space-y-1.5">
+            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#9d7b58]">
+              Nota de temporada
+            </span>
+            <textarea
+              rows={2}
+              value={tariffInfo.seasonalNote}
+              onChange={(event) => onChangeTariffInfo("seasonalNote", event.target.value)}
+              className="w-full rounded-xl border border-[#d9cdb6] bg-[#fffdf8] px-3 py-2.5 text-sm outline-none ring-[#6c1710] transition focus:ring-2"
+            />
+          </label>
+          <label className="block space-y-1.5">
+            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#9d7b58]">
+              Nota de vigencia
+            </span>
+            <textarea
+              rows={2}
+              value={tariffInfo.validityNote}
+              onChange={(event) => onChangeTariffInfo("validityNote", event.target.value)}
+              className="w-full rounded-xl border border-[#d9cdb6] bg-[#fffdf8] px-3 py-2.5 text-sm outline-none ring-[#6c1710] transition focus:ring-2"
+            />
+          </label>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#9d7b58]">
+                Notas adicionales
+              </span>
+              <button
+                type="button"
+                onClick={onAddExtraNote}
+                disabled={savingTariffInfo || tariffInfo.extraNotes.length >= 8}
+                className="rounded-full border border-[#6c1710] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-[#6c1710] transition hover:bg-[#6c1710] hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                Agregar nota
+              </button>
+            </div>
+            {tariffInfo.extraNotes.map((note, index) => (
+              <div key={`extra-note-${index}`} className="flex items-start gap-2">
+                <textarea
+                  rows={2}
+                  value={note}
+                  onChange={(event) => onChangeExtraNote(index, event.target.value)}
+                  className="w-full rounded-xl border border-[#d9cdb6] bg-[#fffdf8] px-3 py-2.5 text-sm outline-none ring-[#6c1710] transition focus:ring-2"
+                />
+                <button
+                  type="button"
+                  onClick={() => onRemoveExtraNote(index)}
+                  disabled={savingTariffInfo}
+                  className="mt-1 rounded-full border border-red-300 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-red-700 transition hover:bg-red-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  Quitar
+                </button>
+              </div>
+            ))}
+          </div>
+          <div className="pt-1">
+            <button
+              type="button"
+              onClick={saveTariffInfo}
+              disabled={savingTariffInfo}
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-[#6c1710] px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-[#6c1710] transition hover:bg-[#6c1710] hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {savingTariffInfo ? (
+                <>
+                  <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-[#6c1710] border-t-transparent" />
+                  Guardando...
+                </>
+              ) : (
+                "Guardar bloque"
+              )}
+            </button>
+          </div>
+        </div>
+      </article>
       <div className="pointer-events-none fixed right-4 top-20 z-50 md:right-8">
         <AnimatePresence mode="wait">
           {toast && (

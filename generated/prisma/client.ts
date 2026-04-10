@@ -61,3 +61,8 @@ export type RoomRate = Prisma.RoomRateModel
  * 
  */
 export type AuditLog = Prisma.AuditLogModel
+/**
+ * Model TariffInfo
+ * 
+ */
+export type TariffInfo = Prisma.TariffInfoModel

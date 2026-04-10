@@ -387,7 +387,8 @@ export const ModelName = {
   AdminUser: 'AdminUser',
   RoomType: 'RoomType',
   RoomRate: 'RoomRate',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  TariffInfo: 'TariffInfo'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -403,7 +404,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "adminUser" | "roomType" | "roomRate" | "auditLog"
+    modelProps: "adminUser" | "roomType" | "roomRate" | "auditLog" | "tariffInfo"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -671,6 +672,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TariffInfo: {
+      payload: Prisma.$TariffInfoPayload<ExtArgs>
+      fields: Prisma.TariffInfoFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TariffInfoFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TariffInfoPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TariffInfoFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TariffInfoPayload>
+        }
+        findFirst: {
+          args: Prisma.TariffInfoFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TariffInfoPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TariffInfoFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TariffInfoPayload>
+        }
+        findMany: {
+          args: Prisma.TariffInfoFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TariffInfoPayload>[]
+        }
+        create: {
+          args: Prisma.TariffInfoCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TariffInfoPayload>
+        }
+        createMany: {
+          args: Prisma.TariffInfoCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.TariffInfoDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TariffInfoPayload>
+        }
+        update: {
+          args: Prisma.TariffInfoUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TariffInfoPayload>
+        }
+        deleteMany: {
+          args: Prisma.TariffInfoDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TariffInfoUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.TariffInfoUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TariffInfoPayload>
+        }
+        aggregate: {
+          args: Prisma.TariffInfoAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTariffInfo>
+        }
+        groupBy: {
+          args: Prisma.TariffInfoGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TariffInfoGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TariffInfoCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TariffInfoCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -764,6 +831,19 @@ export const AuditLogScalarFieldEnum = {
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
+export const TariffInfoScalarFieldEnum = {
+  id: 'id',
+  parkingNote: 'parkingNote',
+  seasonalNote: 'seasonalNote',
+  validityNote: 'validityNote',
+  extraNotes: 'extraNotes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TariffInfoScalarFieldEnum = (typeof TariffInfoScalarFieldEnum)[keyof typeof TariffInfoScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -838,6 +918,15 @@ export const AuditLogOrderByRelevanceFieldEnum = {
 } as const
 
 export type AuditLogOrderByRelevanceFieldEnum = (typeof AuditLogOrderByRelevanceFieldEnum)[keyof typeof AuditLogOrderByRelevanceFieldEnum]
+
+
+export const TariffInfoOrderByRelevanceFieldEnum = {
+  parkingNote: 'parkingNote',
+  seasonalNote: 'seasonalNote',
+  validityNote: 'validityNote'
+} as const
+
+export type TariffInfoOrderByRelevanceFieldEnum = (typeof TariffInfoOrderByRelevanceFieldEnum)[keyof typeof TariffInfoOrderByRelevanceFieldEnum]
 
 
 
@@ -986,6 +1075,7 @@ export type GlobalOmitConfig = {
   roomType?: Prisma.RoomTypeOmit
   roomRate?: Prisma.RoomRateOmit
   auditLog?: Prisma.AuditLogOmit
+  tariffInfo?: Prisma.TariffInfoOmit
 }
 
 /* Types for Logging */
