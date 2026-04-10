@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 const WHATSAPP_NUMBER =
-  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5493876138620";
+  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5493874029160";
 
 const BENEFICIOS = [
   {

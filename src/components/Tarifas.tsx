@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 
 const WHATSAPP_NUMBER =
-  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5493876138620";
+  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5493874029160";
 
 type PrecioItem = {
   personas: number;

@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 const WHATSAPP_NUMBER =
-  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5493876138620";
+  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5493874029160";
 
 const SERVICIOS = [
   {
@@ -67,7 +67,7 @@ const SERVICIOS_HABITACIONES = [
   },
   {
     icon: Wifi,
-    label: "WiFi rápido gratis",
+    label: "WiFi rápido",
     detail: "Conexión estable para trabajar, estudiar o entretenerte durante toda la estadía.",
   },
   {
@@ -135,7 +135,7 @@ export default function Servicios() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.35 }}
               transition={{ duration: 0.55, delay: index * 0.06, ease: "easeOut" }}
-              className="rounded-2xl border border-[#e8d9c0] bg-white p-6 shadow-sm"
+              className="rounded-2xl border border-[#e8d9c0] bg-white p-6 shadow-sm hover:border-[#FCB040] transition-colors duration-200"
             >
               <div className="mb-4 inline-flex rounded-full bg-[#f5ecd7] p-2.5 text-black">
                 <servicio.icon size={18} />
