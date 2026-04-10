@@ -7,7 +7,7 @@ import {
   BadgeCheck,
   Building2,
   CalendarCheck,
-  Clock,
+  Car,
   FileText,
   MessageCircle,
   Users,
@@ -28,13 +28,13 @@ const BENEFICIOS = [
     icon: CalendarCheck,
     titulo: "Estadías prolongadas",
     descripcion:
-      "Tarifas diferenciadas. Cuanto más tiempo, mejor el precio.",
+      "Tarifas diferenciadas. Coordinamos horarios de ingreso y egreso.",
   },
   {
-    icon: Clock,
-    titulo: "Check-in flexible",
+    icon: Car,
+    titulo: "Cochera privada",
     descripcion:
-      "Coordinamos horarios de ingreso y egreso",
+      "Contamos con cochera privada cubierta para tus vehículos o los de tu equipo.",
   },
   {
     icon: Users,
