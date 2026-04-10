@@ -84,7 +84,7 @@ export default function Contacto() {
                   href={whatsappHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex w-full items-center justify-center rounded-full border border-[#8d2c16] px-6 py-4 text-sm font-medium uppercase tracking-[0.08em] text-[#8d2c16] transition hover:bg-[#8d2c16] hover:text-white"
+                  className="inline-flex w-full items-center justify-center rounded-full border border-[#6c1710] px-6 py-4 text-sm font-medium uppercase tracking-wide text-[#6c1710] transition hover:bg-[#6c1710] hover:text-white"
                 >
                   Consultar por WhatsApp
                 </Link>

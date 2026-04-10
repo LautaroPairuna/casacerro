@@ -391,7 +391,7 @@ export default function Habitaciones() {
                     <button
                         type="button"
                         onClick={() => setSelectedRoom(room)}
-                        className="mt-6 inline-flex items-center justify-center rounded-full border border-[#8d2c16] px-6 py-3 text-sm font-medium uppercase tracking-[0.08em] text-[#8d2c16] transition hover:bg-[#8d2c16] hover:text-white"
+                        className="mt-6 inline-flex items-center justify-center rounded-full border border-[#6c1710] px-6 py-3 text-sm font-medium uppercase tracking-wide text-[#6c1710] transition hover:bg-[#6c1710] hover:text-white"
                     >
                         Ver más
                     </button>
