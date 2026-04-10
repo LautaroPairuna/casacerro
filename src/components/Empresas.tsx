@@ -34,7 +34,7 @@ const BENEFICIOS = [
     icon: Car,
     titulo: "Cochera privada",
     descripcion:
-      "Contamos con cochera privada cubierta para tus vehículos o los de tu equipo.",
+      "Contamos con cochera privada y segura para tus vehículos o los de tu equipo.",
   },
   {
     icon: Users,

@@ -32,25 +32,25 @@ export default function Nosotros() {
             className="xl:col-span-4"
           >
             <div className="h-full rounded-4xl bg-[#f5ecd7] p-8 shadow-sm md:p-10">
-              <p className="text-base leading-8 text-neutral-700 md:text-lg">
-                A 50 metros del Shopping Alto Noa, <strong>CasaCerro</strong> le
-                ofrece 7 apartamentos espaciosos, muy cómodos y con todos los
-                servicios para una estadía tranquila, segura y agradable.
-              </p>
+            <p className="text-base leading-8 text-neutral-700 md:text-lg">
+            A 50 metros del Shopping Alto Noa, <strong>CasaCerro</strong> le
+            ofrece 7 apartamentos espaciosos, muy cómodos, con cochera privada y segura, y todos los
+            servicios para una estadía tranquila y agradable.
+            </p>
 
-              <p className="mt-6 text-base leading-8 text-neutral-700 md:text-lg">
-                Nuestro objetivo es brindar un espacio acogedor para quienes
-                desean disfrutar de Salta con comodidad, buena ubicación y una
-                atención cercana, ya sea en una visita corta o durante varios
-                días.
-              </p>
+            <p className="mt-6 text-base leading-8 text-neutral-700 md:text-lg">
+            Nuestro objetivo es brindar un espacio acogedor para quienes
+            desean disfrutar de Salta con comodidad, buena ubicación y una
+            atención cercana, ya sea en una visita corta o durante varios
+            días.
+            </p>
 
-              <p className="mt-6 text-base leading-8 text-neutral-700 md:text-lg">
-                En CasaCerro combinamos calidez, confort y practicidad para que
-                cada huésped encuentre un lugar donde descansar, sentirse bien
-                recibido y vivir una experiencia simple y memorable desde el
-                primer momento.
-              </p>
+            <p className="mt-6 text-base leading-8 text-neutral-700 md:text-lg">
+            En CasaCerro combinamos calidez, confort y practicidad para que
+            cada huésped encuentre un lugar donde descansar, sentirse bien
+            recibido y vivir una experiencia simple y memorable desde el
+            primer momento.
+            </p>
             </div>
           </motion.div>
 
