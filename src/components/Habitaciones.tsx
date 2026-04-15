@@ -30,7 +30,6 @@ type Amenity = {
 type RoomCategory = {
   id: string;
   name: string;
-  quantityLabel: string;
   capacityLabel: string;
   bedsLabel: string;
   cardImage: string;
@@ -55,7 +54,6 @@ const ROOM_CATEGORIES: RoomCategory[] = [
   {
     id: "monoambiente-single-doble",
     name: "Single / Doble",
-    quantityLabel: "2 habitaciones",
     capacityLabel: "1 o 2 huéspedes",
     bedsLabel: "Configuración single / doble",
     cardImage: "/image/habitaciones/monoambiente-single-doble.jpeg",
@@ -72,7 +70,6 @@ const ROOM_CATEGORIES: RoomCategory[] = [
   {
     id: "monoambiente-triple",
     name: "Triple",
-    quantityLabel: "1 habitacion",
     capacityLabel: "Hasta 3 huéspedes",
     bedsLabel: "Configuración triple",
     cardImage: "/image/habitaciones/monoambiente-triple.jpeg",
@@ -88,8 +85,7 @@ const ROOM_CATEGORIES: RoomCategory[] = [
   },
   {
     id: "monoambiente-4-personas",
-    name: "Monoambientes",
-    quantityLabel: "3 habitaciones",
+    name: "Cuádruple",
     capacityLabel: "Hasta 4 huéspedes",
     bedsLabel: "Configuración para 4 personas",
     cardImage: "/image/habitaciones/dos-ambientes-4-personas.jpeg",
@@ -106,7 +102,6 @@ const ROOM_CATEGORIES: RoomCategory[] = [
   {
     id: "dos-ambientes-4-personas",
     name: "Dos Ambientes",
-    quantityLabel: "1 habitacion",
     capacityLabel: "Hasta 4 huéspedes",
     bedsLabel: "Ambientes separados",
     cardImage: "/image/habitaciones/monoambiente-4-personas.jpeg",
@@ -232,7 +227,6 @@ function RoomModal({ room, onClose }: RoomModalProps) {
                 <div className="mt-6 space-y-3 text-sm uppercase tracking-[0.16em] text-neutral-500 md:text-base">
                   <div className="flex items-center gap-2">
                     <Home className="h-4 w-4" />
-                    <span>{room.quantityLabel}</span>
                   </div>
 
                   <div className="flex items-center gap-2">
@@ -371,9 +365,6 @@ export default function Habitaciones() {
 
                 <div className="bg-[#f5ecd7] p-6 md:p-8">
                     <div className="flex flex-row flex-wrap gap-2">
-                        <span className="inline-flex items-center rounded-full border border-[#d8c7a8] bg-white/80 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.12em] text-neutral-600">
-                        {room.quantityLabel}
-                        </span>
 
                         <span className="inline-flex items-center rounded-full border border-[#d8c7a8] bg-white/80 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.12em] text-neutral-600">
                         {room.capacityLabel}
@@ -391,7 +382,7 @@ export default function Habitaciones() {
                     <button
                         type="button"
                         onClick={() => setSelectedRoom(room)}
-                        className="mt-6 inline-flex items-center justify-center rounded-full border border-[#8d2c16] px-6 py-3 text-sm font-medium uppercase tracking-[0.08em] text-[#8d2c16] transition hover:bg-[#8d2c16] hover:text-white"
+                        className="mt-6 inline-flex items-center justify-center rounded-full border border-[#6c1710] px-6 py-3 text-sm font-medium uppercase tracking-wide text-[#6c1710] transition hover:bg-[#6c1710] hover:text-white"
                     >
                         Ver más
                     </button>
@@ -399,6 +390,46 @@ export default function Habitaciones() {
             </motion.article>
           ))}
         </div>
+
+        {/* Servicios en habitaciones */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="mt-8"
+        >
+        <div className="rounded-2xl border border-[#e8d9c0] bg-[#f5ecd7]/80 px-6 py-6">
+          <h3 className="text-lg font-semibold uppercase tracking-[0.12em] text-[#20160a]">
+            Servicios en habitaciones
+          </h3>
+          <p className="mt-2 text-sm leading-7 text-neutral-600">
+            Todas las categorías de habitaciones incluyen servicios pensados para que llegues y te
+            instales sin preocupaciones. De forma orientativa, no necesitás traer ropa de cama ni
+            toallas para una estadía normal.
+          </p>
+          <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { icon: Sparkles, label: "Ropa de cama y ropa de baño incluida", detail: "Cada apartamento se entrega listo para usar, sin necesidad de traer blanquería." },
+              { icon: Wifi, label: "WiFi rápido", detail: "Conexión estable para trabajar, estudiar o entretenerte durante toda la estadía." },
+              { icon: Snowflake, label: "Aire acondicionado frío / calor", detail: "Ambiente climatizado para mantener el confort en cualquier época del año." },
+              { icon: Coffee, label: "Kitchenette equipada", detail: "Espacio funcional para comidas simples, desayunos y uso diario." },
+              { icon: Tv, label: "TV led / cable", detail: "Opciones de entretenimiento dentro del apartamento para momentos de descanso." },
+              { icon: Bath, label: "Baño privado completo", detail: "Cada unidad cuenta con su propio baño para mayor comodidad y privacidad." },
+              { icon: Shield, label: "Caja fuerte", detail: "Resguardo adicional para documentación y pertenencias personales." },
+              { icon: CarFront, label: "Cochera privada", detail: "Disponibilidad sujeta a ocupación para facilitar tu llegada en vehículo." },
+            ].map((item) => (
+              <div key={item.label} className="rounded-xl border border-[#e8d9c0] bg-white px-3 py-2.5">
+                <div className="flex items-center gap-2.5">
+                  <item.icon size={16} className="shrink-0 text-black" />
+                  <span className="text-sm font-medium text-neutral-800">{item.label}</span>
+                </div>
+                <p className="mt-1.5 pl-6 text-xs leading-6 text-neutral-600">{item.detail}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        </motion.div>
       </div>
 
       {selectedRoom && (

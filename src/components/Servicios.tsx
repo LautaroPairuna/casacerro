@@ -4,21 +4,16 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   BadgeCheck,
-  Bath,
   Car,
   Clock,
-  Coffee,
   MessageCircle,
   Shield,
-  Snowflake,
-  Sparkles,
-  Tv,
   Users,
   Wifi,
 } from "lucide-react";
 
 const WHATSAPP_NUMBER =
-  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5493876138620";
+  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5493874029160";
 
 const SERVICIOS = [
   {
@@ -29,9 +24,9 @@ const SERVICIOS = [
   },
   {
     icon: Car,
-    titulo: "Cochera sujeta a disponibilidad",
+    titulo: "Cochera",
     descripcion:
-      "Espacio de estacionamiento para mayor comodidad durante tu estadía.",
+      "Espacio de estacionamiento para mayor comodidad durante tu estadía, sujeta a disponibilidad.",
   },
   {
     icon: Clock,
@@ -52,55 +47,13 @@ const SERVICIOS = [
       "Configuraciones de alojamiento para distintas cantidades de personas.",
   },
   {
-    icon: Sparkles,
-    titulo: "Apartamentos listos para usar",
+    icon: Shield,
+    titulo: "Seguridad",
     descripcion:
-      "Incluyen ropa de cama y toallas para que puedas instalarte sin preparativos adicionales.",
+      "Rapidez y facilidad en el check-in a través de códigos, cámaras de seguridad.",
   },
 ];
 
-const SERVICIOS_HABITACIONES = [
-  {
-    icon: Sparkles,
-    label: "Ropa de cama y toallas incluidas",
-    detail: "Cada apartamento se entrega listo para usar, sin necesidad de traer blanquería.",
-  },
-  {
-    icon: Wifi,
-    label: "WiFi rápido gratis",
-    detail: "Conexión estable para trabajar, estudiar o entretenerte durante toda la estadía.",
-  },
-  {
-    icon: Snowflake,
-    label: "Aire acondicionado frío / calor",
-    detail: "Ambiente climatizado para mantener el confort en cualquier época del año.",
-  },
-  {
-    icon: Coffee,
-    label: "Kitchenette equipada",
-    detail: "Espacio funcional para comidas simples, desayunos y uso diario.",
-  },
-  {
-    icon: Tv,
-    label: "TV led / cable",
-    detail: "Opciones de entretenimiento dentro del apartamento para momentos de descanso.",
-  },
-  {
-    icon: Bath,
-    label: "Baño privado completo",
-    detail: "Cada unidad cuenta con su propio baño para mayor comodidad y privacidad.",
-  },
-  {
-    icon: Shield,
-    label: "Caja fuerte",
-    detail: "Resguardo adicional para documentación y pertenencias personales.",
-  },
-  {
-    icon: Car,
-    label: "Cochera privada",
-    detail: "Disponibilidad sujeta a ocupación para facilitar tu llegada en vehículo.",
-  },
-];
 
 export default function Servicios() {
   const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
@@ -135,7 +88,7 @@ export default function Servicios() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.35 }}
               transition={{ duration: 0.55, delay: index * 0.06, ease: "easeOut" }}
-              className="rounded-2xl border border-[#e8d9c0] bg-white p-6 shadow-sm"
+              className="rounded-2xl border border-[#e8d9c0] bg-white p-6 shadow-sm hover:border-[#FCB040] transition-colors duration-200"
             >
               <div className="mb-4 inline-flex rounded-full bg-[#f5ecd7] p-2.5 text-black">
                 <servicio.icon size={18} />
@@ -145,37 +98,6 @@ export default function Servicios() {
             </motion.article>
           ))}
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: 0.5, delay: 0.08, ease: "easeOut" }}
-          className="mt-7 rounded-2xl border border-[#e8d9c0] bg-[#f5ecd7]/80 px-6 py-6"
-        >
-          <h3 className="text-lg font-semibold uppercase tracking-[0.12em] text-[#20160a]">
-            Servicios en habitaciones
-          </h3>
-          <p className="mt-2 text-sm leading-7 text-neutral-600">
-            Todas las categorías de habitaciones incluyen servicios pensados para que llegues y te
-            instales sin preocupaciones. De forma orientativa, no necesitás traer ropa de cama ni
-            toallas para una estadía normal.
-          </p>
-          <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {SERVICIOS_HABITACIONES.map((item) => (
-              <div
-                key={item.label}
-                className="rounded-xl border border-[#e8d9c0] bg-white px-3 py-2.5"
-              >
-                <div className="flex items-center gap-2.5">
-                  <item.icon size={16} className="shrink-0 text-black" />
-                  <span className="text-sm font-medium text-neutral-800">{item.label}</span>
-                </div>
-                <p className="mt-1.5 pl-6 text-xs leading-6 text-neutral-600">{item.detail}</p>
-              </div>
-            ))}
-          </div>
-        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 16 }}

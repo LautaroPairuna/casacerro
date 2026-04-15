@@ -29,7 +29,7 @@ const HERO_IMAGES: HeroImage[] = [
 ];
 
 const WHATSAPP_NUMBER =
-  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5493876138620";
+  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5493874029160";
 
 export default function Hero() {
   const [selectedIndex, setSelectedIndex] = useState(0);
