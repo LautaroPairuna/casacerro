@@ -105,7 +105,10 @@ export async function ensureAdminBootstrap(): Promise<void> {
 
   const existingAdmin = await prisma.adminUser.findUnique({
     where: { email: adminEmail },
-    select: { id: true },
+    select: {
+      id: true,
+      passwordHash: true,
+    },
   });
 
   if (!existingAdmin) {
@@ -125,7 +128,29 @@ export async function ensureAdminBootstrap(): Promise<void> {
         nextData: { correo: adminEmail },
       },
     });
+    return;
   }
+
+  const passwordMatches = await bcrypt.compare(adminPassword, existingAdmin.passwordHash);
+  if (passwordMatches) {
+    return;
+  }
+
+  const nextPasswordHash = await bcrypt.hash(adminPassword, 12);
+  await prisma.adminUser.update({
+    where: { id: existingAdmin.id },
+    data: { passwordHash: nextPasswordHash },
+  });
+  await prisma.auditLog.create({
+    data: {
+      actorEmail: adminEmail,
+      action: "ACTUALIZAR",
+      entity: "usuario_administrador",
+      entityId: adminEmail,
+      previousData: { cambio: "credenciales" },
+      nextData: { cambio: "credenciales" },
+    },
+  });
 }
 
 export async function ensureTariffBootstrap(): Promise<void> {
