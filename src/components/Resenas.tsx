@@ -87,7 +87,7 @@ async function fetchGoogleReviews(): Promise<Review[]> {
 
 function PlatformBadge({ platform }: { platform: "google" | "booking" }) {
   const data = {
-    google: { label: "Google", score: "4.9", outOf: "/ 5", count: "38 reseñas" },
+    google: { label: "Google", score: "4.8", outOf: "/ 5", count: "179 reseñas" },
     booking: { label: "Booking.com", score: "9.7", outOf: "/ 10", count: "" },
   }[platform];
 
