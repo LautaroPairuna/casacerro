@@ -234,21 +234,21 @@ export default function Tarifas() {
           transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
           className="mt-7 rounded-2xl border border-[#e8d9c0] bg-[#f5ecd7]/80 px-6 py-5 space-y-3"
         >
-          <div className="flex items-start gap-2.5 text-sm text-neutral-600">
-            <Car size={15} className="mt-0.5 shrink-0 text-[#A87B51]" />
+          <div className="flex items-start gap-2.5 text-base font-bold text-[#6c1710]">
+            <Car size={15} className="mt-0.5 shrink-0 text-[#6c1710]" />
             <span>{tariffInfo.parkingNote}</span>
           </div>
-          <div className="flex items-start gap-2.5 text-sm text-neutral-600">
-            <Info size={15} className="mt-0.5 shrink-0 text-[#A87B51]" />
+          <div className="flex items-start gap-2.5 text-base font-bold text-[#6c1710]">
+            <Info size={15} className="mt-0.5 shrink-0 text-[#6c1710]" />
             <span>{tariffInfo.seasonalNote}</span>
           </div>
-          <div className="flex items-start gap-2.5 text-sm text-neutral-600">
-            <Info size={15} className="mt-0.5 shrink-0 text-[#A87B51]" />
+          <div className="flex items-start gap-2.5 text-base font-bold text-[#6c1710]">
+            <Info size={15} className="mt-0.5 shrink-0 text-[#6c1710]" />
             <span>{tariffInfo.validityNote}</span>
           </div>
           {tariffInfo.extraNotes.map((note, index) => (
-            <div key={`${note}-${index}`} className="flex items-start gap-2.5 text-sm text-neutral-600">
-              <Info size={15} className="mt-0.5 shrink-0 text-[#A87B51]" />
+            <div key={`${note}-${index}`} className="flex items-start gap-2.5 text-base font-bold text-[#6c1710]">
+              <Info size={15} className="mt-0.5 shrink-0 text-[#6c1710]" />
               <span>{note}</span>
             </div>
           ))}
