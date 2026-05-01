@@ -159,9 +159,6 @@ export default function Resenas() {
             Reseñas
           </h2>
           <div className="mt-5 mb-5 mx-auto w-32 h-0.5 bg-[#FCB040]" />
-          <p className="text-xs uppercase tracking-[0.3em] text-[#A87B51]">
-            Lo que dicen nuestros huéspedes
-          </p>
         </div>
 
         {/* Platform score badges */}
