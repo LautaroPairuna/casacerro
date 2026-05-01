@@ -23,22 +23,109 @@ function BookingIcon() {
 }
 
 const FALLBACK_REVIEWS: Review[] = [
-  { id: 1, platform: "google", score: 5, author: "María G.", date: "Febrero 2025", text: "Un lugar increíble para descansar. Todo limpio, cómodo y muy bien equipado. La atención fue impecable y el entorno es hermoso. Definitivamente volvemos." },
-  { id: 2, platform: "google", score: 5, author: "Carlos R.", date: "Enero 2025", text: "Superó todas nuestras expectativas. Silencioso, tranquilo y con todo lo necesario para disfrutar. La ubicación es perfecta para explorar la zona serrana." },
-  { id: 3, platform: "google", score: 5, author: "Sofía M.", date: "Diciembre 2024", text: "Un rincón mágico en las sierras. Las habitaciones son amplias, luminosas y tienen todo lo necesario. La familia que atiende el lugar es muy amable y atenta." },
-  { id: 4, platform: "google", score: 5, author: "Roberto F.", date: "Marzo 2025", text: "Excelente relación calidad-precio. El lugar está muy bien mantenido y la limpieza es impecable. Perfecto para desconectarse del ruido de la ciudad." },
-  { id: 5, platform: "google", score: 5, author: "Lucas T.", date: "Noviembre 2024", text: "Hermoso, tranquilo y muy cómodo. Ideal para una escapada en familia. Los chicos disfrutaron mucho el espacio y nosotros pudimos descansar de verdad." },
-  { id: 6, platform: "google", score: 5, author: "Valentina S.", date: "Febrero 2025", text: "Todo perfecto desde la llegada hasta la partida. El alojamiento supera las fotos: es aún más acogedor en persona. Ya reservamos para volver en invierno." },
-  { id: 7, platform: "google", score: 5, author: "Agustina P.", date: "Enero 2025", text: "El lugar es una joya. Tranquilidad total, naturaleza por todos lados y las instalaciones impecables. La atención personalizada hizo la diferencia." },
-  { id: 8, platform: "google", score: 5, author: "Martín D.", date: "Marzo 2025", text: "Sin dudas el mejor alojamiento que tuvimos en las sierras. El entorno es hermoso y el lugar está pensado para que realmente puedas descansar." },
+  {
+    id: 1,
+    platform: "google",
+    score: 5,
+    author: "Patricia A.",
+    date: "Hace 3 días",
+    text: "Excelente atención de los anfitriones y el servicio de alojamiento muy completo y confortable. Muy buena ubicación.",
+    tripTypes: ["Vacaciones", "Familiar"],
+    categoryScores: { habitaciones: 5, servicio: 5, ubicacion: 5 },
+    highlights: ["Vista increíble", "Tranquilo", "Buen precio"],
+    ownerResponse: {
+      text: "Mucho nos reconforta estimada Patricia, saber que se han sentido cómodos y a gusto con nosotros! Hasta pronto!",
+      date: "Hace 2 días",
+    },
+  },
+  {
+    id: 2,
+    platform: "google",
+    score: 5,
+    author: "María G.",
+    date: "Febrero 2025",
+    text: "Un lugar increíble para descansar. Todo limpio, cómodo y muy bien equipado. La atención fue impecable y el entorno es hermoso. Definitivamente volvemos.",
+    tripTypes: ["Vacaciones"],
+    highlights: ["Vista increíble", "Tranquilo", "Muy limpio"],
+    categoryScores: { habitaciones: 5, servicio: 5, ubicacion: 5 },
+  },
+  {
+    id: 3,
+    platform: "google",
+    score: 5,
+    author: "Carlos R.",
+    date: "Enero 2025",
+    text: "Superó todas nuestras expectativas. Silencioso, tranquilo y con todo lo necesario para disfrutar. La ubicación es perfecta para explorar la zona serrana.",
+    tripTypes: ["Vacaciones", "En pareja"],
+    highlights: ["Tranquilo", "Buen precio"],
+    categoryScores: { habitaciones: 5, servicio: 5, ubicacion: 5 },
+    ownerResponse: {
+      text: "Gracias Carlos! Nos alegra mucho que hayan podido disfrutar y descansar. Los esperamos de nuevo!",
+    },
+  },
+  {
+    id: 4,
+    platform: "google",
+    score: 5,
+    author: "Sofía M.",
+    date: "Diciembre 2024",
+    text: "Un rincón mágico en las sierras. Las habitaciones son amplias, luminosas y tienen todo lo necesario. La familia que atiende el lugar es muy amable y atenta.",
+    tripTypes: ["Familiar"],
+    highlights: ["Vista increíble", "Calidez y hospitalidad"],
+    categoryScores: { habitaciones: 5, servicio: 5 },
+  },
+  {
+    id: 5,
+    platform: "google",
+    score: 5,
+    author: "Roberto F.",
+    date: "Marzo 2025",
+    text: "Excelente relación calidad-precio. El lugar está muy bien mantenido y la limpieza es impecable. Perfecto para desconectarse del ruido de la ciudad.",
+    tripTypes: ["Vacaciones"],
+    highlights: ["Buen precio", "Tranquilo", "Muy limpio"],
+  },
+  {
+    id: 6,
+    platform: "google",
+    score: 5,
+    author: "Lucas T.",
+    date: "Noviembre 2024",
+    text: "Hermoso, tranquilo y muy cómodo. Ideal para una escapada en familia. Los chicos disfrutaron mucho el espacio y nosotros pudimos descansar de verdad.",
+    tripTypes: ["Familiar"],
+    highlights: ["Tranquilo", "Vista increíble"],
+    categoryScores: { habitaciones: 5, servicio: 5, ubicacion: 5 },
+  },
+  {
+    id: 7,
+    platform: "google",
+    score: 5,
+    author: "Valentina S.",
+    date: "Febrero 2025",
+    text: "Todo perfecto desde la llegada hasta la partida. El alojamiento supera las fotos: es aún más acogedor en persona. Ya reservamos para volver en invierno.",
+    tripTypes: ["Vacaciones", "En pareja"],
+    highlights: ["Vista increíble", "Buen precio", "Tranquilo"],
+    ownerResponse: {
+      text: "Qué alegría Valentina! Los esperamos con los brazos abiertos para el invierno. Va a ser muy lindo!",
+    },
+  },
+  {
+    id: 8,
+    platform: "google",
+    score: 5,
+    author: "Agustina P.",
+    date: "Enero 2025",
+    text: "El lugar es una joya. Tranquilidad total, naturaleza por todos lados y las instalaciones impecables. La atención personalizada hizo la diferencia.",
+    highlights: ["Calidez y hospitalidad", "Tranquilo"],
+    categoryScores: { servicio: 5, ubicacion: 5 },
+  },
 ];
 
 // ── Badge de puntaje ──────────────────────────────────────────────────────────
 
 function PlatformBadge({ platform }: { platform: "google" | "booking" }) {
   const data = {
-    google: { label: "Google", score: "4.8", outOf: "/ 5", count: "179 reseñas" },
-    booking: { label: "Booking.com", score: "9.7", outOf: "/ 10", count: "" },
+    google: { label: "Google", score: "4.8", outOf: "/ 5", count: "180 reseñas" },
+    booking: { label: "Booking.com", score: "9.3", outOf: "/ 10", count: "" },
   }[platform];
 
   return (
