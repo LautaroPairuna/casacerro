@@ -61,8 +61,18 @@ type Review = {
   author: string;
   date: string;
   text: string;
-  /** Optional room type label */
   room?: string;
+  tripTypes?: string[];
+  highlights?: string[];
+  categoryScores?: {
+    habitaciones?: number;
+    servicio?: number;
+    ubicacion?: number;
+  };
+  ownerResponse?: {
+    text: string;
+    date?: string;
+  };
 };
 
 const REVIEWS: Review[] = [
@@ -70,9 +80,16 @@ const REVIEWS: Review[] = [
     id: 1,
     platform: "google",
     score: 5,
-    author: "María G.",
-    date: "Febrero 2025",
-    text: "Un lugar increíble para descansar. Todo limpio, cómodo y muy bien equipado. La atención fue impecable y el entorno es hermoso. Definitivamente volvemos.",
+    author: "Patricia A.",
+    date: "Hace 3 días",
+    text: "Excelente atención de los anfitriones y el servicio de alojamiento muy completo y confortable. Muy buena ubicación.",
+    tripTypes: ["Vacaciones", "Familiar"],
+    categoryScores: { habitaciones: 5, servicio: 5, ubicacion: 5 },
+    highlights: ["Vista increíble", "Tranquilo", "Buen precio"],
+    ownerResponse: {
+      text: "Mucho nos reconforta estimada Patricia, saber que se han sentido cómodos y a gusto con nosotros! Hasta pronto!",
+      date: "Hace 2 días",
+    },
   },
   {
     id: 2,
@@ -90,6 +107,9 @@ const REVIEWS: Review[] = [
     author: "Sofía M.",
     date: "Diciembre 2024",
     text: "Un rincón mágico en las sierras. Las habitaciones son amplias, luminosas y tienen todo lo necesario. La familia que atiende el lugar es muy amable y atenta.",
+    tripTypes: ["Familiar"],
+    highlights: ["Vista increíble", "Calidez y hospitalidad"],
+    categoryScores: { habitaciones: 5, servicio: 5 },
   },
   {
     id: 4,
@@ -107,6 +127,9 @@ const REVIEWS: Review[] = [
     author: "Lucas T.",
     date: "Noviembre 2024",
     text: "Hermoso, tranquilo y muy cómodo. Ideal para una escapada en familia. Los chicos disfrutaron mucho el espacio y nosotros pudimos descansar de verdad.",
+    tripTypes: ["Familiar"],
+    highlights: ["Tranquilo", "Vista increíble"],
+    categoryScores: { habitaciones: 5, servicio: 5, ubicacion: 5 },
   },
   {
     id: 6,
@@ -116,6 +139,17 @@ const REVIEWS: Review[] = [
     date: "Febrero 2025",
     text: "Todo perfecto desde la llegada hasta la partida. El alojamiento supera las fotos: es aún más acogedor en persona. Ya reservamos para volver en invierno.",
     room: "Dos Ambientes",
+  },
+  {
+    id: 7,
+    platform: "google",
+    score: 5,
+    author: "María G.",
+    date: "Febrero 2025",
+    text: "Un lugar increíble para descansar. Todo limpio, cómodo y muy bien equipado. La atención fue impecable y el entorno es hermoso. Definitivamente volvemos.",
+    tripTypes: ["Vacaciones"],
+    highlights: ["Vista increíble", "Tranquilo", "Muy limpio"],
+    categoryScores: { habitaciones: 5, servicio: 5, ubicacion: 5 },
   },
 ];
 
@@ -148,13 +182,30 @@ function StarRow({ score }: { score: number }) {
   );
 }
 
+function CategoryScore({ label, score }: { label: string; score: number }) {
+  return (
+    <div className="flex items-center gap-1.5">
+      <span className="text-[10px] text-neutral-600">{label}</span>
+      <div className="flex-1 h-1 rounded-full bg-[#f0e6d3] overflow-hidden min-w-[36px]">
+        <div
+          className="h-full rounded-full bg-[#FCB040]"
+          style={{ width: `${(score / 5) * 100}%` }}
+        />
+      </div>
+      <span className="text-[10px] font-medium text-[#6c1710]">{score.toFixed(1)}</span>
+    </div>
+  );
+}
+
 function ReviewCard({ review }: { review: Review }) {
   const isGoogle = review.platform === "google";
+  const { categoryScores, highlights, tripTypes, ownerResponse } = review;
+  const hasCategoryScores = categoryScores && Object.keys(categoryScores).length > 0;
 
   return (
     <div className="h-full rounded-2xl border border-[#e8d9c0] bg-white flex flex-col p-6 shadow-sm select-none">
       {/* Platform + score header */}
-      <div className="flex items-start justify-between gap-3 mb-4">
+      <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-2">
           {isGoogle ? <GoogleIcon /> : <BookingIcon />}
           <span className="text-xs font-medium uppercase tracking-wide text-neutral-500">
@@ -173,6 +224,20 @@ function ReviewCard({ review }: { review: Review }) {
         </div>
       </div>
 
+      {/* Trip type badges */}
+      {tripTypes && tripTypes.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 mb-3">
+          {tripTypes.map((t) => (
+            <span
+              key={t}
+              className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wide bg-[#f5ecd7] text-[#A87B51] border border-[#e8d9c0]"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+      )}
+
       {/* Quote */}
       <div className="relative flex-1">
         <Quote
@@ -180,13 +245,42 @@ function ReviewCard({ review }: { review: Review }) {
           className="absolute -top-1 -left-1 text-[#FCB040]/40"
           strokeWidth={1.5}
         />
-        <p className="text-sm text-neutral-600 leading-relaxed pl-6 italic">
+        <p className="text-sm text-neutral-600 leading-relaxed pl-6 italic line-clamp-5">
           &quot;{review.text}&quot;
         </p>
       </div>
 
+      {/* Highlights */}
+      {highlights && highlights.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 mt-3">
+          {highlights.slice(0, 4).map((h) => (
+            <span
+              key={h}
+              className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] bg-neutral-50 text-neutral-500 border border-neutral-200"
+            >
+              {h}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Category scores */}
+      {hasCategoryScores && (
+        <div className="mt-3 space-y-1.5">
+          {categoryScores!.habitaciones !== undefined && (
+            <CategoryScore label="Habitaciones" score={categoryScores!.habitaciones!} />
+          )}
+          {categoryScores!.servicio !== undefined && (
+            <CategoryScore label="Servicio" score={categoryScores!.servicio!} />
+          )}
+          {categoryScores!.ubicacion !== undefined && (
+            <CategoryScore label="Ubicación" score={categoryScores!.ubicacion!} />
+          )}
+        </div>
+      )}
+
       {/* Footer */}
-      <div className="mt-5 pt-4 border-t border-[#e8d9c0] flex items-center justify-between gap-2">
+      <div className="mt-4 pt-4 border-t border-[#e8d9c0] flex items-center justify-between gap-2">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-full bg-[#f5ecd7] border border-[#e8d9c0] flex items-center justify-center text-[11px] font-semibold text-[#6c1710] uppercase shrink-0">
             {review.author.slice(0, 2)}
@@ -204,6 +298,18 @@ function ReviewCard({ review }: { review: Review }) {
         </div>
         <span className="text-[11px] text-neutral-400 shrink-0">{review.date}</span>
       </div>
+
+      {/* Owner response */}
+      {ownerResponse && (
+        <div className="mt-3 rounded-xl bg-[#faf6ef] border border-[#e8d9c0] px-3 py-2.5">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-[#A87B51] mb-1">
+            Respuesta del propietario{ownerResponse.date ? ` · ${ownerResponse.date}` : ""}
+          </p>
+          <p className="text-[11px] text-neutral-600 leading-snug line-clamp-3">
+            {ownerResponse.text}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
@@ -216,7 +322,7 @@ function PlatformBadge({ platform }: { platform: Platform }) {
         {platform === "google" ? <GoogleIcon /> : <BookingIcon />}
       </div>
       <div>
-        <p className="text-[10px] uppercase tracking-[0.2em] text-neutral-400 mb-0.5">
+        <p className="text-[10px] uppercase tracking-[0.2em] text-neutral-600 mb-0.5">
           {data.label}
         </p>
         <div className="flex items-baseline gap-1">
@@ -262,9 +368,6 @@ export default function Resenas() {
             Reseñas
           </h2>
           <div className="mt-5 mb-5 mx-auto w-32 h-0.5 bg-[#FCB040]" />
-          <p className="text-xs uppercase tracking-[0.3em] text-[#A87B51]">
-            Lo que dicen nuestros huéspedes
-          </p>
         </motion.div>
 
         {/* Platform score badges */}
@@ -286,7 +389,6 @@ export default function Resenas() {
           viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.6, delay: 0.12, ease: "easeOut" }}
         >
-          {/* Viewport */}
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex gap-5 -ml-1 pl-1">
               {REVIEWS.map((review) => (
@@ -300,7 +402,6 @@ export default function Resenas() {
             </div>
           </div>
 
-          {/* Navigation */}
           <div className="flex items-center justify-center gap-4 mt-8">
             <button
               onClick={scrollPrev}

@@ -40,8 +40,10 @@ export default function Header() {
     event.preventDefault();
     const target = document.querySelector(href);
     if (target) {
-      const headerHeight = 88;
-      const top = target.getBoundingClientRect().top + window.scrollY - headerHeight;
+      const nav = document.querySelector("nav");
+      const headerHeight = nav ? nav.getBoundingClientRect().height : 80;
+      const extraOffset: Record<string, number> = { "#resenas": 55, "#nosotros": 20 };
+      const top = target.getBoundingClientRect().top + window.scrollY - headerHeight + (extraOffset[href] ?? 0);
       window.scrollTo({ top, behavior: "smooth" });
       window.history.pushState(null, "", href);
     }
