@@ -22,8 +22,6 @@ function BookingIcon() {
   );
 }
 
-// ── Fallback reviews (se usan si no hay credenciales de Google) ───────────────
-
 const FALLBACK_REVIEWS: Review[] = [
   { id: 1, platform: "google", score: 5, author: "María G.", date: "Febrero 2025", text: "Un lugar increíble para descansar. Todo limpio, cómodo y muy bien equipado. La atención fue impecable y el entorno es hermoso. Definitivamente volvemos." },
   { id: 2, platform: "google", score: 5, author: "Carlos R.", date: "Enero 2025", text: "Superó todas nuestras expectativas. Silencioso, tranquilo y con todo lo necesario para disfrutar. La ubicación es perfecta para explorar la zona serrana." },
@@ -34,54 +32,6 @@ const FALLBACK_REVIEWS: Review[] = [
   { id: 7, platform: "google", score: 5, author: "Agustina P.", date: "Enero 2025", text: "El lugar es una joya. Tranquilidad total, naturaleza por todos lados y las instalaciones impecables. La atención personalizada hizo la diferencia." },
   { id: 8, platform: "google", score: 5, author: "Martín D.", date: "Marzo 2025", text: "Sin dudas el mejor alojamiento que tuvimos en las sierras. El entorno es hermoso y el lugar está pensado para que realmente puedas descansar." },
 ];
-
-// ── Fetch reviews desde Google Places API ────────────────────────────────────
-
-type GoogleReview = {
-  rating: number;
-  authorAttribution: { displayName: string };
-  relativePublishTimeDescription: string;
-  text?: { text: string };
-};
-
-async function fetchGoogleReviews(): Promise<Review[]> {
-  const apiKey = process.env.GOOGLE_PLACES_API_KEY;
-  const placeId = process.env.GOOGLE_PLACE_ID;
-
-  if (!apiKey || apiKey === "TU_API_KEY_AQUI" || !placeId || placeId === "TU_PLACE_ID_AQUI") {
-    return [];
-  }
-
-  try {
-    const res = await fetch(
-      `https://places.googleapis.com/v1/places/${placeId}`,
-      {
-        headers: {
-          "X-Goog-Api-Key": apiKey,
-          "X-Goog-FieldMask": "reviews",
-        },
-        next: { revalidate: 86400 },
-      }
-    );
-    if (!res.ok) return [];
-
-    const data = await res.json();
-    const raw: GoogleReview[] = data.reviews ?? [];
-
-    return raw
-      .filter((r) => r.text?.text)
-      .map((r, i) => ({
-        id: i + 1,
-        platform: "google" as const,
-        score: r.rating,
-        author: r.authorAttribution.displayName,
-        date: r.relativePublishTimeDescription,
-        text: r.text!.text,
-      }));
-  } catch {
-    return [];
-  }
-}
 
 // ── Badge de puntaje ──────────────────────────────────────────────────────────
 
@@ -110,9 +60,8 @@ function PlatformBadge({ platform }: { platform: "google" | "booking" }) {
 
 // ── Main section ──────────────────────────────────────────────────────────────
 
-export default async function Resenas() {
-  const googleReviews = await fetchGoogleReviews();
-  const reviews = googleReviews.length > 0 ? googleReviews : FALLBACK_REVIEWS;
+export default function Resenas() {
+  const reviews = FALLBACK_REVIEWS;
 
   return (
     <section id="resenas" className="py-20 px-4 md:px-6 bg-(--resenas-bg)">
