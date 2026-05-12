@@ -61,21 +61,9 @@ function StarRow({ score }: { score: number }) {
   );
 }
 
-function CategoryScore({ label, score }: { label: string; score: number }) {
-  return (
-    <div className="flex items-center gap-1.5">
-      <span className="text-[10px] text-neutral-500">{label}</span>
-      <div className="flex-1 h-1 rounded-full bg-[#f0e6d3] overflow-hidden min-w-[36px]">
-        <div className="h-full rounded-full bg-[#FCB040]" style={{ width: `${(score / 5) * 100}%` }} />
-      </div>
-      <span className="text-[10px] font-medium text-[#6c1710]">{score.toFixed(1)}</span>
-    </div>
-  );
-}
 
 function ReviewCard({ review }: { review: Review }) {
-  const { categoryScores, highlights, tripTypes, ownerResponse } = review;
-  const hasCategoryScores = categoryScores && Object.keys(categoryScores).length > 0;
+  const { highlights, ownerResponse } = review;
 
   return (
     <div className="h-full rounded-2xl border border-[#e8d9c0] bg-white flex flex-col p-6 shadow-sm select-none">
@@ -87,17 +75,6 @@ function ReviewCard({ review }: { review: Review }) {
         </div>
         <StarRow score={review.score} />
       </div>
-
-      {/* Trip type badges */}
-      {tripTypes && tripTypes.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mb-3">
-          {tripTypes.map((t) => (
-            <span key={t} className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wide bg-[#f5ecd7] text-[#A87B51] border border-[#e8d9c0]">
-              {t}
-            </span>
-          ))}
-        </div>
-      )}
 
       {/* Review text */}
       <div className="relative flex-1">
@@ -115,21 +92,6 @@ function ReviewCard({ review }: { review: Review }) {
               {h}
             </span>
           ))}
-        </div>
-      )}
-
-      {/* Category scores */}
-      {hasCategoryScores && (
-        <div className="mt-3 space-y-1.5">
-          {categoryScores!.habitaciones !== undefined && (
-            <CategoryScore label="Habitaciones" score={categoryScores!.habitaciones!} />
-          )}
-          {categoryScores!.servicio !== undefined && (
-            <CategoryScore label="Servicio" score={categoryScores!.servicio!} />
-          )}
-          {categoryScores!.ubicacion !== undefined && (
-            <CategoryScore label="Ubicación" score={categoryScores!.ubicacion!} />
-          )}
         </div>
       )}
 
