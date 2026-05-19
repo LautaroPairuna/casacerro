@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import {
-  ensureTariffBootstrap,
-  getRoomTypesWithRates,
-  getTariffInfo,
+  getTariffCatalog,
   parseUpdateTariffInfoPayload,
   updateTariffInfo,
 } from "@/lib/admin-data";
@@ -15,9 +13,7 @@ export async function GET() {
     return NextResponse.json({ message: "No autorizado." }, { status: 401 });
   }
 
-  await ensureTariffBootstrap();
-  const roomTypes = await getRoomTypesWithRates();
-  const tariffInfo = await getTariffInfo();
+  const { roomTypes, tariffInfo } = await getTariffCatalog();
 
   return NextResponse.json({ roomTypes, tariffInfo }, { status: 200 });
 }

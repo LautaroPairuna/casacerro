@@ -42,8 +42,6 @@ function GoogleIcon() {
   );
 }
 
-// ── Sub-components ────────────────────────────────────────────────────────────
-
 function StarRow({ score }: { score: number }) {
   return (
     <div className="flex items-center gap-0.5" aria-label={`${score} estrellas`}>
@@ -61,106 +59,43 @@ function StarRow({ score }: { score: number }) {
   );
 }
 
-function CategoryScore({ label, score }: { label: string; score: number }) {
-  return (
-    <div className="flex items-center gap-1.5">
-      <span className="text-[10px] text-neutral-500">{label}</span>
-      <div className="flex-1 h-1 rounded-full bg-[#f0e6d3] overflow-hidden min-w-[36px]">
-        <div className="h-full rounded-full bg-[#FCB040]" style={{ width: `${(score / 5) * 100}%` }} />
-      </div>
-      <span className="text-[10px] font-medium text-[#6c1710]">{score.toFixed(1)}</span>
-    </div>
-  );
-}
-
 function ReviewCard({ review }: { review: Review }) {
-  const { categoryScores, highlights, tripTypes, ownerResponse } = review;
-  const hasCategoryScores = categoryScores && Object.keys(categoryScores).length > 0;
-
   return (
-    <div className="h-full rounded-2xl border border-[#e8d9c0] bg-white flex flex-col p-6 shadow-sm select-none">
-      {/* Header: platform + stars */}
-      <div className="flex items-start justify-between gap-3 mb-3">
-        <div className="flex items-center gap-2">
+    <article className="h-full rounded-[28px] border border-[#eadfcb] bg-white px-6 py-6 shadow-sm select-none">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5">
           <GoogleIcon />
-          <span className="text-xs font-medium uppercase tracking-wide text-neutral-500">Google</span>
+          <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-neutral-500">
+            Google
+          </span>
         </div>
         <StarRow score={review.score} />
       </div>
 
-      {/* Trip type badges */}
-      {tripTypes && tripTypes.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mb-3">
-          {tripTypes.map((t) => (
-            <span key={t} className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wide bg-[#f5ecd7] text-[#A87B51] border border-[#e8d9c0]">
-              {t}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* Review text */}
-      <div className="relative flex-1">
-        <Quote size={26} className="absolute -top-1 -left-1 text-[#FCB040]/40" strokeWidth={1.5} />
-        <p className="text-sm text-neutral-600 leading-relaxed pl-6 italic line-clamp-5">
+      <div className="mt-6 flex min-h-[168px] flex-col">
+        <Quote size={24} className="mb-3 text-[#d7b27a]" strokeWidth={1.5} />
+        <p className="text-[15px] leading-8 text-neutral-700 italic line-clamp-6">
           &quot;{review.text}&quot;
         </p>
       </div>
 
-      {/* Highlights */}
-      {highlights && highlights.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mt-3">
-          {highlights.slice(0, 4).map((h) => (
-            <span key={h} className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] bg-neutral-50 text-neutral-500 border border-neutral-200">
-              {h}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* Category scores */}
-      {hasCategoryScores && (
-        <div className="mt-3 space-y-1.5">
-          {categoryScores!.habitaciones !== undefined && (
-            <CategoryScore label="Habitaciones" score={categoryScores!.habitaciones!} />
-          )}
-          {categoryScores!.servicio !== undefined && (
-            <CategoryScore label="Servicio" score={categoryScores!.servicio!} />
-          )}
-          {categoryScores!.ubicacion !== undefined && (
-            <CategoryScore label="Ubicación" score={categoryScores!.ubicacion!} />
-          )}
-        </div>
-      )}
-
-      {/* Author row */}
-      <div className="mt-4 pt-4 border-t border-[#e8d9c0] flex items-center justify-between gap-2">
+      <div className="mt-6 flex items-center justify-between gap-3 border-t border-[#eee2cf] pt-5">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-full bg-[#f5ecd7] border border-[#e8d9c0] flex items-center justify-center text-[11px] font-semibold text-[#6c1710] uppercase shrink-0">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#e8d9c0] bg-[#f8f1e3] text-[11px] font-semibold uppercase text-[#6c1710] shrink-0">
             {review.author.slice(0, 2)}
           </div>
           <div>
             <p className="text-sm font-medium text-neutral-800 leading-tight">{review.author}</p>
             {review.room && (
-              <p className="text-[10px] uppercase tracking-wide text-[#A87B51]">{review.room}</p>
+              <p className="text-[10px] uppercase tracking-[0.14em] text-neutral-400">{review.room}</p>
             )}
           </div>
         </div>
-        <span className="text-[11px] text-neutral-400 shrink-0">{review.date}</span>
+        <span className="shrink-0 text-[11px] uppercase tracking-[0.12em] text-neutral-400">
+          {review.date}
+        </span>
       </div>
-
-      {/* Owner response */}
-      {ownerResponse && (
-        <div className="mt-3 rounded-xl bg-[#faf6ef] border border-[#e8d9c0] px-3 py-2.5">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-[#A87B51] mb-1">
-            Respuesta del propietario{ownerResponse.date ? ` · ${ownerResponse.date}` : ""}
-          </p>
-          <p className="text-[11px] text-neutral-600 leading-snug line-clamp-3">
-            {ownerResponse.text}
-          </p>
-        </div>
-      )}
-    </div>
+    </article>
   );
 }
 

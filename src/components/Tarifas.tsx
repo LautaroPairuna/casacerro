@@ -1,9 +1,6 @@
-"use client";
-
 import { User, Car, Info, MessageCircle } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { getTariffCatalog } from "@/lib/admin-data";
 
 const WHATSAPP_NUMBER =
   process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5493874029160";
@@ -79,76 +76,50 @@ function PersonasIcons({ count }: { count: number }) {
   );
 }
 
-export default function Tarifas() {
-  const [habitaciones, setHabitaciones] = useState<Habitacion[]>(INITIAL_HABITACIONES);
-  const [tariffInfo, setTariffInfo] = useState<TariffInfo>(INITIAL_TARIFF_INFO);
+async function loadTariffData(): Promise<{
+  habitaciones: Habitacion[];
+  tariffInfo: TariffInfo;
+}> {
+  try {
+    const { roomTypes, tariffInfo } = await getTariffCatalog();
+    const habitaciones =
+      roomTypes.length > 0
+        ? roomTypes.map((roomType) => ({
+            id: roomType.id,
+            tipo: roomType.name,
+            badge: roomType.badge,
+            descripcion: roomType.description,
+            gridCols: roomType.rates.length === 3 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2",
+            precios: roomType.rates.map((rate) => ({
+              personas: rate.people,
+              label: rate.label,
+              precio: rate.price,
+            })),
+          }))
+        : INITIAL_HABITACIONES;
 
-  const whatsappHref = useMemo(() => {
-    const message =
-      "Hola, me gustaría consultar por disponibilidad y tarifas en Casa Cerro.";
-    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-  }, []);
-
-  useEffect(() => {
-    const fetchTarifas = async () => {
-      try {
-        const response = await fetch("/api/tarifas", { cache: "no-store" });
-        if (!response.ok) return;
-
-        const payload = (await response.json()) as {
-          roomTypes: Array<{
-            id: number;
-            name: string;
-            badge: string;
-            description: string;
-            rates: Array<{
-              id: number;
-              label: string;
-              people: number;
-              price: number;
-            }>;
-          }>;
-          tariffInfo?: TariffInfo | null;
-        };
-
-        const next = payload.roomTypes.map((roomType) => ({
-          id: roomType.id,
-          tipo: roomType.name,
-          badge: roomType.badge,
-          descripcion: roomType.description,
-          gridCols: roomType.rates.length === 3 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2",
-          precios: roomType.rates.map((rate) => ({
-            personas: rate.people,
-            label: rate.label,
-            precio: rate.price,
-          })),
-        }));
-
-        if (next.length > 0) {
-          setHabitaciones(next);
-        }
-
-        if (payload.tariffInfo) {
-          setTariffInfo(payload.tariffInfo);
-        }
-      } catch {
-        return;
-      }
+    return {
+      habitaciones,
+      tariffInfo: tariffInfo ?? INITIAL_TARIFF_INFO,
     };
+  } catch {
+    return {
+      habitaciones: INITIAL_HABITACIONES,
+      tariffInfo: INITIAL_TARIFF_INFO,
+    };
+  }
+}
 
-    void fetchTarifas();
-  }, []);
+export default async function Tarifas() {
+  const { habitaciones, tariffInfo } = await loadTariffData();
+  const message =
+    "Hola, me gustaría consultar por disponibilidad y tarifas en Casa Cerro.";
+  const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 
   return (
     <section id="tarifas" className="py-20 px-4 md:px-6 bg-[#eee]">
       <div className="mx-auto max-w-[1400px]">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.7 }}
-          transition={{ duration: 0.55, ease: "easeOut" }}
-          className="text-center mb-12"
-        >
+        <div className="text-center mb-12">
           <h2 className="text-5xl md:text-6xl font-light tracking-[0.15em] uppercase  text-neutral-900">
             Tarifas
           </h2>
@@ -157,16 +128,12 @@ export default function Tarifas() {
           <p className="text-xs uppercase tracking-[0.3em] text-[#A87B51] mb-3">
             Precios por noche · en pesos argentinos
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
           {habitaciones.map((hab, index) => (
-            <motion.div
+            <div
               key={hab.id}
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.35 }}
-              transition={{ duration: 0.6, delay: index * 0.08, ease: "easeOut" }}
               className="rounded-2xl overflow-hidden border border-[#e8d9c0] shadow-sm bg-white flex flex-col"
             >
               <div className="bg-[#f5ecd7] px-6 pt-6 pb-5 border-b border-[#e8d9c0]">
@@ -223,17 +190,11 @@ export default function Tarifas() {
                   Consultar disponibilidad
                 </Link>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
-          className="mt-7 rounded-2xl border border-[#e8d9c0] bg-[#f5ecd7]/80 px-6 py-5 space-y-3"
-        >
+        <div className="mt-7 rounded-2xl border border-[#e8d9c0] bg-[#f5ecd7]/80 px-6 py-5 space-y-3">
           <div className="flex items-start gap-2.5 text-base font-bold text-[#6c1710]">
             <Car size={15} className="mt-0.5 shrink-0 text-[#6c1710]" />
             <span>{tariffInfo.parkingNote}</span>
@@ -252,7 +213,7 @@ export default function Tarifas() {
               <span>{note}</span>
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -227,9 +227,7 @@ export async function getRoomTypesWithRates() {
   });
 }
 
-export async function getTariffInfo() {
-  await ensureTariffBootstrap();
-
+async function findTariffInfo() {
   return prisma.tariffInfo.findUnique({
     where: { id: 1 },
     select: {
@@ -250,6 +248,22 @@ export async function getTariffInfo() {
       extraNotes: normalizeExtraNotes(tariffInfo.extraNotes),
     };
   });
+}
+
+export async function getTariffInfo() {
+  await ensureTariffBootstrap();
+  return findTariffInfo();
+}
+
+export async function getTariffCatalog() {
+  await ensureTariffBootstrap();
+
+  const [roomTypes, tariffInfo] = await Promise.all([
+    getRoomTypesWithRates(),
+    findTariffInfo(),
+  ]);
+
+  return { roomTypes, tariffInfo };
 }
 
 export async function updateRatePrice(input: UpdateRatePayload, actorEmail: string) {
