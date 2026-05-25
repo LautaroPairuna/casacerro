@@ -7,11 +7,16 @@ nixPkgs = ["nodejs_24"]
 cmds = ["npx pnpm@10.29.3 install --frozen-lockfile"]
 
 [phases.build]
-cmds = ["npm run build"]
+cmds = [
+  "npm run build",
+  "cp -r public .next/standalone/",
+  "cp -r .next/static .next/standalone/.next/",
+]
 
 [start]
-cmd = "npm start"
+cmd = "node .next/standalone/server.js"
 
 [variables]
 NODE_ENV = "production"
 NIXPACKS_NODE_VERSION = "24"
+NODE_OPTIONS = "--max-old-space-size=384"
