@@ -3,7 +3,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
-import { AnimatePresence, motion } from "framer-motion";
 import Reveal from "./Reveal";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -136,6 +135,7 @@ function AmenityItem({ icon: Icon, label }: Amenity) {
 
 function RoomModal({ room, onClose }: RoomModalProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isClosing, setIsClosing] = useState(false);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
@@ -165,9 +165,14 @@ function RoomModal({ room, onClose }: RoomModalProps) {
     setSelectedIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
 
+  const handleRequestClose = useCallback(() => {
+    if (isClosing) return;
+    setIsClosing(true);
+  }, [isClosing]);
+
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") handleRequestClose();
     };
 
     document.body.style.overflow = "hidden";
@@ -177,7 +182,17 @@ function RoomModal({ room, onClose }: RoomModalProps) {
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [onClose]);
+  }, [handleRequestClose]);
+
+  useEffect(() => {
+    if (!isClosing) return;
+
+    const timeoutId = window.setTimeout(() => {
+      onClose();
+    }, 220);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [isClosing, onClose]);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -192,27 +207,19 @@ function RoomModal({ room, onClose }: RoomModalProps) {
   }, [emblaApi, onSelect]);
 
   return (
-    <motion.div
-      className="fixed inset-0 z-[999] bg-black/55 p-4 md:p-6"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
+    <div
+      className={`${isClosing ? "cc-anim-fade-out" : "cc-anim-fade-in"} fixed inset-0 z-[999] bg-black/55 p-4 md:p-6`}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (e.target === e.currentTarget) handleRequestClose();
       }}
     >
-      <motion.div
-        className="mx-auto flex h-full w-full max-w-[1320px] items-center justify-center"
-        initial={{ opacity: 0, y: 24, scale: 0.985 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 18, scale: 0.975 }}
-        transition={{ duration: 0.22, ease: "easeOut" }}
+      <div
+        className={`${isClosing ? "cc-anim-modal-out" : "cc-anim-modal-in"} mx-auto flex h-full w-full max-w-[1320px] items-center justify-center`}
       >
           <div className="relative max-h-[92vh] w-full overflow-hidden rounded-[32px] bg-[#eee] shadow-2xl">
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleRequestClose}
               aria-label="Cerrar modal"
               className="absolute left-4 top-4 z-30 inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#770000] text-white transition hover:opacity-90"
             >
@@ -321,8 +328,8 @@ function RoomModal({ room, onClose }: RoomModalProps) {
               </div>
             </div>
           </div>
-        </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }
 
@@ -421,15 +428,13 @@ export default function Habitaciones() {
         </Reveal>
       </div>
 
-      <AnimatePresence mode="wait">
-        {selectedRoom && (
-          <RoomModal
-            key={selectedRoom.id}
-            room={selectedRoom}
-            onClose={() => setSelectedRoom(null)}
-          />
-        )}
-      </AnimatePresence>
+      {selectedRoom && (
+        <RoomModal
+          key={selectedRoom.id}
+          room={selectedRoom}
+          onClose={() => setSelectedRoom(null)}
+        />
+      )}
     </section>
   );
 }

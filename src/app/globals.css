@@ -65,6 +65,10 @@ html {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+@keyframes cc-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
 @keyframes cc-fade-up {
   from { opacity: 0; transform: translateY(28px) scale(var(--anim-scale-from, 1)); }
   to { opacity: 1; transform: translateY(0) scale(1); }
@@ -81,6 +85,10 @@ html {
   from { opacity: 0; transform: translateY(18px) scale(0.98); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
+@keyframes cc-modal-out {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(18px) scale(0.975); }
+}
 @keyframes cc-toast-in {
   from { opacity: 0; transform: translateY(-12px) scale(0.96); }
   to { opacity: 1; transform: translateY(0) scale(1); }
@@ -91,10 +99,12 @@ html {
 }
 
 .cc-anim-fade-in { animation: cc-fade-in var(--anim-duration, 0.5s) ease-out var(--anim-delay, 0s) both; }
+.cc-anim-fade-out { animation: cc-fade-out var(--anim-duration, 0.2s) ease-out both; }
 .cc-anim-fade-up { animation: cc-fade-up var(--anim-duration, 0.45s) ease-out var(--anim-delay, 0s) both; }
 .cc-anim-slide-down { animation: cc-slide-down 0.4s ease-in-out both; }
 .cc-anim-pop-in { animation: cc-pop-in var(--anim-duration, 0.45s) ease-out var(--anim-delay, 0.2s) both; }
 .cc-anim-modal-in { animation: cc-modal-in 0.22s ease-out both; }
+.cc-anim-modal-out { animation: cc-modal-out 0.22s ease-out both; }
 .cc-anim-toast-in { animation: cc-toast-in 0.22s ease-out both; }
 .cc-anim-progress {
   transform-origin: left;
@@ -104,10 +114,12 @@ html {
 @media (prefers-reduced-motion: reduce) {
   [data-reveal],
   .cc-anim-fade-in,
+  .cc-anim-fade-out,
   .cc-anim-fade-up,
   .cc-anim-slide-down,
   .cc-anim-pop-in,
   .cc-anim-modal-in,
+  .cc-anim-modal-out,
   .cc-anim-toast-in {
     opacity: 1 !important;
     transform: none !important;
