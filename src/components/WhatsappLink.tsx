@@ -1,7 +1,4 @@
-"use client";
-
 import Image from "next/image";
-import { motion } from "framer-motion";
 
 type WhatsappLinkProps = {
   phone?: string;
@@ -17,17 +14,13 @@ export default function WhatsappLink({
   const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
 
   return (
-    <motion.a
+    <a
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Contactar por WhatsApp"
       title="Contactar por WhatsApp"
-      className={`fixed z-50 inline-block rounded-full shadow-sm transition-transform hover:scale-[1.03] active:scale-95 ${className}`}
-      initial={{ opacity: 0, scale: 0.6, y: 24 }}
-      whileInView={{ opacity: 1, scale: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.8 }}
-      transition={{ duration: 0.45, ease: "easeOut", delay: 0.2 }}
+      className={`cc-anim-pop-in fixed z-50 inline-block rounded-full shadow-sm transition-transform hover:scale-[1.03] active:scale-95 ${className}`}
       style={{
         right: 'max(1rem, env(safe-area-inset-right))',
         bottom: 'max(1rem, env(safe-area-inset-bottom))',
@@ -41,6 +34,6 @@ export default function WhatsappLink({
         loading="lazy"
         priority={false}
       />
-    </motion.a>
+    </a>
   );
 }

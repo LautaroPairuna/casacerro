@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
-import { motion } from "framer-motion";
+import Reveal from "./Reveal";
 
 const WHATSAPP_NUMBER =
   process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5493874029160";
@@ -18,27 +18,15 @@ export default function Contacto() {
   return (
     <section id="contacto" className="w-full bg-[#eee] px-4 py-20 md:px-6">
       <div className="mx-auto w-full max-w-[1400px]">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.7 }}
-          transition={{ duration: 0.55, ease: "easeOut" }}
-          className="mb-12 text-center"
-        >
+        <Reveal className="mb-12 text-center" duration={0.55} amount={0.7}>
           <h2 className="text-5xl md:text-6xl font-light tracking-[0.15em] uppercase text-neutral-900">
             Contacto
           </h2>
           <div className="mt-5 mb-5 mx-auto w-32 h-0.5 bg-[#FCB040]" />
-        </motion.div>
+        </Reveal>
 
         <div className="grid grid-cols-1 gap-8 xl:grid-cols-12 xl:items-stretch">
-          <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.35 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="xl:col-span-4"
-          >
+          <Reveal className="xl:col-span-4" duration={0.6} amount={0.35}>
             <div className="h-full rounded-[32px] bg-[#f5ecd7] p-8 shadow-sm md:p-10">
               <p className="text-base leading-8 text-neutral-700 md:text-lg">
                 Estamos a disposición para ayudarte con tu reserva, resolver
@@ -97,15 +85,9 @@ export default function Contacto() {
                 </Link>
               </div>
             </div>
-          </motion.div>
+          </Reveal>
 
-          <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.25 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
-            className="xl:col-span-8"
-          >
+          <Reveal className="xl:col-span-8" duration={0.7} delay={0.1} amount={0.25}>
             <div className="overflow-hidden rounded-[32px] shadow-md">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3622.3938671779433!2d-65.40379382374566!3d-24.781963207568836!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x941bc39432107a25%3A0x78c00de00add8673!2sCasacerro!5e0!3m2!1ses-419!2sar!4v1774445836355!5m2!1ses-419!2sar"
@@ -117,7 +99,7 @@ export default function Contacto() {
                 title="Mapa de ubicación de CasaCerro"
               />
             </div>
-          </motion.div>
+          </Reveal>
         </div>
       </div>
     </section>

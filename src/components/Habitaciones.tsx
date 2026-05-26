@@ -2,8 +2,8 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
+import Reveal from "./Reveal";
 import type { LucideIcon } from "lucide-react";
 import {
   Bath,
@@ -191,23 +191,13 @@ function RoomModal({ room, onClose }: RoomModalProps) {
   }, [emblaApi, onSelect]);
 
   return (
-    <AnimatePresence>
-      <motion.div
-        className="fixed inset-0 z-[999] bg-black/55 p-4 md:p-6"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={(e) => {
-          if (e.target === e.currentTarget) onClose();
-        }}
-      >
-        <motion.div
-          className="mx-auto flex h-full w-full max-w-[1320px] items-center justify-center"
-          initial={{ opacity: 0, y: 18, scale: 0.98 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 18, scale: 0.98 }}
-          transition={{ duration: 0.22, ease: "easeOut" }}
-        >
+    <div
+      className="cc-anim-fade-in fixed inset-0 z-[999] bg-black/55 p-4 md:p-6"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className="cc-anim-modal-in mx-auto flex h-full w-full max-w-[1320px] items-center justify-center">
           <div className="relative max-h-[92vh] w-full overflow-hidden rounded-[32px] bg-[#eee] shadow-2xl">
             <button
               type="button"
@@ -318,10 +308,9 @@ function RoomModal({ room, onClose }: RoomModalProps) {
                 </div>
               </div>
             </div>
-          </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -331,27 +320,21 @@ export default function Habitaciones() {
   return (
     <section id="habitaciones" className="w-full bg-[#eee] px-4 py-20 md:px-6">
       <div className="mx-auto w-full max-w-[1400px]">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.7 }}
-          transition={{ duration: 0.55, ease: "easeOut" }}
-          className="mb-12 text-center"
-        >
+        <Reveal className="mb-12 text-center" duration={0.55} amount={0.7}>
           <h2 className="text-4xl md:text-6xl font-light tracking-[0.15em] uppercase text-neutral-900">
             Habitaciones
           </h2>
           <div className="mt-5 mb-5 mx-auto w-32 h-0.5 bg-[#FCB040]" />
-        </motion.div>
+        </Reveal>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 xl:grid-cols-4">
           {ROOM_CATEGORIES.map((room, index) => (
-            <motion.article
+            <Reveal
+              as="article"
               key={room.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, delay: index * 0.08, ease: "easeOut" }}
+              duration={0.6}
+              delay={index * 0.08}
+              amount={0.3}
               className="overflow-hidden rounded-[32px] border border-[#e7dcc8] bg-white shadow-sm"
             >
                 <div className="relative aspect-[16/10] w-full overflow-hidden">
@@ -387,18 +370,12 @@ export default function Habitaciones() {
                         Ver más
                     </button>
                 </div>
-            </motion.article>
+            </Reveal>
           ))}
         </div>
 
         {/* Servicios en habitaciones */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          className="mt-8"
-        >
+        <Reveal className="mt-8" duration={0.5} amount={0.2}>
         <div className="rounded-2xl border border-[#e8d9c0] bg-[#f5ecd7]/80 px-6 py-6">
           <h3 className="text-lg font-semibold uppercase tracking-[0.12em] text-[#20160a]">
             Servicios en habitaciones
@@ -429,7 +406,7 @@ export default function Habitaciones() {
             ))}
           </div>
         </div>
-        </motion.div>
+        </Reveal>
       </div>
 
       {selectedRoom && (

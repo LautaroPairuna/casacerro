@@ -19,4 +19,5 @@ cmd = "node .next/standalone/server.js"
 [variables]
 NODE_ENV = "production"
 NIXPACKS_NODE_VERSION = "24"
-NODE_OPTIONS = "--max-old-space-size=384"
+NODE_OPTIONS = "--max-old-space-size=256 --max-semi-space-size=16"
+HOSTNAME = "0.0.0.0"

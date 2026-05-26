@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 
 type LinkItem = { href: string; label: string };
 
@@ -111,15 +110,8 @@ export default function Header() {
       </div>
 
       {/* Menú móvil */}
-      <AnimatePresence>
-        {menuOpen && !isDesktop && (
-          <motion.div
-            initial={{ y: "-100%", opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: "-100%", opacity: 0 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="fixed inset-0 bg-[#FFF8e7] flex flex-col items-center justify-center z-50"
-          >
+      {menuOpen && !isDesktop && (
+        <div className="cc-anim-slide-down fixed inset-0 bg-[#FFF8e7] flex flex-col items-center justify-center z-50">
             <button
               className="absolute top-6 right-6 text-3xl focus:outline-none text-[#6c1710]"
               onClick={() => setMenuOpen(false)}
@@ -143,10 +135,9 @@ export default function Header() {
                   </a>
                 </li>
               ))}
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </ul>
+        </div>
+      )}
     </nav>
   );
 }

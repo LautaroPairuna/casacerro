@@ -4,7 +4,7 @@ import { useCallback, useMemo } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
-import { motion } from "framer-motion";
+import Reveal from "./Reveal";
 
 type Platform = "google" | "booking";
 
@@ -131,12 +131,7 @@ export default function ResenasCarousel({ reviews }: { reviews: Review[] }) {
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.25 }}
-      transition={{ duration: 0.6, delay: 0.12, ease: "easeOut" }}
-    >
+    <Reveal duration={0.6} delay={0.12} amount={0.25}>
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex gap-5 -ml-1 pl-1">
           {reviews.map((review) => (
@@ -166,6 +161,6 @@ export default function ResenasCarousel({ reviews }: { reviews: Review[] }) {
           <ChevronRight size={20} />
         </button>
       </div>
-    </motion.div>
+    </Reveal>
   );
 }

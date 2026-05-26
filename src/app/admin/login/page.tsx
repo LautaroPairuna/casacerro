@@ -1,7 +1,6 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
@@ -37,30 +36,25 @@ export default function AdminLoginPage() {
 
   return (
     <section className="relative isolate flex min-h-screen w-full items-center justify-center overflow-hidden px-4 py-10">
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className="absolute left-[-14rem] top-[-8rem] h-[34rem] w-[34rem] rounded-full bg-[#fcb040]/20 blur-[120px]"
+      <div
+        className="cc-anim-fade-in absolute left-[-14rem] top-[-8rem] h-[34rem] w-[34rem] rounded-full bg-[#fcb040]/20 blur-[120px]"
+        style={{ ["--anim-duration" as string]: "0.5s" }}
       />
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.05, ease: "easeOut" }}
-        className="absolute right-[-16rem] bottom-[-10rem] h-[38rem] w-[38rem] rounded-full bg-[#6c1710]/15 blur-[130px]"
+      <div
+        className="cc-anim-fade-in absolute right-[-16rem] bottom-[-10rem] h-[38rem] w-[38rem] rounded-full bg-[#6c1710]/15 blur-[130px]"
+        style={{ ["--anim-duration" as string]: "0.6s", ["--anim-delay" as string]: "0.05s" }}
       />
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.65, delay: 0.08, ease: "easeOut" }}
-        className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(252,176,64,0.12),transparent_40%),radial-gradient(circle_at_80%_75%,rgba(108,23,16,0.16),transparent_42%)]"
+      <div
+        className="cc-anim-fade-in absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(252,176,64,0.12),transparent_40%),radial-gradient(circle_at_80%_75%,rgba(108,23,16,0.16),transparent_42%)]"
+        style={{ ["--anim-duration" as string]: "0.65s", ["--anim-delay" as string]: "0.08s" }}
       />
 
-      <motion.div
-        initial={{ opacity: 0, y: 28, scale: 0.98 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.42, ease: "easeOut" }}
-        className="relative z-10 w-full max-w-md rounded-3xl border border-[#e0d5bf] bg-white/95 p-8 shadow-[0_14px_40px_rgba(71,41,10,0.12)] backdrop-blur-sm"
+      <div
+        className="cc-anim-fade-up relative z-10 w-full max-w-md rounded-3xl border border-[#e0d5bf] bg-white/95 p-8 shadow-[0_14px_40px_rgba(71,41,10,0.12)] backdrop-blur-sm"
+        style={{
+          ["--anim-duration" as string]: "0.42s",
+          ["--anim-scale-from" as string]: "0.98",
+        }}
       >
         <div className="mb-6 space-y-3">
           <span className="inline-flex items-center rounded-full border border-[#eadcc2] bg-[#fff8e7] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#a87b51]">
@@ -102,20 +96,14 @@ export default function AdminLoginPage() {
             />
           </div>
 
-          <AnimatePresence mode="wait">
-            {error && (
-              <motion.p
-                key={error}
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.2 }}
-                className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
-              >
-                {error}
-              </motion.p>
-            )}
-          </AnimatePresence>
+          {error && (
+            <p
+              key={error}
+              className="cc-anim-toast-in rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
+            >
+              {error}
+            </p>
+          )}
 
           <button
             type="submit"
@@ -132,7 +120,7 @@ export default function AdminLoginPage() {
             )}
           </button>
         </form>
-      </motion.div>
+      </div>
     </section>
   );
 }

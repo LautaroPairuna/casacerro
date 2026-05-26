@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 
 type AdminRate = {
   id: number;
@@ -354,40 +353,32 @@ export default function AdminTarifasPage() {
         </div>
       </article>
       <div className="pointer-events-none fixed right-4 top-20 z-50 md:right-8">
-        <AnimatePresence mode="wait">
-          {toast && (
-            <motion.div
-              key={toast.id}
-              initial={{ opacity: 0, y: -12, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -8, scale: 0.96 }}
-              transition={{ duration: 0.22, ease: "easeOut" }}
-              className={`relative overflow-hidden rounded-xl border px-4 py-3 text-sm shadow-lg backdrop-blur-sm ${
-                toast.type === "success"
-                  ? "border-emerald-200 bg-emerald-50/95 text-emerald-800"
-                  : "border-red-200 bg-red-50/95 text-red-700"
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <span
-                  className={`h-2.5 w-2.5 rounded-full ${
-                    toast.type === "success" ? "bg-emerald-500" : "bg-red-500"
-                  }`}
-                />
-                <span>{toast.message}</span>
-              </div>
-              <motion.div
-                key={`${toast.id}-progress`}
-                initial={{ scaleX: 1 }}
-                animate={{ scaleX: 0 }}
-                transition={{ duration: TOAST_DURATION_MS / 1000, ease: "linear" }}
-                className={`absolute bottom-0 left-0 h-0.5 w-full origin-left ${
-                  toast.type === "success" ? "bg-emerald-400" : "bg-red-400"
+        {toast && (
+          <div
+            key={toast.id}
+            className={`cc-anim-toast-in relative overflow-hidden rounded-xl border px-4 py-3 text-sm shadow-lg backdrop-blur-sm ${
+              toast.type === "success"
+                ? "border-emerald-200 bg-emerald-50/95 text-emerald-800"
+                : "border-red-200 bg-red-50/95 text-red-700"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <span
+                className={`h-2.5 w-2.5 rounded-full ${
+                  toast.type === "success" ? "bg-emerald-500" : "bg-red-500"
                 }`}
               />
-            </motion.div>
-          )}
-        </AnimatePresence>
+              <span>{toast.message}</span>
+            </div>
+            <div
+              key={`${toast.id}-progress`}
+              className={`cc-anim-progress absolute bottom-0 left-0 h-0.5 w-full ${
+                toast.type === "success" ? "bg-emerald-400" : "bg-red-400"
+              }`}
+              style={{ ["--anim-duration" as string]: `${TOAST_DURATION_MS / 1000}s` }}
+            />
+          </div>
+        )}
       </div>
 
       {roomTypes.map((roomType) => (

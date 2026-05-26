@@ -6,7 +6,7 @@ import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { motion } from "framer-motion";
+import Reveal from "./Reveal";
 
 type HeroImage = {
   src: string;
@@ -97,13 +97,7 @@ export default function Hero() {
   return (
     <section className="w-full bg-[#eee] pt-32 pb-12 px-4 md:px-6">
       <div className="mx-auto max-w-[1400px] grid grid-cols-1 gap-8 xl:grid-cols-12 xl:items-stretch">
-        <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="xl:col-span-4 flex"
-        >
+        <Reveal className="xl:col-span-4 flex" duration={0.6} amount={0.35}>
           <div className="flex w-full flex-col justify-center rounded-3xl bg-[#f5ecd7] p-8 shadow-md md:p-10">
             <span className="mb-10 inline-block text-sm uppercase tracking-[0.25em] text-neutral-600 text-center">
               Bienvenidos a...
@@ -142,15 +136,9 @@ export default function Hero() {
               </a>
             </div>
           </div>
-        </motion.div>
+        </Reveal>
 
-        <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
-          className="xl:col-span-8"
-        >
+        <Reveal className="xl:col-span-8" duration={0.7} delay={0.1} amount={0.25}>
           <div className="relative overflow-hidden rounded-3xl shadow-md">
             <div className="overflow-hidden" ref={emblaRef}>
               <div className="flex">
@@ -206,7 +194,7 @@ export default function Hero() {
               ))}
             </div>
           </div>
-        </motion.div>
+        </Reveal>
       </div>
     </section>
   );

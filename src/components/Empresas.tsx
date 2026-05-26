@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import Reveal from "./Reveal";
 import {
   BadgeCheck,
   Building2,
@@ -68,13 +68,7 @@ export default function Empresas() {
       <div className="mx-auto max-w-[1400px]">
 
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.7 }}
-          transition={{ duration: 0.55, ease: "easeOut" }}
-          className="text-center mb-14"
-        >
+        <Reveal className="text-center mb-14" duration={0.55} amount={0.7}>
           <h2 className="text-5xl md:text-6xl font-light tracking-[0.15em] uppercase text-neutral-900">
             Para Empresas
           </h2>
@@ -90,19 +84,18 @@ export default function Empresas() {
             Salta. Ofrecemos condiciones especiales para empresas, equipos y
             estadías de larga duración.
           </p>
-        </motion.div>
+        </Reveal>
 
         {/* Beneficios */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
           {BENEFICIOS.map((b, index) => {
             const Icon = b.icon;
             return (
-              <motion.div
+              <Reveal
                 key={b.titulo}
-                initial={{ opacity: 0, y: 28 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.55, delay: index * 0.07, ease: "easeOut" }}
+                duration={0.55}
+                delay={index * 0.07}
+                amount={0.3}
                 className="rounded-2xl border border-[#e8d9c0] bg-white px-6 py-6 flex gap-4 shadow-sm hover:border-[#FCB040] transition-colors duration-200"
               >
                 <div className="shrink-0 mt-0.5">
@@ -118,17 +111,15 @@ export default function Empresas() {
                     {b.descripcion}
                   </p>
                 </div>
-              </motion.div>
+              </Reveal>
             );
           })}
         </div>
 
         {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.55, ease: "easeOut" }}
+        <Reveal
+          duration={0.55}
+          amount={0.5}
           className="rounded-2xl border border-[#e8d9c0] bg-[#f5ecd7]/80 px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-6"
         >
           <div>
@@ -148,7 +139,7 @@ export default function Empresas() {
             <MessageCircle size={16} />
             Consultar condiciones
           </Link>
-        </motion.div>
+        </Reveal>
 
       </div>
     </section>

@@ -1,7 +1,5 @@
-"use client";
-
 import Link from "next/link";
-import { motion } from "framer-motion";
+import Reveal from "./Reveal";
 import {
   BadgeCheck,
   Car,
@@ -63,13 +61,7 @@ export default function Servicios() {
   return (
     <section id="servicios" className="bg-[#eee] px-4 py-20 md:px-6">
       <div className="mx-auto max-w-[1400px]">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.7 }}
-          transition={{ duration: 0.55, ease: "easeOut" }}
-          className="mb-10 text-center"
-        >
+        <Reveal className="mb-10 text-center" duration={0.55} amount={0.7}>
           <h2 className="text-5xl font-light uppercase tracking-[0.15em] text-neutral-900 md:text-6xl">
             Servicios
           </h2>
@@ -78,16 +70,16 @@ export default function Servicios() {
             Conocé en detalle lo que ofrecemos para que tu experiencia en CasaCerro sea cómoda,
             práctica y adaptada a tu viaje.
           </p>
-        </motion.div>
+        </Reveal>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {SERVICIOS.map((servicio, index) => (
-            <motion.article
+            <Reveal
+              as="article"
               key={servicio.titulo}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.35 }}
-              transition={{ duration: 0.55, delay: index * 0.06, ease: "easeOut" }}
+              duration={0.55}
+              delay={index * 0.06}
+              amount={0.35}
               className="rounded-2xl border border-[#e8d9c0] bg-white p-6 shadow-sm hover:border-[#FCB040] transition-colors duration-200"
             >
               <div className="mb-4 inline-flex rounded-full bg-[#f5ecd7] p-2.5 text-black">
@@ -95,17 +87,11 @@ export default function Servicios() {
               </div>
               <h3 className="text-xl font-semibold text-[#20160a]">{servicio.titulo}</h3>
               <p className="mt-2 text-sm leading-7 text-neutral-600">{servicio.descripcion}</p>
-            </motion.article>
+            </Reveal>
           ))}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.45, delay: 0.1, ease: "easeOut" }}
-          className="mt-8"
-        >
+        <Reveal className="mt-8" duration={0.45} delay={0.1} amount={0.4}>
           <Link
             href={whatsappHref}
             target="_blank"
@@ -115,7 +101,7 @@ export default function Servicios() {
             <MessageCircle size={16} />
             Consultar servicios
           </Link>
-        </motion.div>
+        </Reveal>
       </div>
     </section>
   );
