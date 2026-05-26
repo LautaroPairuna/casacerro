@@ -1,3 +1,4 @@
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 import { ZodError, z } from "zod";
 import { parseUpdateRatePayload, updateRatePrice } from "@/lib/admin-data";
@@ -29,6 +30,9 @@ export async function PUT(
     if (!updated) {
       return NextResponse.json({ message: "Tarifa no encontrada." }, { status: 404 });
     }
+
+    revalidateTag("tariff-catalog", "max");
+    revalidatePath("/");
 
     return NextResponse.json({ rate: updated }, { status: 200 });
   } catch (error) {

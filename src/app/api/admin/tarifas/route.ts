@@ -1,3 +1,4 @@
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import {
@@ -32,6 +33,9 @@ export async function PUT(request: Request) {
     if (!updated) {
       return NextResponse.json({ message: "Información no encontrada." }, { status: 404 });
     }
+
+    revalidateTag("tariff-catalog", "max");
+    revalidatePath("/");
 
     return NextResponse.json({ tariffInfo: updated }, { status: 200 });
   } catch (error) {

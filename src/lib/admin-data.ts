@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import { unstable_cache } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 
@@ -205,7 +206,7 @@ export async function updateLastLogin(adminId: number): Promise<void> {
   });
 }
 
-export async function getRoomTypesWithRates() {
+async function findRoomTypesWithRates() {
   return prisma.roomType.findMany({
     orderBy: { displayOrder: "asc" },
     select: {
@@ -251,19 +252,36 @@ async function findTariffInfo() {
 }
 
 export async function getTariffInfo() {
-  await ensureTariffBootstrap();
-  return findTariffInfo();
+  const catalog = await getTariffCatalog();
+  return catalog.tariffInfo;
 }
 
+const getCachedTariffCatalog = unstable_cache(
+  async () => {
+    await ensureTariffBootstrap();
+
+    const [roomTypes, tariffInfo] = await Promise.all([
+      findRoomTypesWithRates(),
+      findTariffInfo(),
+    ]);
+
+    return { roomTypes, tariffInfo };
+  },
+  ["tariff-catalog"],
+  {
+    tags: ["tariff-catalog"],
+    revalidate: false,
+  }
+);
+
 export async function getTariffCatalog() {
+  return getCachedTariffCatalog();
+}
+
+export async function getRoomTypesWithRates() {
   await ensureTariffBootstrap();
-
-  const [roomTypes, tariffInfo] = await Promise.all([
-    getRoomTypesWithRates(),
-    findTariffInfo(),
-  ]);
-
-  return { roomTypes, tariffInfo };
+  const catalog = await getCachedTariffCatalog();
+  return catalog.roomTypes;
 }
 
 export async function updateRatePrice(input: UpdateRatePayload, actorEmail: string) {
