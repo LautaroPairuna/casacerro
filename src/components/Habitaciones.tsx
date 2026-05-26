@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
+import { AnimatePresence, motion } from "framer-motion";
 import Reveal from "./Reveal";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -88,11 +89,11 @@ const ROOM_CATEGORIES: RoomCategory[] = [
     name: "Cuádruple",
     capacityLabel: "Hasta 4 huéspedes",
     bedsLabel: "Configuración para 4 personas",
-    cardImage: "/image/habitaciones/dos-ambientes-4-personas.jpeg",
+    cardImage: "/image/habitaciones/monoambiente-4-personas.jpeg",
     images: [
-      "/image/habitaciones/dos-ambientes-4-personas/dos-ambientes-4-personas-1.jpeg",
-      "/image/habitaciones/dos-ambientes-4-personas/dos-ambientes-4-personas-2.jpeg",
-      "/image/habitaciones/dos-ambientes-4-personas/dos-ambientes-4-personas-3.jpeg",
+      "/image/habitaciones/monoambiente-4-personas/monoambiente-4-personas-1.jpeg",
+      "/image/habitaciones/monoambiente-4-personas/monoambiente-4-personas-2.jpeg",
+      "/image/habitaciones/monoambiente-4-personas/monoambiente-4-personas-3.jpeg",
     ],
     cardSummary: "Amplio y cómodo para compartir en un solo ambiente.",
     modalDescription:
@@ -104,11 +105,11 @@ const ROOM_CATEGORIES: RoomCategory[] = [
     name: "Dos Ambientes",
     capacityLabel: "Hasta 4 huéspedes",
     bedsLabel: "Ambientes separados",
-    cardImage: "/image/habitaciones/monoambiente-4-personas.jpeg",
+    cardImage: "/image/habitaciones/dos-ambientes-4-personas.jpeg",
     images: [
-      "/image/habitaciones/monoambiente-4-personas/monoambiente-4-personas-1.jpeg",
-      "/image/habitaciones/monoambiente-4-personas/monoambiente-4-personas-2.jpeg",
-      "/image/habitaciones/monoambiente-4-personas/monoambiente-4-personas-3.jpeg",
+      "/image/habitaciones/dos-ambientes-4-personas/dos-ambientes-4-personas-1.jpeg",
+      "/image/habitaciones/dos-ambientes-4-personas/dos-ambientes-4-personas-2.jpeg",
+      "/image/habitaciones/dos-ambientes-4-personas/dos-ambientes-4-personas-3.jpeg",
     ],
     cardSummary: "Más amplitud, privacidad y comodidad para la estadía.",
     modalDescription:
@@ -191,13 +192,23 @@ function RoomModal({ room, onClose }: RoomModalProps) {
   }, [emblaApi, onSelect]);
 
   return (
-    <div
-      className="cc-anim-fade-in fixed inset-0 z-[999] bg-black/55 p-4 md:p-6"
+    <motion.div
+      className="fixed inset-0 z-[999] bg-black/55 p-4 md:p-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="cc-anim-modal-in mx-auto flex h-full w-full max-w-[1320px] items-center justify-center">
+      <motion.div
+        className="mx-auto flex h-full w-full max-w-[1320px] items-center justify-center"
+        initial={{ opacity: 0, y: 24, scale: 0.985 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 18, scale: 0.975 }}
+        transition={{ duration: 0.22, ease: "easeOut" }}
+      >
           <div className="relative max-h-[92vh] w-full overflow-hidden rounded-[32px] bg-[#eee] shadow-2xl">
             <button
               type="button"
@@ -252,7 +263,7 @@ function RoomModal({ room, onClose }: RoomModalProps) {
               </div>
 
               <div className="lg:col-span-6">
-                <div className="relative h-[420px] w-full md:h-[560px] lg:h-full">
+                <div className="relative h-[420px] min-h-[420px] w-full md:h-[560px] lg:h-full">
                   <div className="h-full overflow-hidden" ref={emblaRef}>
                     <div className="flex h-full">
                       {room.images.map((image, index) => (
@@ -265,6 +276,7 @@ function RoomModal({ room, onClose }: RoomModalProps) {
                             alt={`${room.name} - imagen ${index + 1}`}
                             fill
                             priority={index === 0}
+                            sizes="(min-width: 1024px) 50vw, 100vw"
                             className="object-cover"
                           />
                         </div>
@@ -308,9 +320,9 @@ function RoomModal({ room, onClose }: RoomModalProps) {
                 </div>
               </div>
             </div>
-        </div>
-      </div>
-    </div>
+          </div>
+        </motion.div>
+    </motion.div>
   );
 }
 
@@ -409,13 +421,15 @@ export default function Habitaciones() {
         </Reveal>
       </div>
 
-      {selectedRoom && (
-        <RoomModal
-          key={selectedRoom.id}
-          room={selectedRoom}
-          onClose={() => setSelectedRoom(null)}
-        />
-      )}
+      <AnimatePresence mode="wait">
+        {selectedRoom && (
+          <RoomModal
+            key={selectedRoom.id}
+            room={selectedRoom}
+            onClose={() => setSelectedRoom(null)}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }
