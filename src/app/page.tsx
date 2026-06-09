@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import WhatsappLink from "@/components/WhatsappLink";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
@@ -19,8 +20,6 @@ const siteUrl =
 const homeTitle = "Apartamentos cómodos en Salta | CasaCerro";
 const homeDescription =
   "Alojate en CasaCerro: apartamentos amplios, cómodos y equipados en Salta, cerca del Shopping Alto Noa. Consultá disponibilidad, habitaciones y tarifas por WhatsApp.";
-
-export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: homeTitle,
@@ -49,7 +48,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
+export default async function Home() {
+  await connection();
+
   const websiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
