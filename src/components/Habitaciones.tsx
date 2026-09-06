@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useId, useRef, useState } from "react";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import Reveal from "./Reveal";
+import { useFocusTrap } from "@/lib/use-focus-trap";
 import type { LucideIcon } from "lucide-react";
 import {
   Bath,
@@ -136,6 +137,8 @@ function AmenityItem({ icon: Icon, label }: Amenity) {
 function RoomModal({ room, onClose }: RoomModalProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isClosing, setIsClosing] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
@@ -170,19 +173,15 @@ function RoomModal({ room, onClose }: RoomModalProps) {
     setIsClosing(true);
   }, [isClosing]);
 
+  useFocusTrap(dialogRef, true, handleRequestClose);
+
+  // El scroll de fondo se bloquea mientras el modal está abierto.
   useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") handleRequestClose();
-    };
-
     document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", onKeyDown);
-
     return () => {
       document.body.style.overflow = "";
-      window.removeEventListener("keydown", onKeyDown);
     };
-  }, [handleRequestClose]);
+  }, []);
 
   useEffect(() => {
     if (!isClosing) return;
@@ -208,6 +207,7 @@ function RoomModal({ room, onClose }: RoomModalProps) {
 
   return (
     <div
+      role="presentation"
       className={`${isClosing ? "cc-anim-fade-out" : "cc-anim-fade-in"} fixed inset-0 z-[999] bg-black/55 p-4 md:p-6`}
       onClick={(e) => {
         if (e.target === e.currentTarget) handleRequestClose();
@@ -216,7 +216,14 @@ function RoomModal({ room, onClose }: RoomModalProps) {
       <div
         className={`${isClosing ? "cc-anim-modal-out" : "cc-anim-modal-in"} mx-auto flex h-full w-full max-w-[1320px] items-center justify-center`}
       >
-          <div className="relative max-h-[92vh] w-full overflow-hidden rounded-[32px] bg-[#eee] shadow-2xl">
+          <div
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={titleId}
+            tabIndex={-1}
+            className="relative max-h-[92vh] w-full overflow-hidden rounded-[32px] bg-[#eee] shadow-2xl focus:outline-none"
+          >
             <button
               type="button"
               onClick={handleRequestClose}
@@ -228,7 +235,10 @@ function RoomModal({ room, onClose }: RoomModalProps) {
 
             <div className="grid max-h-[92vh] grid-cols-1 overflow-y-auto lg:grid-cols-12">
               <div className="p-8 pt-24 md:p-10 md:pt-24 lg:col-span-6 lg:p-12 lg:pt-24">
-                <h3 className="text-4xl uppercase leading-tight tracking-[0.08em] text-neutral-900 md:text-5xl">
+                <h3
+                  id={titleId}
+                  className="text-4xl uppercase leading-tight tracking-[0.08em] text-neutral-900 md:text-5xl"
+                >
                   {room.name}
                 </h3>
 
@@ -309,19 +319,24 @@ function RoomModal({ room, onClose }: RoomModalProps) {
                     <ChevronRight className="h-6 w-6" />
                   </button>
 
-                  <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2">
+                  <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center">
                     {room.images.map((_, index) => (
                       <button
                         key={index}
                         type="button"
                         onClick={() => scrollTo(index)}
                         aria-label={`Ir a la imagen ${index + 1}`}
-                        className={`h-2.5 rounded-full transition-all ${
-                          selectedIndex === index
-                            ? "w-8 bg-white"
-                            : "w-2.5 bg-white/65 hover:bg-white/85"
-                        }`}
-                      />
+                        aria-current={selectedIndex === index ? "true" : undefined}
+                        className="group flex h-6 items-center justify-center px-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                      >
+                        <span
+                          className={`block h-2.5 rounded-full transition-all ${
+                            selectedIndex === index
+                              ? "w-8 bg-white"
+                              : "w-2.5 bg-white/65 group-hover:bg-white/85"
+                          }`}
+                        />
+                      </button>
                     ))}
                   </div>
                 </div>

@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useFocusTrap } from "@/lib/use-focus-trap";
 
 type LinkItem = { href: string; label: string };
 
@@ -18,6 +19,13 @@ const MENU_ITEMS: LinkItem[] = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
+
+  // El menú móvil tapa la pantalla completa: mientras está abierto el foco no
+  // puede seguir viajando por los enlaces de abajo.
+  useFocusTrap(menuRef, menuOpen, closeMenu);
 
   return (
     <nav
@@ -69,10 +77,11 @@ export default function Header() {
         <div className="flex items-center gap-x-6 xl:hidden">
           <button
             type="button"
-            className="text-3xl focus:outline-none flex items-center ml-4 text-[#6c1710]"
+            className="ml-4 flex items-center rounded-sm text-3xl text-[#6c1710] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6c1710]"
             onClick={() => setMenuOpen((prev) => !prev)}
             aria-expanded={menuOpen}
-            aria-label="Abrir menú"
+            aria-controls="menu-movil"
+            aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
           >
             ☰
           </button>
@@ -81,11 +90,16 @@ export default function Header() {
 
       {/* Menú móvil */}
       {menuOpen && (
-        <div className="cc-anim-slide-down fixed inset-0 bg-[#FFF8e7] flex flex-col items-center justify-center z-50 xl:hidden">
+        <div
+          id="menu-movil"
+          ref={menuRef}
+          tabIndex={-1}
+          className="cc-anim-slide-down fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#FFF8e7] focus:outline-none xl:hidden"
+        >
           <button
             type="button"
-            className="absolute top-6 right-6 text-3xl focus:outline-none text-[#6c1710]"
-            onClick={() => setMenuOpen(false)}
+            className="absolute right-6 top-6 rounded-sm text-3xl text-[#6c1710] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6c1710]"
+            onClick={closeMenu}
             aria-label="Cerrar menú"
           >
             ✖
@@ -96,7 +110,7 @@ export default function Header() {
               <li key={item.href}>
                 <a
                   href={item.href}
-                  onClick={() => setMenuOpen(false)}
+                  onClick={closeMenu}
                   className="relative group font-sans transition-colors duration-300 hover:text-gray-800 uppercase"
                 >
                   {item.label}

@@ -4,8 +4,9 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { whatsappHref } from "@/lib/site";
+import { useAutoplayControl } from "@/lib/use-autoplay-control";
 
 type HeroImage = {
   src: string;
@@ -51,6 +52,8 @@ export default function Hero() {
     },
     [autoplay]
   );
+
+  const { isPlaying, toggle: toggleAutoplay } = useAutoplayControl(emblaApi);
 
   const scrollPrev = useCallback(() => {
     if (!emblaApi) return;
@@ -184,20 +187,38 @@ export default function Hero() {
               <ChevronRight size={20} />
             </button>
 
-            <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2">
+            <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center">
               {HERO_IMAGES.map((image, index) => (
                 <button
                   key={image.src}
                   type="button"
                   onClick={() => scrollTo(index)}
                   aria-label={`Ir a la imagen ${index + 1}`}
-                  className={`h-2.5 rounded-full transition-all ${
-                    selectedIndex === index
-                      ? "w-8 bg-white"
-                      : "w-2.5 bg-white/60 hover:bg-white/80"
-                  }`}
-                />
+                  aria-current={selectedIndex === index ? "true" : undefined}
+                  // El punto visible sigue midiendo 10px, pero el área
+                  // clickeable llega a 24x24 (WCAG 2.5.8).
+                  className="group flex h-6 items-center justify-center px-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                >
+                  <span
+                    className={`block h-2.5 rounded-full transition-all ${
+                      selectedIndex === index
+                        ? "w-8 bg-white"
+                        : "w-2.5 bg-white/60 group-hover:bg-white/80"
+                    }`}
+                  />
+                </button>
               ))}
+
+              <button
+                type="button"
+                onClick={toggleAutoplay}
+                aria-label={
+                  isPlaying ? "Pausar el cambio automático de imágenes" : "Reanudar el cambio automático de imágenes"
+                }
+                className="ml-2 flex h-6 w-6 items-center justify-center rounded-full text-white transition hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              >
+                {isPlaying ? <Pause size={13} /> : <Play size={13} />}
+              </button>
             </div>
           </div>
         </div>

@@ -60,8 +60,14 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <a
+        href="#contenido"
+        className="sr-only rounded-full bg-[#6c1710] px-5 py-3 text-sm font-medium uppercase tracking-wide text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50"
+      >
+        Saltar al contenido
+      </a>
       <Header />
-      <main>
+      <main id="contenido" tabIndex={-1}>
         <Hero />
         <Nosotros />
         <Resenas />

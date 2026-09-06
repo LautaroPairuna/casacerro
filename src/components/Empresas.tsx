@@ -74,8 +74,8 @@ export default function Empresas() {
           </h2>
           <div className="mt-5 mb-6 mx-auto w-32 h-0.5 bg-[#FCB040]" />
           <div className="inline-flex items-center gap-2 mb-5">
-            <Building2 size={16} className="text-[#A87B51]" />
-            <span className="text-xs uppercase tracking-[0.3em] text-[#A87B51]">
+            <Building2 size={16} className="text-[#8a5f38]" />
+            <span className="text-xs uppercase tracking-[0.3em] text-[#8a5f38]">
               Soluciones corporativas
             </span>
           </div>

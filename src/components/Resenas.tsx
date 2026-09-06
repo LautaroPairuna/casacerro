@@ -123,10 +123,10 @@ function PlatformBadge({ platform }: { platform: "google" | "booking" }) {
         {platform === "google" ? <GoogleIcon /> : <BookingIcon />}
       </div>
       <div>
-        <p className="text-[10px] uppercase tracking-[0.2em] text-neutral-400 mb-0.5">{data.label}</p>
+        <p className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 mb-0.5">{data.label}</p>
         <div className="flex items-baseline gap-1">
           <span className="text-3xl font-bold text-[#6c1710] leading-none">{data.score}</span>
-          <span className="text-sm text-neutral-400">{data.outOf}</span>
+          <span className="text-sm text-neutral-500">{data.outOf}</span>
         </div>
         <p className="text-[11px] text-neutral-500 mt-0.5 min-h-[1em]">{data.count}</p>
       </div>

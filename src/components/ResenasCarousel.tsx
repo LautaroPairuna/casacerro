@@ -3,8 +3,9 @@
 import { useCallback, useMemo } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
-import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import { ChevronLeft, ChevronRight, Pause, Play, Quote } from "lucide-react";
 import Reveal from "./Reveal";
+import { useAutoplayControl } from "@/lib/use-autoplay-control";
 
 type Platform = "google" | "booking";
 
@@ -102,11 +103,11 @@ function ReviewCard({ review }: { review: Review }) {
           <div>
             <p className="text-sm font-medium text-neutral-800 leading-tight">{review.author}</p>
             {review.room && (
-              <p className="text-[10px] uppercase tracking-[0.14em] text-neutral-400">{review.room}</p>
+              <p className="text-[10px] uppercase tracking-[0.14em] text-neutral-500">{review.room}</p>
             )}
           </div>
         </div>
-        <span className="shrink-0 text-[11px] uppercase tracking-[0.12em] text-neutral-400">
+        <span className="shrink-0 text-[11px] uppercase tracking-[0.12em] text-neutral-500">
           {review.date}
         </span>
       </div>
@@ -126,6 +127,8 @@ export default function ResenasCarousel({ reviews }: { reviews: Review[] }) {
     { loop: true, align: "center", slidesToScroll: 1, duration: 50 },
     [autoplay]
   );
+
+  const { isPlaying, toggle: toggleAutoplay } = useAutoplayControl(emblaApi);
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
@@ -147,6 +150,7 @@ export default function ResenasCarousel({ reviews }: { reviews: Review[] }) {
 
       <div className="flex items-center justify-center gap-4 mt-8">
         <button
+          type="button"
           onClick={scrollPrev}
           aria-label="Reseña anterior"
           className="flex items-center justify-center w-11 h-11 rounded-full border border-[#6c1710] text-[#6c1710] transition hover:bg-[#6c1710] hover:text-white"
@@ -154,11 +158,22 @@ export default function ResenasCarousel({ reviews }: { reviews: Review[] }) {
           <ChevronLeft size={20} />
         </button>
         <button
+          type="button"
           onClick={scrollNext}
           aria-label="Siguiente reseña"
           className="flex items-center justify-center w-11 h-11 rounded-full border border-[#6c1710] text-[#6c1710] transition hover:bg-[#6c1710] hover:text-white"
         >
           <ChevronRight size={20} />
+        </button>
+        <button
+          type="button"
+          onClick={toggleAutoplay}
+          aria-label={
+            isPlaying ? "Pausar el avance automático de reseñas" : "Reanudar el avance automático de reseñas"
+          }
+          className="flex items-center justify-center w-11 h-11 rounded-full border border-[#6c1710] text-[#6c1710] transition hover:bg-[#6c1710] hover:text-white"
+        >
+          {isPlaying ? <Pause size={18} /> : <Play size={18} />}
         </button>
       </div>
     </Reveal>

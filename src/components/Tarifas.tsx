@@ -31,13 +31,13 @@ export default function Tarifas({
             Tarifas
           </h2>
           <div className="mt-5 mb-5 mx-auto w-32 h-0.5 bg-[#FCB040]" />
-          <p className="text-xs uppercase tracking-[0.3em] text-[#A87B51] mb-3">
+          <p className="text-xs uppercase tracking-[0.3em] text-[#8a5f38] mb-3">
             Precios por noche · en pesos argentinos
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-          {habitaciones.map((hab, index) => (
+          {habitaciones.map((hab) => (
             <div
               key={hab.id}
               className="rounded-2xl overflow-hidden border border-[#e8d9c0] shadow-sm bg-white flex flex-col"
@@ -57,7 +57,7 @@ export default function Tarifas({
               </div>
 
               <div className="px-6 pt-5 pb-4 flex-1">
-                <p className="text-[11px] uppercase tracking-[0.2em] text-neutral-400 mb-3">
+                <p className="text-[11px] uppercase tracking-[0.2em] text-neutral-500 mb-3">
                   Opciones disponibles
                 </p>
                 <div className={`grid ${hab.gridCols} gap-3`}>
@@ -77,7 +77,7 @@ export default function Tarifas({
                       <p className="text-xl font-bold text-[#6c1710] mt-1 leading-none">
                         {formatPrecio(p.precio)}
                       </p>
-                      <p className="text-[11px] text-neutral-400 mt-0.5">
+                      <p className="text-[11px] text-neutral-500 mt-0.5">
                         por noche
                       </p>
                     </div>
