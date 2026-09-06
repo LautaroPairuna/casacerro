@@ -10,10 +10,13 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["lucide-react"],
   },
   images: {
-    // El contenedor arranca con heap acotado (256 MB), así que las imágenes se
-    // sirven tal cual desde /public en vez de optimizarse on-demand.
-    unoptimized: true,
-    minimumCacheTTL: 86400,
+    // El contenedor arranca con heap acotado (256 MB), así que no se optimiza
+    // on-demand: las variantes WebP se generan antes con sharp
+    // (`pnpm images:optimize`) y este loader arma el srcset apuntando a ellas.
+    loader: "custom",
+    loaderFile: "./src/lib/image-loader.ts",
+    deviceSizes: [640, 828, 1200, 1600],
+    imageSizes: [256],
   },
   async headers() {
     return [
