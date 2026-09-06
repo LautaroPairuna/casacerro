@@ -9,9 +9,7 @@ import Resenas from "@/components/Resenas";
 import Habitaciones from "@/components/Habitaciones";
 import Empresas from "@/components/Empresas";
 import Servicios from "@/components/Servicios";
-import Faq from "@/components/Faq";
 import Footer from "@/components/Footer";
-import { buildFaqItems } from "@/lib/faq";
 import { buildJsonLd } from "@/lib/seo";
 import { loadTariffData } from "@/lib/tariffs";
 
@@ -54,8 +52,7 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const { habitaciones, tariffInfo } = await loadTariffData();
-  const faqItems = buildFaqItems(habitaciones, tariffInfo);
-  const jsonLd = buildJsonLd(habitaciones, faqItems);
+  const jsonLd = buildJsonLd(habitaciones);
 
   return (
     <>
@@ -72,7 +69,6 @@ export default async function Home() {
         <Habitaciones />
         <Tarifas habitaciones={habitaciones} tariffInfo={tariffInfo} />
         <Empresas />
-        <Faq items={faqItems} />
         <Contacto />
       </main>
       <Footer />

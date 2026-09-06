@@ -9,7 +9,6 @@ const SECCIONES = [
   { href: "#habitaciones", label: "Habitaciones" },
   { href: "#tarifas", label: "Tarifas" },
   { href: "#empresas", label: "Empresas" },
-  { href: "#preguntas", label: "Preguntas frecuentes" },
   { href: "#contacto", label: "Contacto" },
 ];
 

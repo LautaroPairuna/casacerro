@@ -1,4 +1,3 @@
-import type { FaqItem } from "@/lib/faq";
 import { BUSINESS, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import { priceRange, type Habitacion } from "@/lib/tariffs";
 
@@ -33,7 +32,7 @@ function amenityFeature(name: string) {
  * nodos entre sí por `@id` (la página apunta al negocio, las ofertas al mismo
  * alojamiento) y es lo que Google recomienda para una entidad local.
  */
-export function buildJsonLd(habitaciones: Habitacion[], faqItems: FaqItem[]) {
+export function buildJsonLd(habitaciones: Habitacion[]) {
   const rango = priceRange(habitaciones);
 
   const offers = habitaciones.flatMap((hab) =>
@@ -138,7 +137,7 @@ export function buildJsonLd(habitaciones: Habitacion[], faqItems: FaqItem[]) {
   };
 
   const webPage = {
-    "@type": ["WebPage", "FAQPage"],
+    "@type": "WebPage",
     "@id": PAGE_ID,
     url: SITE_URL,
     name: `${SITE_NAME} | Apartamentos en Salta`,
@@ -150,14 +149,6 @@ export function buildJsonLd(habitaciones: Habitacion[], faqItems: FaqItem[]) {
       "@type": "ImageObject",
       url: `${SITE_URL}/image/hero/foto-hero-2.jpeg`,
     },
-    mainEntity: faqItems.map((item) => ({
-      "@type": "Question",
-      name: item.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: item.answer,
-      },
-    })),
   };
 
   return {
