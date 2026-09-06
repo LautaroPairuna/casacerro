@@ -44,8 +44,10 @@ export default function Nosotros() {
             <div className="relative h-full min-h-105 w-full overflow-hidden rounded-4xl shadow-md xl:min-h-full">
               <Image
                 src="/image/nosotros/foto-nosotros.jpeg"
-                alt="CasaCerro - apartamentos y estadía en Salta"
+                alt="Interior de un apartamento de CasaCerro en Salta"
                 fill
+                sizes="(min-width: 1280px) 66vw, 100vw"
+                loading="lazy"
                 className="object-cover"
               />
             </div>

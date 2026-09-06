@@ -1,36 +1,38 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Mulish } from "next/font/google";
 import "./globals.css";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
+// Solo los pesos que realmente se usan: cada peso extra es un archivo woff2
+// más en el critical path. Cormorant se aplica únicamente a los títulos.
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["300", "400", "600"],
+  display: "swap",
 });
 
 const mulish = Mulish({
   variable: "--font-mulish",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
 });
 
-const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-const siteUrl =
-  rawSiteUrl && /^https?:\/\//.test(rawSiteUrl)
-    ? rawSiteUrl
-    : "https://casacerro.com.ar";
-const siteName = "CasaCerro Salta";
-const siteDescription =
-  "CasaCerro ofrece apartamentos amplios y cómodos en Salta, a 50 metros del Shopping Alto Noa, con excelente ubicación, servicios completos y atención cercana para una estadía tranquila.";
+export const viewport: Viewport = {
+  themeColor: "#6c1710",
+  colorScheme: "light",
+};
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: `${siteName} | Apartamentos en Salta`,
-    template: `%s | ${siteName}`,
+    default: `${SITE_NAME} | Apartamentos en Salta`,
+    template: `%s | ${SITE_NAME}`,
   },
-  description: siteDescription,
-  applicationName: siteName,
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  manifest: "/manifest.webmanifest",
   keywords: [
     "CasaCerro",
     "apartamentos en Salta",
@@ -38,20 +40,31 @@ export const metadata: Metadata = {
     "apart hotel Salta",
     "departamentos temporarios Salta",
     "hospedaje cerca Alto Noa",
+    "alojamiento cerca del Shopping Alto Noa",
     "tarifas alojamiento Salta",
+    "alojamiento para empresas en Salta",
     "reserva por WhatsApp Salta",
   ],
-  authors: [{ name: siteName }],
-  creator: siteName,
-  publisher: siteName,
+  authors: [{ name: SITE_NAME }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
   alternates: {
     canonical: "/",
+    languages: { "es-AR": "/" },
   },
   openGraph: {
-    title: `${siteName} | Apartamentos en Salta`,
-    description: siteDescription,
+    title: `${SITE_NAME} | Apartamentos en Salta`,
+    description: SITE_DESCRIPTION,
     url: "/",
-    siteName,
+    siteName: SITE_NAME,
     locale: "es_AR",
     type: "website",
     images: [
@@ -65,8 +78,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteName} | Apartamentos en Salta`,
-    description: siteDescription,
+    title: `${SITE_NAME} | Apartamentos en Salta`,
+    description: SITE_DESCRIPTION,
     images: ["/image/hero/foto-hero-2.jpeg"],
   },
   robots: {
@@ -90,9 +103,15 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="es"
+      lang="es-AR"
       className={`${cormorant.variable} ${mulish.variable} h-full antialiased`}
     >
+      <head>
+        {/* El iframe del mapa y los enlaces a wa.me se resuelven antes de que el
+            usuario llegue a esas secciones. */}
+        <link rel="preconnect" href="https://www.google.com" />
+        <link rel="dns-prefetch" href="https://wa.me" />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

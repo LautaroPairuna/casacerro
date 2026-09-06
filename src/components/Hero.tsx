@@ -2,11 +2,10 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import Reveal from "./Reveal";
+import { whatsappHref } from "@/lib/site";
 
 type HeroImage = {
   src: string;
@@ -16,20 +15,21 @@ type HeroImage = {
 const HERO_IMAGES: HeroImage[] = [
   {
     src: "/image/hero/foto-hero-2.jpeg",
-    alt: "Vista principal de Casa Cerro",
+    alt: "Frente de CasaCerro, apartamentos en Av. Uruguay 691, Salta",
   },
   {
     src: "/image/hero/foto-hero-4.jpeg",
-    alt: "Habitación de Casa Cerro",
+    alt: "Apartamento equipado de CasaCerro en Salta",
   },
   {
     src: "/image/hero/foto-hero-3.jpeg",
-    alt: "Espacio exterior de Casa Cerro",
+    alt: "Espacio exterior de CasaCerro en Salta",
   },
 ];
 
-const WHATSAPP_NUMBER =
-  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5493874029160";
+const WHATSAPP_HREF = whatsappHref(
+  "Hola, me gustaría consultar por disponibilidad y tarifas en Casa Cerro."
+);
 
 export default function Hero() {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -51,12 +51,6 @@ export default function Hero() {
     },
     [autoplay]
   );
-
-  const whatsappHref = useMemo(() => {
-    const message =
-      "Hola, me gustaría consultar por disponibilidad y tarifas en Casa Cerro.";
-    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-  }, []);
 
   const scrollPrev = useCallback(() => {
     if (!emblaApi) return;
@@ -81,6 +75,8 @@ export default function Hero() {
     setSelectedIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
 
+  // Embla expone su estado por eventos, no por render: este efecto sólo
+  // sincroniza el índice activo de los puntos con el carrusel.
   useEffect(() => {
     if (!emblaApi) return;
 
@@ -97,21 +93,27 @@ export default function Hero() {
   return (
     <section className="w-full bg-[#eee] pt-32 pb-12 px-4 md:px-6">
       <div className="mx-auto max-w-[1400px] grid grid-cols-1 gap-8 xl:grid-cols-12 xl:items-stretch">
-        <Reveal className="xl:col-span-4 flex" duration={0.6} amount={0.35}>
+        {/* Above the fold: animación por CSS en vez de <Reveal>, que arranca en
+            opacity:0 y no se muestra hasta que hidrata el JS (retrasa el LCP). */}
+        <div className="cc-anim-fade-up flex xl:col-span-4">
           <div className="flex w-full flex-col justify-center rounded-3xl bg-[#f5ecd7] p-8 shadow-md md:p-10">
-            <span className="mb-10 inline-block text-sm uppercase tracking-[0.25em] text-neutral-600 text-center">
+            <span className="mb-8 inline-block text-sm uppercase tracking-[0.25em] text-neutral-600 text-center">
               Bienvenidos a...
             </span>
 
-            <Image
-              src="/logo-casacerro-animado.svg"
-              alt="Logo Casa Cerro"
-              width={250}
-              height={125}
-              loading="lazy"
-              priority={false}
-              className="mx-auto mb-5"
-            />
+            <h1 className="text-center">
+              <Image
+                src="/logo-casacerro-animado.svg"
+                alt="CasaCerro"
+                width={250}
+                height={125}
+                loading="eager"
+                className="mx-auto mb-4"
+              />
+              <span className="block text-xl leading-8 tracking-[0.06em] text-neutral-800 md:text-2xl">
+                Apartamentos en Salta, a 50 metros del Shopping Alto Noa
+              </span>
+            </h1>
 
             <p className="mt-5 text-base leading-7 text-neutral-700 md:text-lg">
               Un espacio pensado para disfrutar Salta con comodidad, calidez y
@@ -119,26 +121,28 @@ export default function Hero() {
             </p>
 
             <div className="mt-8 flex flex-col gap-4 sm:flex-col">
-              <Link
-                href={whatsappHref}
+              <a
+                href={WHATSAPP_HREF}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-full border border-[#6c1710] px-6 py-3 text-sm font-medium uppercase tracking-wide text-[#6c1710] transition hover:bg-[#6c1710] hover:text-[#FFFFFF]"
               >
                 Hablar por WhatsApp
-              </Link>
+              </a>
 
               <a
                 href="#habitaciones"
-                className="inline-flex items-center justify-center rounded-full border border-[#6c1710] px-6 py-3 text-sm font-medium uppercase tracking-wide text-[#6c1710] transition hover:bg-[#6c1710] hover:text-[#FFFFFF]"  // #fcb040
+                className="inline-flex items-center justify-center rounded-full border border-[#6c1710] px-6 py-3 text-sm font-medium uppercase tracking-wide text-[#6c1710] transition hover:bg-[#6c1710] hover:text-[#FFFFFF]"
               >
                 Ver habitaciones
               </a>
             </div>
           </div>
-        </Reveal>
+        </div>
 
-        <Reveal className="xl:col-span-8" duration={0.7} delay={0.1} amount={0.25}>
+        {/* La primera foto es el elemento LCP: se pinta sin animación de entrada
+            ni espera de hidratación. */}
+        <div className="xl:col-span-8">
           <div className="relative overflow-hidden rounded-3xl shadow-md">
             <div className="overflow-hidden" ref={emblaRef}>
               <div className="flex">
@@ -151,8 +155,10 @@ export default function Hero() {
                       src={image.src}
                       alt={image.alt}
                       fill
+                      sizes="(min-width: 1280px) 66vw, 100vw"
                       className="object-cover"
-                      priority={index === 0}
+                      loading={index === 0 ? "eager" : "lazy"}
+                      fetchPriority={index === 0 ? "high" : "auto"}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
                   </div>
@@ -179,9 +185,9 @@ export default function Hero() {
             </button>
 
             <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2">
-              {HERO_IMAGES.map((_, index) => (
+              {HERO_IMAGES.map((image, index) => (
                 <button
-                  key={index}
+                  key={image.src}
                   type="button"
                   onClick={() => scrollTo(index)}
                   aria-label={`Ir a la imagen ${index + 1}`}
@@ -194,7 +200,7 @@ export default function Hero() {
               ))}
             </div>
           </div>
-        </Reveal>
+        </div>
       </div>
     </section>
   );

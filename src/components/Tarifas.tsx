@@ -1,70 +1,6 @@
 import { User, Car, Info, MessageCircle } from "lucide-react";
-import Link from "next/link";
-import { getTariffCatalog } from "@/lib/admin-data";
-
-const WHATSAPP_NUMBER =
-  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5493874029160";
-
-type PrecioItem = {
-  personas: number;
-  label: string;
-  precio: number;
-};
-
-type Habitacion = {
-  id: number;
-  tipo: string;
-  badge: string;
-  descripcion: string;
-  gridCols: string;
-  precios: PrecioItem[];
-};
-
-type TariffInfo = {
-  parkingNote: string;
-  seasonalNote: string;
-  validityNote: string;
-  extraNotes: string[];
-};
-
-const INITIAL_HABITACIONES: Habitacion[] = [
-  {
-    id: 1,
-    tipo: "Monoambientes",
-    badge: "Hasta 4 personas",
-    descripcion:
-      "Ambiente integrado con todo lo necesario para una estadía cómoda y agradable.",
-    gridCols: "grid-cols-2 sm:grid-cols-3",
-    precios: [
-      { personas: 2, label: "Single / Doble", precio: 59000 },
-      { personas: 3, label: "Triple", precio: 69000 },
-      { personas: 4, label: "Cuádruple", precio: 78000 },
-    ],
-  },
-  {
-    id: 2,
-    tipo: "Dos Ambientes",
-    badge: "Hasta 4 personas",
-    descripcion:
-      "Ambientes separados, mayor privacidad y espacio. Ideal para familias o grupos.",
-    gridCols: "grid-cols-2",
-    precios: [
-      { personas: 3, label: "Triple", precio: 75000 },
-      { personas: 4, label: "Cuádruple", precio: 88000 },
-    ],
-  },
-];
-
-const INITIAL_TARIFF_INFO: TariffInfo = {
-  parkingNote: "Cochera $9.000 por día. Sujeta a disponibilidad.",
-  seasonalNote: "Los precios pueden variar sin previo aviso en temporada alta y fines de semana largos.",
-  validityNote: "Valores vigentes hasta el 31 de marzo de 2026.",
-  extraNotes: [],
-};
-
-function formatPrecio(precio: number): string {
-  return `$${precio.toLocaleString("es-AR")}`;
-}
+import { whatsappHref } from "@/lib/site";
+import { formatPrecio, type Habitacion, type TariffInfo } from "@/lib/tariffs";
 
 function PersonasIcons({ count }: { count: number }) {
   return (
@@ -76,45 +12,16 @@ function PersonasIcons({ count }: { count: number }) {
   );
 }
 
-async function loadTariffData(): Promise<{
+export default function Tarifas({
+  habitaciones,
+  tariffInfo,
+}: {
   habitaciones: Habitacion[];
   tariffInfo: TariffInfo;
-}> {
-  try {
-    const { roomTypes, tariffInfo } = await getTariffCatalog();
-    const habitaciones =
-      roomTypes.length > 0
-        ? roomTypes.map((roomType) => ({
-            id: roomType.id,
-            tipo: roomType.name,
-            badge: roomType.badge,
-            descripcion: roomType.description,
-            gridCols: roomType.rates.length === 3 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2",
-            precios: roomType.rates.map((rate) => ({
-              personas: rate.people,
-              label: rate.label,
-              precio: rate.price,
-            })),
-          }))
-        : INITIAL_HABITACIONES;
-
-    return {
-      habitaciones,
-      tariffInfo: tariffInfo ?? INITIAL_TARIFF_INFO,
-    };
-  } catch {
-    return {
-      habitaciones: INITIAL_HABITACIONES,
-      tariffInfo: INITIAL_TARIFF_INFO,
-    };
-  }
-}
-
-export default async function Tarifas() {
-  const { habitaciones, tariffInfo } = await loadTariffData();
-  const message =
-    "Hola, me gustaría consultar por disponibilidad y tarifas en Casa Cerro.";
-  const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}) {
+  const href = whatsappHref(
+    "Hola, me gustaría consultar por disponibilidad y tarifas en Casa Cerro."
+  );
 
   return (
     <section id="tarifas" className="py-20 px-4 md:px-6 bg-[#eee]">
@@ -124,7 +31,6 @@ export default async function Tarifas() {
             Tarifas
           </h2>
           <div className="mt-5 mb-5 mx-auto w-32 h-0.5 bg-[#FCB040]" />
-          <h3>  </h3>
           <p className="text-xs uppercase tracking-[0.3em] text-[#A87B51] mb-3">
             Precios por noche · en pesos argentinos
           </p>
@@ -180,15 +86,15 @@ export default async function Tarifas() {
               </div>
 
               <div className="px-6 pb-6 pt-2">
-                <Link
-                  href={whatsappHref}
+                <a
+                  href={href}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full rounded-full border border-[#6c1710] px-6 py-3 text-sm font-medium uppercase tracking-wide text-[#6c1710] transition hover:bg-[#6c1710] hover:text-[#FFFFFF]"
                 >
                   <MessageCircle size={16} />
                   Consultar disponibilidad
-                </Link>
+                </a>
               </div>
             </div>
           ))}

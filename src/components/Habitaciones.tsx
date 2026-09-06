@@ -280,9 +280,9 @@ function RoomModal({ room, onClose }: RoomModalProps) {
                         >
                           <Image
                             src={image}
-                            alt={`${room.name} - imagen ${index + 1}`}
+                            alt={`Apartamento ${room.name} de CasaCerro en Salta - imagen ${index + 1}`}
                             fill
-                            priority={index === 0}
+                            loading={index === 0 ? "eager" : "lazy"}
                             sizes="(min-width: 1024px) 50vw, 100vw"
                             className="object-cover"
                           />
@@ -359,8 +359,10 @@ export default function Habitaciones() {
                 <div className="relative aspect-[16/10] w-full overflow-hidden">
                     <Image
                     src={room.cardImage}
-                    alt={room.name}
+                    alt={`Apartamento ${room.name} de CasaCerro en Salta`}
                     fill
+                    sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 50vw, 100vw"
+                    loading="lazy"
                     className="object-cover transition duration-500 hover:scale-[1.02]"
                     />
                 </div>

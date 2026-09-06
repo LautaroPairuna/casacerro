@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { connection } from "next/server";
 import WhatsappLink from "@/components/WhatsappLink";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
@@ -10,22 +9,27 @@ import Resenas from "@/components/Resenas";
 import Habitaciones from "@/components/Habitaciones";
 import Empresas from "@/components/Empresas";
 import Servicios from "@/components/Servicios";
+import Faq from "@/components/Faq";
+import Footer from "@/components/Footer";
+import { buildFaqItems } from "@/lib/faq";
+import { buildJsonLd } from "@/lib/seo";
+import { loadTariffData } from "@/lib/tariffs";
 
-const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-const siteUrl =
-  rawSiteUrl && /^https?:\/\//.test(rawSiteUrl)
-    ? rawSiteUrl
-    : "https://casacerro.com.ar";
+// La landing se prerenderiza y se regenera cada hora; el panel de admin ya
+// llama a `revalidatePath("/")` al tocar una tarifa, así que un cambio de
+// precio se ve al instante sin renderizar la página en cada visita.
+export const revalidate = 3600;
 
-const homeTitle = "Apartamentos cómodos en Salta | CasaCerro";
+const homeTitle = "Apartamentos en Salta cerca del Alto Noa | CasaCerro";
 const homeDescription =
-  "Alojate en CasaCerro: apartamentos amplios, cómodos y equipados en Salta, cerca del Shopping Alto Noa. Consultá disponibilidad, habitaciones y tarifas por WhatsApp.";
+  "Apartamentos amplios y equipados en Salta, a 50 metros del Shopping Alto Noa. Cochera privada, WiFi, aire acondicionado y kitchenette. Consultá tarifas y disponibilidad por WhatsApp.";
 
 export const metadata: Metadata = {
   title: homeTitle,
   description: homeDescription,
   alternates: {
     canonical: "/",
+    languages: { "es-AR": "/" },
   },
   openGraph: {
     title: homeTitle,
@@ -49,67 +53,30 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  await connection();
-
-  const websiteJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "CasaCerro Salta",
-    url: siteUrl,
-    inLanguage: "es-AR",
-    description: homeDescription,
-  };
-
-  const lodgingJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "LodgingBusiness",
-    name: "CasaCerro",
-    url: siteUrl,
-    image: [
-      `${siteUrl}/image/hero/foto-hero-2.jpeg`,
-      `${siteUrl}/image/habitaciones/monoambiente-4-personas.jpeg`,
-    ],
-    logo: `${siteUrl}/logo-casacerro-base.svg`,
-    description:
-      "CasaCerro ofrece apartamentos espaciosos y confortables en Salta, con servicios completos y ubicación estratégica cerca del Shopping Alto Noa.",
-    telephone: "+54 9 387 402 9160",
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "Av. Uruguay 691",
-      addressLocality: "Salta",
-      postalCode: "A4400",
-      addressCountry: "AR",
-    },
-    areaServed: "Salta, Argentina",
-    sameAs: ["https://www.instagram.com/casacerro.salta/"],
-    amenityFeature: [
-      { "@type": "LocationFeatureSpecification", name: "WiFi gratis", value: true },
-      { "@type": "LocationFeatureSpecification", name: "Aire acondicionado", value: true },
-      { "@type": "LocationFeatureSpecification", name: "Kitchenette", value: true },
-      { "@type": "LocationFeatureSpecification", name: "Cochera privada", value: true },
-    ],
-  };
+  const { habitaciones, tariffInfo } = await loadTariffData();
+  const faqItems = buildFaqItems(habitaciones, tariffInfo);
+  const jsonLd = buildJsonLd(habitaciones, faqItems);
 
   return (
-    <main>
+    <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(lodgingJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Header />
-      <Hero />
-      <Nosotros />
-      <Resenas />
-      <Servicios />
-      <Habitaciones />
-      <Tarifas />
-      <Empresas />
-      <Contacto />
+      <main>
+        <Hero />
+        <Nosotros />
+        <Resenas />
+        <Servicios />
+        <Habitaciones />
+        <Tarifas habitaciones={habitaciones} tariffInfo={tariffInfo} />
+        <Empresas />
+        <Faq items={faqItems} />
+        <Contacto />
+      </main>
+      <Footer />
       <WhatsappLink />
-    </main>
+    </>
   );
 }
