@@ -113,8 +113,8 @@ const FALLBACK_REVIEWS: Review[] = [
 
 function PlatformBadge({ platform }: { platform: "google" | "booking" }) {
   const data = {
-    google: { label: "Google", score: "4.8", outOf: "/ 5", count: "180 reseñas" },
-    booking: { label: "Booking.com", score: "9.3", outOf: "/ 10", count: "" },
+    google: { label: "Google", score: "4.8", outOf: "/ 5", count: "188 reseñas" },
+    booking: { label: "Booking.com", score: "9.1", outOf: "/ 10", count: "" },
   }[platform];
 
   return (
