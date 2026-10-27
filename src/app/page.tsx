@@ -10,13 +10,20 @@ import Habitaciones from "@/components/Habitaciones";
 import Empresas from "@/components/Empresas";
 import Servicios from "@/components/Servicios";
 import Footer from "@/components/Footer";
+import { connection } from "next/server";
 import { buildJsonLd } from "@/lib/seo";
 import { loadTariffData } from "@/lib/tariffs";
 
-// La landing se prerenderiza y se regenera cada hora; el panel de admin ya
-// llama a `revalidatePath("/")` al tocar una tarifa, así que un cambio de
-// precio se ve al instante sin renderizar la página en cada visita.
-export const revalidate = 3600;
+// La página se renderiza en cada request (connection() la fuerza a dinámica),
+// pero eso no pega contra la base en cada visita: getTariffCatalog() está
+// memoizado con unstable_cache + tags, así que la consulta real sólo corre
+// cuando el panel de admin invalida el tag ("tariff-catalog") al guardar un
+// cambio. Antes esta página tenía `revalidate = 3600`: eso agregaba una
+// SEGUNDA caché, de la página entera, que si una regeneración de fondo
+// pisaba la base en el momento justo (timeout, deploy en curso), horneaba
+// los precios de fallback en el HTML estático durante una hora entera — sin
+// ningún error visible. Con render dinámico + caché sólo a nivel dato, un
+// fallo puntual de la base ya no queda pegado.
 
 const homeTitle = "Apartamentos en Salta cerca del Alto Noa | CasaCerro";
 const homeDescription =
@@ -51,6 +58,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
+  await connection();
   const { habitaciones, tariffInfo } = await loadTariffData();
   const jsonLd = buildJsonLd(habitaciones);
 

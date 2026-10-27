@@ -94,7 +94,14 @@ export async function loadTariffData(): Promise<{
       habitaciones,
       tariffInfo: tariffInfo ?? INITIAL_TARIFF_INFO,
     };
-  } catch {
+  } catch (error) {
+    // Antes este catch era mudo: si la base no respondía, la home mostraba
+    // los precios de ejemplo sin dejar ningún rastro en los logs. Con esto,
+    // el error real (timeout, host inalcanzable, credenciales) queda en el
+    // log del servicio en Dokploy — es lo primero que hay que mirar si la
+    // home vuelve a mostrar estos valores de fallback.
+    console.error("[tarifas] No se pudo leer el catálogo de la base:", error);
+
     return {
       habitaciones: INITIAL_HABITACIONES,
       tariffInfo: INITIAL_TARIFF_INFO,
