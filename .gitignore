@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Dumps de la base (tienen datos y hashes de contraseñas): nunca al repo
+/prisma/db/
+*.sql.gz
