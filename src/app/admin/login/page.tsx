@@ -35,7 +35,7 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <section className="relative isolate flex min-h-screen w-full items-center justify-center overflow-hidden px-4 py-10">
+    <main className="relative isolate flex min-h-screen w-full items-center justify-center overflow-hidden px-4 py-10">
       <div
         className="cc-anim-fade-in absolute left-[-14rem] top-[-8rem] h-[34rem] w-[34rem] rounded-full bg-[#fcb040]/20 blur-[120px]"
         style={{ ["--anim-duration" as string]: "0.5s" }}
@@ -121,6 +121,6 @@ export default function AdminLoginPage() {
           </button>
         </form>
       </div>
-    </section>
+    </main>
   );
 }

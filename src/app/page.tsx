@@ -86,7 +86,9 @@ export default async function Home() {
         <Contacto />
       </main>
       <Footer />
-      <WhatsappLink />
+      <aside aria-label="Contacto por WhatsApp">
+        <WhatsappLink />
+      </aside>
     </>
   );
 }

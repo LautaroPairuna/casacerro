@@ -45,7 +45,7 @@ function GoogleIcon() {
 
 function StarRow({ score }: { score: number }) {
   return (
-    <div className="flex items-center gap-0.5" aria-label={`${score} estrellas`}>
+    <div className="flex items-center gap-0.5" role="img" aria-label={`${score} estrellas`}>
       {[1, 2, 3, 4, 5].map((i) => (
         <svg key={i} viewBox="0 0 16 16" className="w-4 h-4" aria-hidden="true">
           <path
