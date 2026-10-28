@@ -13,12 +13,27 @@ import {
   getAdminByEmail,
   updateLastLogin,
 } from "@/lib/admin-data";
+import {
+  ipDelPedido,
+  limpiarFallos,
+  registrarFallo,
+  segundosDeBloqueo,
+} from "@/lib/login-throttle";
 
 export async function POST(request: Request) {
   const requestId = Math.random().toString(36).substring(7);
   const start = Date.now();
+  const ip = ipDelPedido(request.headers);
 
   try {
+    const espera = segundosDeBloqueo(ip);
+    if (espera > 0) {
+      return NextResponse.json(
+        { message: "Demasiados intentos fallidos. Esperá unos minutos antes de volver a probar." },
+        { status: 429, headers: { "Retry-After": String(espera) } },
+      );
+    }
+
     console.log(`[AUTH][${requestId}] Inicio de intento de login`);
     
     await ensureAdminBootstrap();
@@ -32,16 +47,19 @@ export async function POST(request: Request) {
     const admin = await getAdminByEmail(email);
     if (!admin) {
       console.warn(`[AUTH][${requestId}] Usuario no encontrado: ${email}`);
+      registrarFallo(ip);
       return NextResponse.json({ message: "Credenciales inválidas." }, { status: 401 });
     }
 
     const isValid = await bcrypt.compare(password, admin.passwordHash);
     if (!isValid) {
       console.warn(`[AUTH][${requestId}] Contraseña incorrecta para: ${email}`);
+      registrarFallo(ip);
       return NextResponse.json({ message: "Credenciales inválidas." }, { status: 401 });
     }
 
     console.log(`[AUTH][${requestId}] Credenciales válidas. Actualizando último acceso...`);
+    limpiarFallos(ip);
     await updateLastLogin(admin.id);
     
     const token = await createSessionToken({
