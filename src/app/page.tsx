@@ -42,10 +42,10 @@ export const metadata: Metadata = {
     url: "/",
     images: [
       {
-        url: "/image/hero/foto-hero-2.jpeg",
+        url: "/og-casacerro.png",
         width: 1200,
         height: 630,
-        alt: "Apartamentos CasaCerro en Salta",
+        alt: "CasaCerro: apartamentos en Salta",
       },
     ],
   },
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: homeTitle,
     description: homeDescription,
-    images: ["/image/hero/foto-hero-2.jpeg"],
+    images: ["/og-casacerro.png"],
   },
 };
 

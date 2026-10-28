@@ -69,10 +69,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/image/hero/foto-hero-2.jpeg",
+        url: "/og-casacerro.png",
         width: 1200,
         height: 630,
-        alt: "CasaCerro Salta - apartamentos para estadía en Salta",
+        alt: "CasaCerro: apartamentos en Salta",
       },
     ],
   },
@@ -80,7 +80,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${SITE_NAME} | Apartamentos en Salta`,
     description: SITE_DESCRIPTION,
-    images: ["/image/hero/foto-hero-2.jpeg"],
+    images: ["/og-casacerro.png"],
   },
   robots: {
     index: true,
