@@ -195,15 +195,6 @@ export default function PreSaltaBanner() {
             <MessageCircle size={18} />
             Reservar con PRE SALTA
           </a>
-          <a
-            href={PRESALTA.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-full border border-white/80 px-7 py-3 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-white hover:text-[#A80003] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-          >
-            Cómo funciona
-            <span className="sr-only"> (abre presalta.ar en una pestaña nueva)</span>
-          </a>
         </div>
       </div>
 

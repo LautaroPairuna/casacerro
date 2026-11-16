@@ -1,4 +1,5 @@
 import ResenasCarousel, { type Review } from "@/components/ResenasCarousel";
+import Reveal from "@/components/Reveal";
 
 // ── Icons ─────────────────────────────────────────────────────────────────────
 
@@ -143,18 +144,18 @@ export default function Resenas() {
     <section id="resenas" className="py-20 px-4 md:px-6 bg-(--resenas-bg)">
       <div className="mx-auto max-w-[1400px]">
         {/* Header */}
-        <div className="text-center mb-12">
+        <Reveal className="text-center mb-12" duration={0.55} amount={0.7}>
           <h2 className="text-5xl md:text-6xl font-light tracking-[0.15em] uppercase text-neutral-900">
             Reseñas
           </h2>
           <div className="mt-5 mb-5 mx-auto w-32 h-0.5 bg-[#FCB040]" />
-        </div>
+        </Reveal>
 
         {/* Platform score badges */}
-        <div className="flex flex-wrap justify-center gap-4 mb-10">
+        <Reveal className="flex flex-wrap justify-center gap-4 mb-10" duration={0.5} delay={0.1} amount={0.5}>
           <PlatformBadge platform="google" />
           <PlatformBadge platform="booking" />
-        </div>
+        </Reveal>
 
         {/* Carousel (Client Component) */}
         <ResenasCarousel reviews={reviews} />

@@ -93,7 +93,7 @@ export default async function Home({
       {showPreSalta && <PreSaltaBanner />}
       <Header />
       <main id="contenido" tabIndex={-1}>
-        <Hero />
+        <Hero preSalta={showPreSalta} />
         <Nosotros />
         <Resenas />
         <Servicios />

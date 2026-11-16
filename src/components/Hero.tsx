@@ -43,7 +43,16 @@ const WHATSAPP_HREF = whatsappHref(
   "Hola, me gustaría consultar por disponibilidad y tarifas en Casa Cerro."
 );
 
-export default function Hero() {
+const PRESALTA_WHATSAPP_HREF = whatsappHref(
+  "Hola, quiero reservar con PRE SALTA. ¿Me pasan disponibilidad y tarifas para mis fechas?"
+);
+
+/**
+ * `preSalta`: mientras dura el período de compras de PRE SALTA el segundo
+ * botón de la tarjeta pasa a ser "Reservar con PRE SALTA" (mismo estilo) en
+ * lugar de "Ver habitaciones"; al terminar el programa vuelve solo.
+ */
+export default function Hero({ preSalta = false }: { preSalta?: boolean }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -276,12 +285,23 @@ export default function Hero() {
                 Hablar por WhatsApp
               </a>
 
-              <a
-                href="#habitaciones"
-                className="inline-flex items-center justify-center rounded-full border border-[#6c1710] px-6 py-3 text-center text-sm font-medium uppercase tracking-wide text-[#6c1710] transition hover:bg-[#6c1710] hover:text-[#FFFFFF]"
-              >
-                Ver habitaciones
-              </a>
+              {preSalta ? (
+                <a
+                  href={PRESALTA_WHATSAPP_HREF}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center rounded-full border border-[#6c1710] px-6 py-3 text-center text-sm font-medium uppercase tracking-wide text-[#6c1710] transition hover:bg-[#6c1710] hover:text-[#FFFFFF]"
+                >
+                  Reservar con PRE SALTA
+                </a>
+              ) : (
+                <a
+                  href="#habitaciones"
+                  className="inline-flex items-center justify-center rounded-full border border-[#6c1710] px-6 py-3 text-center text-sm font-medium uppercase tracking-wide text-[#6c1710] transition hover:bg-[#6c1710] hover:text-[#FFFFFF]"
+                >
+                  Ver habitaciones
+                </a>
+              )}
             </div>
           </div>
         </div>

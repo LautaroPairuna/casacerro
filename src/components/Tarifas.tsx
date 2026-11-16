@@ -1,6 +1,7 @@
 import { User, Car, Info, MessageCircle } from "lucide-react";
 import { whatsappHref } from "@/lib/site";
 import { formatPrecio, type Habitacion, type TariffInfo } from "@/lib/tariffs";
+import Reveal from "./Reveal";
 
 function PersonasIcons({ count }: { count: number }) {
   return (
@@ -26,7 +27,7 @@ export default function Tarifas({
   return (
     <section id="tarifas" className="py-20 px-4 md:px-6 bg-[#eee]">
       <div className="mx-auto max-w-[1400px]">
-        <div className="text-center mb-12">
+        <Reveal className="text-center mb-12" duration={0.55} amount={0.7}>
           <h2 className="text-5xl md:text-6xl font-light tracking-[0.15em] uppercase  text-neutral-900">
             Tarifas
           </h2>
@@ -34,13 +35,16 @@ export default function Tarifas({
           <p className="text-xs uppercase tracking-[0.3em] text-[#8a5f38] mb-3">
             Precios por noche · en pesos argentinos
           </p>
-        </div>
+        </Reveal>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-          {habitaciones.map((hab) => (
-            <div
+          {habitaciones.map((hab, cardIndex) => (
+            <Reveal
               key={hab.id}
               className="rounded-2xl overflow-hidden border border-[#e8d9c0] shadow-sm bg-white flex flex-col"
+              duration={0.6}
+              delay={cardIndex * 0.12}
+              amount={0.2}
             >
               <div className="bg-[#f5ecd7] px-6 pt-6 pb-5 border-b border-[#e8d9c0]">
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
@@ -96,11 +100,11 @@ export default function Tarifas({
                   Consultar disponibilidad
                 </a>
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
 
-        <div className="mt-7 rounded-2xl border border-[#e8d9c0] bg-[#f5ecd7]/80 px-6 py-5 space-y-3">
+        <Reveal className="mt-7 rounded-2xl border border-[#e8d9c0] bg-[#f5ecd7]/80 px-6 py-5 space-y-3">
           <div className="flex items-start gap-2.5 text-base font-bold text-[#6c1710]">
             <Car size={15} className="mt-0.5 shrink-0 text-[#6c1710]" />
             <span>{tariffInfo.parkingNote}</span>
@@ -119,7 +123,7 @@ export default function Tarifas({
               <span>{note}</span>
             </div>
           ))}
-        </div>
+        </Reveal>
       </div>
     </section>
   );

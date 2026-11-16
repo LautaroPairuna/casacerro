@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { MapPin, MessageCircle } from "lucide-react";
 import { BUSINESS, SITE_NAME, formatPhone, whatsappHref } from "@/lib/site";
+import Reveal from "./Reveal";
 
 const SECCIONES = [
   { href: "#nosotros", label: "Nosotros" },
@@ -42,7 +43,7 @@ export default function Footer() {
   return (
     <footer className="w-full bg-[#f5ecd7] px-4 py-14 md:px-6">
       <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-10 md:grid-cols-3">
-        <div>
+        <Reveal duration={0.5} amount={0.3}>
           <Image
             src="/logo-casacerro-base.svg"
             alt={`${SITE_NAME} - apartamentos en Salta`}
@@ -56,9 +57,9 @@ export default function Footer() {
             {BUSINESS.landmark}. Estadías cortas y prolongadas, con cochera privada y
             atención cercana.
           </p>
-        </div>
+        </Reveal>
 
-        <div>
+        <Reveal duration={0.5} delay={0.1} amount={0.3}>
           <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-[#6c1710]">
             Contacto
           </h2>
@@ -98,9 +99,10 @@ export default function Footer() {
               </a>
             </p>
           </address>
-        </div>
+        </Reveal>
 
-        <nav aria-label="Secciones del sitio">
+        <Reveal duration={0.5} delay={0.2} amount={0.3}>
+          <nav aria-label="Secciones del sitio">
           <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-[#6c1710]">
             Secciones
           </h2>
@@ -116,7 +118,8 @@ export default function Footer() {
               </li>
             ))}
           </ul>
-        </nav>
+          </nav>
+        </Reveal>
       </div>
 
       <div className="mx-auto mt-12 max-w-[1400px] border-t border-[#e8d9c0] pt-6 text-xs text-neutral-500">
