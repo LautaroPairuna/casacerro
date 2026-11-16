@@ -22,9 +22,10 @@ const DEFAULT_ROOM_TYPES = [
       "Ambiente integrado con todo lo necesario para una estadía cómoda y agradable.",
     displayOrder: 1,
     rates: [
-      { label: "Single / Doble", people: 2, price: 59000, displayOrder: 1 },
-      { label: "Triple", people: 3, price: 69000, displayOrder: 2 },
-      { label: "Cuádruple", people: 4, price: 78000, displayOrder: 3 },
+      { label: "Single / Doble Standard", people: 2, price: 69000, displayOrder: 1 },
+      { label: "Single / Doble Superior", people: 2, price: 79000, displayOrder: 2 },
+      { label: "Triple", people: 3, price: 89000, displayOrder: 3 },
+      { label: "Cuádruple", people: 4, price: 98000, displayOrder: 4 },
     ],
   },
   {
@@ -35,8 +36,9 @@ const DEFAULT_ROOM_TYPES = [
       "Ambientes separados, mayor privacidad y espacio. Ideal para familias o grupos.",
     displayOrder: 2,
     rates: [
-      { label: "Triple", people: 3, price: 75000, displayOrder: 1 },
-      { label: "Cuádruple", people: 4, price: 88000, displayOrder: 2 },
+      { label: "Doble Superior", people: 2, price: 85000, displayOrder: 1 },
+      { label: "Triple", people: 3, price: 95000, displayOrder: 2 },
+      { label: "Cuádruple", people: 4, price: 118000, displayOrder: 3 },
     ],
   },
 ];
