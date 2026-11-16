@@ -130,13 +130,15 @@ export default function Hero() {
       aria-label="Bienvenida"
       className="w-full bg-[#eee] px-4 pb-8 pt-20 md:px-6 md:pt-24 xl:h-svh xl:min-h-[640px] xl:pb-8"
     >
-      <div className="mx-auto grid h-full max-w-[1400px] grid-cols-1 gap-6 xl:grid-cols-12 xl:gap-8">
+      {/* Tarjeta y carrusel forman un único bloque: un solo contenedor redondeado
+          con sombra, sin separación entre las dos partes. */}
+      <div className="hero-parallax mx-auto grid h-full max-w-[1400px] grid-cols-1 overflow-hidden rounded-3xl bg-[#f5ecd7] shadow-md xl:grid-cols-12">
         {/* Carrusel (8 columnas). En mobile va primero: la foto es lo que
             engancha, y la tarjeta queda justo abajo. La primera foto es el
             elemento LCP: se pinta sin animación de entrada ni espera de
             hidratación. */}
-        <div className="hero-parallax-media order-first xl:order-last xl:col-span-8 xl:h-full">
-          <div className="relative h-full overflow-hidden rounded-3xl bg-[#2b1a12] shadow-md">
+        <div className="order-first xl:order-last xl:col-span-8 xl:h-full">
+          <div className="relative h-full overflow-hidden bg-[#2b1a12]">
             <div className="h-full overflow-hidden" ref={emblaRef}>
               <div className="flex h-full">
                 {HERO_IMAGES.map((image, index) => (
@@ -227,9 +229,9 @@ export default function Hero() {
         {/* Tarjeta de bienvenida (4 columnas). Above the fold: animación por
             CSS en vez de <Reveal>, que arranca en opacity:0 y no se muestra
             hasta que hidrata el JS (retrasa el LCP). */}
-        <div className="hero-parallax-content flex xl:col-span-4 xl:h-full">
+        <div className="flex xl:col-span-4 xl:h-full">
           <div
-            className="cc-anim-fade-up flex w-full flex-col justify-center rounded-3xl bg-[#f5ecd7] p-6 shadow-md sm:p-8 md:p-10"
+            className="cc-anim-fade-up flex w-full flex-col justify-center p-6 sm:p-8 md:p-10"
             style={{ ["--anim-duration" as string]: "0.7s", ["--anim-delay" as string]: "0.1s" }}
           >
             <span className="mb-4 block text-center text-xs uppercase tracking-[0.25em] text-neutral-600 sm:mb-6 sm:text-sm">
