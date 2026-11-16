@@ -64,17 +64,18 @@ export default function Tarifas({
 
               {/* Lista de precios: un renglón por opción. A diferencia de la
                   grilla de cajitas, se adapta a cualquier cantidad de tarifas
-                  que se carguen desde el admin y las dos tarjetas quedan
-                  alineadas renglón por renglón. */}
-              <div className="px-6 pt-5 pb-4 flex-1">
+                  que se carguen desde el admin. Los renglones se estiran
+                  (flex-1) para llenar el alto de la tarjeta: si una tiene
+                  menos opciones que la otra, no queda espacio en blanco. */}
+              <div className="flex flex-1 flex-col px-6 pt-5 pb-4">
                 <p className="text-[11px] uppercase tracking-[0.2em] text-neutral-500 mb-2">
                   Opciones disponibles
                 </p>
-                <ul className="divide-y divide-[#efe4d0]">
+                <ul className="flex flex-1 flex-col divide-y divide-[#efe4d0]">
                   {hab.precios.map((p) => (
                     <li
                       key={p.label}
-                      className="-mx-3 flex items-center justify-between gap-4 rounded-xl px-3 py-3.5 transition-colors duration-200 hover:bg-[#FFF5E5]"
+                      className="-mx-3 flex flex-1 items-center justify-between gap-4 rounded-xl px-3 py-3.5 transition-colors duration-200 hover:bg-[#FFF5E5]"
                     >
                       <div className="min-w-0">
                         <PersonasIcons count={p.personas} />
