@@ -165,13 +165,14 @@ section[id] {
 
 /* ---------- Hero ---------- */
 /* El hero publica su avance de scroll en --hero-progress (0 arriba, 1 cuando
-   salió de pantalla). Solo en desktop, donde el bloque entra entero en el
-   viewport: en mobile se apila y el efecto lo desvanecería mientras todavía
-   se está leyendo. La escala es del bloque entero, las fotos no se recortan. */
+   salió de pantalla) y el texto de bienvenida sube y se desvanece con él. El
+   bloque en sí no se mueve: es a sangre y se vería el fondo de la página.
+   Solo en desktop: en mobile el texto está debajo de las fotos y se
+   desvanecería mientras todavía se está leyendo. */
 @media (min-width: 1280px) {
-  .hero-parallax {
-    transform: translate3d(0, calc(var(--hero-progress, 0) * -50px), 0) scale(calc(1 - var(--hero-progress, 0) * 0.04));
-    opacity: calc(1 - var(--hero-progress, 0) * 1.1);
+  .hero-parallax-content {
+    transform: translate3d(0, calc(var(--hero-progress, 0) * -60px), 0);
+    opacity: calc(1 - var(--hero-progress, 0) * 1.4);
   }
 }
 
@@ -180,7 +181,7 @@ section[id] {
   .presalta-pop > *,
   .presalta-rise,
   .presalta-bounce,
-  .hero-parallax {
+  .hero-parallax-content {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;

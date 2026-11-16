@@ -128,11 +128,12 @@ export default function Hero() {
       id="inicio"
       ref={sectionRef}
       aria-label="Bienvenida"
-      className="w-full bg-[#eee] px-4 pb-8 pt-20 md:px-6 md:pt-24 xl:h-svh xl:min-h-[640px] xl:pb-8"
+      className="w-full bg-[#f5ecd7] pt-16 xl:h-svh xl:min-h-[640px]"
     >
-      {/* Tarjeta y carrusel forman un único bloque: un solo contenedor redondeado
-          con sombra, sin separación entre las dos partes. */}
-      <div className="hero-parallax mx-auto grid h-full max-w-[1400px] grid-cols-1 overflow-hidden rounded-3xl bg-[#f5ecd7] shadow-md xl:grid-cols-12">
+      {/* Tarjeta y carrusel forman un único bloque a sangre: ocupan todo el
+          ancho y, en desktop, todo el alto debajo del header. El pt-16 del
+          section es la altura del header fijo. */}
+      <div className="grid h-full grid-cols-1 overflow-hidden xl:grid-cols-12">
         {/* Carrusel (8 columnas). En mobile va primero: la foto es lo que
             engancha, y la tarjeta queda justo abajo. La primera foto es el
             elemento LCP: se pinta sin animación de entrada ni espera de
@@ -229,9 +230,9 @@ export default function Hero() {
         {/* Tarjeta de bienvenida (4 columnas). Above the fold: animación por
             CSS en vez de <Reveal>, que arranca en opacity:0 y no se muestra
             hasta que hidrata el JS (retrasa el LCP). */}
-        <div className="flex xl:col-span-4 xl:h-full">
+        <div className="hero-parallax-content flex xl:col-span-4 xl:h-full">
           <div
-            className="cc-anim-fade-up flex w-full flex-col justify-center p-6 sm:p-8 md:p-10"
+            className="cc-anim-fade-up mx-auto flex w-full max-w-xl flex-col justify-center px-6 py-8 sm:px-10 sm:py-10 xl:px-12"
             style={{ ["--anim-duration" as string]: "0.7s", ["--anim-delay" as string]: "0.1s" }}
           >
             <span className="mb-4 block text-center text-xs uppercase tracking-[0.25em] text-neutral-600 sm:mb-6 sm:text-sm">
