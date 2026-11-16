@@ -165,10 +165,15 @@ section[id] {
 
 /* ---------- Hero ---------- */
 /* El hero publica su avance de scroll en --hero-progress (0 arriba, 1 cuando
-   salió de pantalla) y el texto de bienvenida sube y se desvanece con él. El
-   bloque en sí no se mueve: es a sangre y se vería el fondo de la página.
-   Solo en desktop: en mobile el texto está debajo de las fotos y se
-   desvanecería mientras todavía se está leyendo. */
+   salió de pantalla). Las fotos bajan más lento que la página (parallax): al
+   moverse hacia abajo mientras la sección sube nunca queda un hueco arriba,
+   así que no hace falta agrandarlas, lo que recortaría más la foto. */
+.hero-parallax-bg {
+  transform: translate3d(0, calc(var(--hero-progress, 0) * 30%), 0);
+}
+
+/* El texto sube y se desvanece solo en desktop: en mobile está debajo de las
+   fotos y se desvanecería mientras todavía se está leyendo. */
 @media (min-width: 1280px) {
   .hero-parallax-content {
     transform: translate3d(0, calc(var(--hero-progress, 0) * -60px), 0);
@@ -176,11 +181,20 @@ section[id] {
   }
 }
 
+@keyframes hero-scroll-dot {
+  0% { opacity: 0; transform: translateY(0); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(12px); }
+}
+.hero-scroll-dot { animation: hero-scroll-dot 1.8s ease-in-out infinite; }
+
 @media (prefers-reduced-motion: reduce) {
   .presalta-banner__bg,
   .presalta-pop > *,
   .presalta-rise,
   .presalta-bounce,
+  .hero-scroll-dot,
+  .hero-parallax-bg,
   .hero-parallax-content {
     animation: none !important;
     opacity: 1 !important;

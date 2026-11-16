@@ -11,20 +11,31 @@ import { useAutoplayControl } from "@/lib/use-autoplay-control";
 type HeroImage = {
   src: string;
   alt: string;
+  /** Punto de enfoque (object-position) en mobile, donde la foto es más angosta. */
+  focusMobile: string;
+  /** Punto de enfoque en desktop: la tarjeta tapa la izquierda, así que lo
+      importante de cada foto se corre hacia la derecha. */
+  focusDesktop: string;
 };
 
 const HERO_IMAGES: HeroImage[] = [
   {
     src: "/image/hero/foto-hero-2.jpeg",
-    alt: "Frente de CasaCerro, apartamentos en Av. Uruguay 691, Salta",
-  },
-  {
-    src: "/image/hero/foto-hero-4.jpeg",
-    alt: "Apartamento equipado de CasaCerro en Salta",
+    alt: "Apartamento de CasaCerro con cama, escritorio, TV y ventanal al patio",
+    focusMobile: "38% 55%",
+    focusDesktop: "70% 50%",
   },
   {
     src: "/image/hero/foto-hero-3.jpeg",
-    alt: "Espacio exterior de CasaCerro en Salta",
+    alt: "Monoambiente de CasaCerro con cama matrimonial, escritorio y kitchenette",
+    focusMobile: "80% 60%",
+    focusDesktop: "75% 55%",
+  },
+  {
+    src: "/image/hero/foto-hero-4.jpeg",
+    alt: "Balcón con plantas y cerco de cañas en CasaCerro, Salta",
+    focusMobile: "50% 40%",
+    focusDesktop: "50% 35%",
   },
 ];
 
@@ -128,111 +139,108 @@ export default function Hero() {
       id="inicio"
       ref={sectionRef}
       aria-label="Bienvenida"
-      className="w-full bg-[#f5ecd7] pt-16 xl:h-svh xl:min-h-[640px]"
+      className="relative isolate w-full bg-[#f5ecd7] pt-16 xl:h-svh xl:min-h-[640px] xl:overflow-hidden xl:bg-[#2b1a12]"
     >
-      {/* Tarjeta y carrusel forman un único bloque a sangre: ocupan todo el
-          ancho y, en desktop, todo el alto debajo del header. El pt-16 del
-          section es la altura del header fijo. */}
-      <div className="grid h-full grid-cols-1 overflow-hidden xl:grid-cols-12">
-        {/* Carrusel (8 columnas). En mobile va primero: la foto es lo que
-            engancha, y la tarjeta queda justo abajo. La primera foto es el
-            elemento LCP: se pinta sin animación de entrada ni espera de
-            hidratación. */}
-        <div className="order-first xl:order-last xl:col-span-8 xl:h-full">
-          <div className="relative h-full overflow-hidden bg-[#2b1a12]">
-            <div className="h-full overflow-hidden" ref={emblaRef}>
-              <div className="flex h-full">
-                {HERO_IMAGES.map((image, index) => (
-                  <div
-                    key={image.src}
-                    className="relative aspect-[4/3] min-w-0 flex-[0_0_100%] sm:aspect-video xl:aspect-auto xl:h-full"
-                  >
-                    {/* Fondo: la misma foto desenfocada rellena el recuadro, así
-                        la foto real se muestra entera (contain) sin bandas
-                        vacías, sea horizontal o vertical. */}
-                    <Image
-                      src={image.src}
-                      alt=""
-                      aria-hidden="true"
-                      fill
-                      sizes="(min-width: 1280px) 66vw, 100vw"
-                      className="scale-110 object-cover opacity-70 blur-2xl"
-                      loading={index === 0 ? "eager" : "lazy"}
-                    />
-                    <Image
-                      src={image.src}
-                      alt={image.alt}
-                      fill
-                      sizes="(min-width: 1280px) 66vw, 100vw"
-                      className="object-contain"
-                      loading={index === 0 ? "eager" : "lazy"}
-                      fetchPriority={index === 0 ? "high" : "auto"}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={scrollPrev}
-              aria-label="Imagen anterior"
-              className="absolute left-3 top-1/2 z-20 -translate-y-1/2 rounded-full bg-white/85 p-2.5 text-black shadow transition hover:bg-white md:left-4 md:p-3"
-            >
-              <ChevronLeft size={20} />
-            </button>
-
-            <button
-              type="button"
-              onClick={scrollNext}
-              aria-label="Siguiente imagen"
-              className="absolute right-3 top-1/2 z-20 -translate-y-1/2 rounded-full bg-white/85 p-2.5 text-black shadow transition hover:bg-white md:right-4 md:p-3"
-            >
-              <ChevronRight size={20} />
-            </button>
-
-            <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center rounded-full bg-black/30 px-1 backdrop-blur-sm">
+      {/* Fotos: en mobile ocupan la franja de arriba (a pantalla completa una
+          foto horizontal quedaría reducida a una tira del centro); en desktop
+          son el fondo de todo el hero. La primera foto es el elemento LCP: se
+          pinta sin animación de entrada ni espera de hidratación. */}
+      <div className="relative h-[56svh] min-h-[320px] overflow-hidden xl:absolute xl:inset-0 xl:h-auto">
+        <div className="hero-parallax-bg h-full">
+          <div className="h-full overflow-hidden" ref={emblaRef}>
+            <div className="flex h-full">
               {HERO_IMAGES.map((image, index) => (
-                <button
+                <div
                   key={image.src}
-                  type="button"
-                  onClick={() => scrollTo(index)}
-                  aria-label={`Ir a la imagen ${index + 1}`}
-                  aria-current={selectedIndex === index ? "true" : undefined}
-                  // El punto visible sigue midiendo 10px, pero el área
-                  // clickeable llega a 24x24 (WCAG 2.5.8).
-                  className="group flex h-6 items-center justify-center px-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="relative h-full min-w-0 flex-[0_0_100%]"
+                  style={{
+                    ["--focus-m" as string]: image.focusMobile,
+                    ["--focus-d" as string]: image.focusDesktop,
+                  }}
                 >
-                  <span
-                    className={`block h-2.5 rounded-full transition-all ${
-                      selectedIndex === index
-                        ? "w-8 bg-white"
-                        : "w-2.5 bg-white/60 group-hover:bg-white/80"
-                    }`}
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    fill
+                    sizes="100vw"
+                    className="object-cover object-[var(--focus-m)] xl:object-[var(--focus-d)]"
+                    loading={index === 0 ? "eager" : "lazy"}
+                    fetchPriority={index === 0 ? "high" : "auto"}
                   />
-                </button>
+                </div>
               ))}
-
-              <button
-                type="button"
-                onClick={toggleAutoplay}
-                aria-label={
-                  isPlaying ? "Pausar el cambio automático de imágenes" : "Reanudar el cambio automático de imágenes"
-                }
-                className="flex h-6 w-6 items-center justify-center rounded-full text-white transition hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-              >
-                {isPlaying ? <Pause size={13} /> : <Play size={13} />}
-              </button>
             </div>
           </div>
         </div>
 
-        {/* Tarjeta de bienvenida (4 columnas). Above the fold: animación por
-            CSS en vez de <Reveal>, que arranca en opacity:0 y no se muestra
-            hasta que hidrata el JS (retrasa el LCP). */}
-        <div className="hero-parallax-content flex xl:col-span-4 xl:h-full">
+        {/* Mobile: oscurece abajo, donde van los puntos. Desktop: oscurece
+            sólo la izquierda, detrás de la tarjeta, y deja limpia la foto. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent xl:bg-gradient-to-r xl:from-black/40 xl:via-black/5 xl:to-transparent"
+        />
+
+        <div className="absolute bottom-12 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 rounded-full bg-black/35 px-2 py-1 backdrop-blur-sm xl:bottom-8 xl:left-auto xl:right-28 xl:translate-x-0">
+          <button
+            type="button"
+            onClick={scrollPrev}
+            aria-label="Imagen anterior"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-white transition hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          >
+            <ChevronLeft size={18} />
+          </button>
+
+          {HERO_IMAGES.map((image, index) => (
+            <button
+              key={image.src}
+              type="button"
+              onClick={() => scrollTo(index)}
+              aria-label={`Ir a la imagen ${index + 1}`}
+              aria-current={selectedIndex === index ? "true" : undefined}
+              // El punto visible sigue midiendo 10px, pero el área
+              // clickeable llega a 24x24 (WCAG 2.5.8).
+              className="group flex h-6 items-center justify-center px-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              <span
+                className={`block h-2.5 rounded-full transition-all ${
+                  selectedIndex === index
+                    ? "w-8 bg-white"
+                    : "w-2.5 bg-white/60 group-hover:bg-white/80"
+                }`}
+              />
+            </button>
+          ))}
+
+          <button
+            type="button"
+            onClick={toggleAutoplay}
+            aria-label={
+              isPlaying ? "Pausar el cambio automático de imágenes" : "Reanudar el cambio automático de imágenes"
+            }
+            className="flex h-7 w-7 items-center justify-center rounded-full text-white transition hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          >
+            {isPlaying ? <Pause size={13} /> : <Play size={13} />}
+          </button>
+
+          <button
+            type="button"
+            onClick={scrollNext}
+            aria-label="Siguiente imagen"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-white transition hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          >
+            <ChevronRight size={18} />
+          </button>
+        </div>
+      </div>
+
+      {/* Tarjeta: en mobile se monta sobre el borde de la foto y ocupa el
+          ancho; en desktop flota a la izquierda sobre el fondo. Above the
+          fold: animación por CSS en vez de <Reveal>, que arranca en opacity:0
+          y no se muestra hasta que hidrata el JS (retrasa el LCP). */}
+      <div className="relative z-10 -mt-8 xl:mx-auto xl:mt-0 xl:flex xl:h-full xl:max-w-[1400px] xl:items-center xl:px-6">
+        <div className="hero-parallax-content w-full xl:max-w-md">
           <div
-            className="cc-anim-fade-up mx-auto flex w-full max-w-xl flex-col justify-center px-6 py-8 sm:px-10 sm:py-10 xl:px-12"
+            className="cc-anim-fade-up rounded-t-3xl bg-[#f5ecd7] px-6 pb-10 pt-8 sm:px-10 xl:rounded-3xl xl:bg-[#f5ecd7]/95 xl:p-10 xl:shadow-xl xl:backdrop-blur-sm"
             style={{ ["--anim-duration" as string]: "0.7s", ["--anim-delay" as string]: "0.1s" }}
           >
             <span className="mb-4 block text-center text-xs uppercase tracking-[0.25em] text-neutral-600 sm:mb-6 sm:text-sm">
@@ -253,12 +261,12 @@ export default function Hero() {
               </span>
             </h1>
 
-            <p className="mt-4 text-base leading-7 text-neutral-700 md:mt-5 md:text-lg">
+            <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-neutral-700 md:mt-5 md:text-lg">
               Un espacio pensado para disfrutar Salta con comodidad, calidez y
               una experiencia tranquila cerca de todo lo importante.
             </p>
 
-            <div className="mt-6 grid grid-cols-1 gap-3 sm:mt-8 sm:grid-cols-2 sm:gap-4 xl:grid-cols-1">
+            <div className="mx-auto mt-6 grid max-w-xl grid-cols-1 gap-3 sm:mt-8 sm:grid-cols-2 sm:gap-4 xl:grid-cols-1">
               <a
                 href={WHATSAPP_HREF}
                 target="_blank"
@@ -278,6 +286,18 @@ export default function Hero() {
           </div>
         </div>
       </div>
+
+      {/* Indicador de scroll hacia la primera sección (desktop). */}
+      <a
+        href="#nosotros"
+        aria-label="Bajar a Acerca de nosotros"
+        className="hero-parallax-content absolute bottom-6 left-1/2 z-20 hidden -translate-x-1/2 flex-col items-center gap-2 text-[11px] uppercase tracking-[0.3em] text-white/90 transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white xl:flex"
+      >
+        <span aria-hidden="true">Descubrí más</span>
+        <span aria-hidden="true" className="flex h-9 w-5 justify-center rounded-full border-2 border-white/80 pt-1.5">
+          <span className="hero-scroll-dot block h-2 w-1 rounded-full bg-white" />
+        </span>
+      </a>
     </section>
   );
 }
