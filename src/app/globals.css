@@ -34,10 +34,10 @@ html {
   scroll-behavior: smooth;
 }
 
-/* El header es fijo (~88px): sin este offset el anchor nativo deja el título
+/* El header es fijo (~60px): sin este offset el anchor nativo deja el título
    tapado. Aplicado a toda seccion con id para no olvidarse de ninguna nueva. */
 section[id] {
-  scroll-margin-top: 6rem;
+  scroll-margin-top: 4.5rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -165,36 +165,30 @@ section[id] {
 
 /* ---------- Hero ---------- */
 /* El hero publica su avance de scroll en --hero-progress (0 arriba, 1 cuando
-   salió de pantalla) y estas reglas lo convierten en parallax. */
-.hero-parallax-bg {
-  transform: translate3d(0, calc(var(--hero-progress, 0) * 18%), 0) scale(1.06);
+   salió de pantalla). Solo en desktop, donde tarjeta y carrusel entran
+   enteros en el viewport: en mobile se apilan y el desplazamiento los
+   desvanecería mientras todavía se están leyendo. Nada se escala: la foto se
+   muestra completa. */
+@media (min-width: 1280px) {
+  .hero-parallax-media {
+    transform: translate3d(0, calc(var(--hero-progress, 0) * 70px), 0);
+    opacity: calc(1 - var(--hero-progress, 0) * 0.9);
+  }
+  .hero-parallax-content {
+    transform: translate3d(0, calc(var(--hero-progress, 0) * -50px), 0);
+    opacity: calc(1 - var(--hero-progress, 0) * 1.4);
+  }
 }
-.hero-parallax-content {
-  opacity: calc(1 - var(--hero-progress, 0) * 1.6);
-  transform: translate3d(0, calc(var(--hero-progress, 0) * -60px), 0);
-}
-
-@keyframes hero-scroll-dot {
-  0% { opacity: 0; transform: translateY(0); }
-  30% { opacity: 1; }
-  100% { opacity: 0; transform: translateY(12px); }
-}
-.hero-scroll-dot { animation: hero-scroll-dot 1.8s ease-in-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
   .presalta-banner__bg,
   .presalta-pop > *,
   .presalta-rise,
   .presalta-bounce,
-  .hero-scroll-dot {
+  .hero-parallax-media,
+  .hero-parallax-content {
     animation: none !important;
     opacity: 1 !important;
-  }
-  .hero-parallax-bg {
-    transform: none;
-  }
-  .hero-parallax-content {
-    opacity: 1;
-    transform: none;
+    transform: none !important;
   }
 }

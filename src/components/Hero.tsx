@@ -125,45 +125,111 @@ export default function Hero() {
 
   return (
     <section
+      id="inicio"
       ref={sectionRef}
       aria-label="Bienvenida"
-      className="relative isolate h-svh min-h-[600px] w-full overflow-hidden bg-[#2b1a12]"
+      className="w-full bg-[#eee] px-4 pb-8 pt-20 md:px-6 md:pt-24 xl:h-svh xl:min-h-[640px] xl:pb-8"
     >
-      {/* Carrusel a sangre, de fondo. La primera foto es el elemento LCP: se
-          pinta sin animación de entrada ni espera de hidratación. */}
-      <div className="hero-parallax-bg absolute inset-0 -z-10">
-        <div className="h-full overflow-hidden" ref={emblaRef}>
-          <div className="flex h-full">
-            {HERO_IMAGES.map((image, index) => (
-              <div key={image.src} className="relative h-full min-w-0 flex-[0_0_100%]">
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  sizes="100vw"
-                  className="object-cover"
-                  loading={index === 0 ? "eager" : "lazy"}
-                  fetchPriority={index === 0 ? "high" : "auto"}
-                />
+      <div className="mx-auto grid h-full max-w-[1400px] grid-cols-1 gap-6 xl:grid-cols-12 xl:gap-8">
+        {/* Carrusel (8 columnas). En mobile va primero: la foto es lo que
+            engancha, y la tarjeta queda justo abajo. La primera foto es el
+            elemento LCP: se pinta sin animación de entrada ni espera de
+            hidratación. */}
+        <div className="hero-parallax-media order-first xl:order-last xl:col-span-8 xl:h-full">
+          <div className="relative h-full overflow-hidden rounded-3xl bg-[#2b1a12] shadow-md">
+            <div className="h-full overflow-hidden" ref={emblaRef}>
+              <div className="flex h-full">
+                {HERO_IMAGES.map((image, index) => (
+                  <div
+                    key={image.src}
+                    className="relative aspect-[4/3] min-w-0 flex-[0_0_100%] sm:aspect-video xl:aspect-auto xl:h-full"
+                  >
+                    {/* Fondo: la misma foto desenfocada rellena el recuadro, así
+                        la foto real se muestra entera (contain) sin bandas
+                        vacías, sea horizontal o vertical. */}
+                    <Image
+                      src={image.src}
+                      alt=""
+                      aria-hidden="true"
+                      fill
+                      sizes="(min-width: 1280px) 66vw, 100vw"
+                      className="scale-110 object-cover opacity-70 blur-2xl"
+                      loading={index === 0 ? "eager" : "lazy"}
+                    />
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      fill
+                      sizes="(min-width: 1280px) 66vw, 100vw"
+                      className="object-contain"
+                      loading={index === 0 ? "eager" : "lazy"}
+                      fetchPriority={index === 0 ? "high" : "auto"}
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={scrollPrev}
+              aria-label="Imagen anterior"
+              className="absolute left-3 top-1/2 z-20 -translate-y-1/2 rounded-full bg-white/85 p-2.5 text-black shadow transition hover:bg-white md:left-4 md:p-3"
+            >
+              <ChevronLeft size={20} />
+            </button>
+
+            <button
+              type="button"
+              onClick={scrollNext}
+              aria-label="Siguiente imagen"
+              className="absolute right-3 top-1/2 z-20 -translate-y-1/2 rounded-full bg-white/85 p-2.5 text-black shadow transition hover:bg-white md:right-4 md:p-3"
+            >
+              <ChevronRight size={20} />
+            </button>
+
+            <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center rounded-full bg-black/30 px-1 backdrop-blur-sm">
+              {HERO_IMAGES.map((image, index) => (
+                <button
+                  key={image.src}
+                  type="button"
+                  onClick={() => scrollTo(index)}
+                  aria-label={`Ir a la imagen ${index + 1}`}
+                  aria-current={selectedIndex === index ? "true" : undefined}
+                  // El punto visible sigue midiendo 10px, pero el área
+                  // clickeable llega a 24x24 (WCAG 2.5.8).
+                  className="group flex h-6 items-center justify-center px-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                >
+                  <span
+                    className={`block h-2.5 rounded-full transition-all ${
+                      selectedIndex === index
+                        ? "w-8 bg-white"
+                        : "w-2.5 bg-white/60 group-hover:bg-white/80"
+                    }`}
+                  />
+                </button>
+              ))}
+
+              <button
+                type="button"
+                onClick={toggleAutoplay}
+                aria-label={
+                  isPlaying ? "Pausar el cambio automático de imágenes" : "Reanudar el cambio automático de imágenes"
+                }
+                className="flex h-6 w-6 items-center justify-center rounded-full text-white transition hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              >
+                {isPlaying ? <Pause size={13} /> : <Play size={13} />}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Oscurece abajo (mobile, donde va la tarjeta) y a la izquierda
-          (desktop) para que los controles blancos se lean sobre cualquier foto. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-black/55 via-black/10 to-black/25 xl:bg-gradient-to-r xl:from-black/45 xl:via-black/10 xl:to-transparent"
-      />
-
-      <div className="mx-auto flex h-full max-w-[1400px] flex-col justify-end px-4 pb-24 pt-28 md:px-6 xl:justify-center xl:pb-16">
-        {/* Above the fold: animación por CSS en vez de <Reveal>, que arranca en
-            opacity:0 y no se muestra hasta que hidrata el JS (retrasa el LCP). */}
-        <div className="hero-parallax-content w-full max-w-md">
+        {/* Tarjeta de bienvenida (4 columnas). Above the fold: animación por
+            CSS en vez de <Reveal>, que arranca en opacity:0 y no se muestra
+            hasta que hidrata el JS (retrasa el LCP). */}
+        <div className="hero-parallax-content flex xl:col-span-4 xl:h-full">
           <div
-            className="cc-anim-fade-up rounded-3xl bg-[#f5ecd7]/95 p-6 shadow-xl backdrop-blur-sm sm:p-8 md:p-10"
+            className="cc-anim-fade-up flex w-full flex-col justify-center rounded-3xl bg-[#f5ecd7] p-6 shadow-md sm:p-8 md:p-10"
             style={{ ["--anim-duration" as string]: "0.7s", ["--anim-delay" as string]: "0.1s" }}
           >
             <span className="mb-4 block text-center text-xs uppercase tracking-[0.25em] text-neutral-600 sm:mb-6 sm:text-sm">
@@ -177,31 +243,31 @@ export default function Hero() {
                 width={250}
                 height={125}
                 loading="eager"
-                className="mx-auto mb-3 h-auto w-44 sm:mb-4 sm:w-[250px]"
+                className="mx-auto mb-3 h-auto w-48 sm:mb-4 sm:w-[250px]"
               />
               <span className="block text-lg leading-7 tracking-[0.06em] text-neutral-800 sm:text-xl sm:leading-8 md:text-2xl">
                 Apartamentos en Salta, a 50 metros del Shopping Alto Noa
               </span>
             </h1>
 
-            <p className="mt-4 hidden text-base leading-7 text-neutral-700 sm:block md:mt-5 md:text-lg">
+            <p className="mt-4 text-base leading-7 text-neutral-700 md:mt-5 md:text-lg">
               Un espacio pensado para disfrutar Salta con comodidad, calidez y
               una experiencia tranquila cerca de todo lo importante.
             </p>
 
-            <div className="mt-6 grid grid-cols-2 gap-3 sm:mt-8 sm:grid-cols-1 sm:gap-4">
+            <div className="mt-6 grid grid-cols-1 gap-3 sm:mt-8 sm:grid-cols-2 sm:gap-4 xl:grid-cols-1">
               <a
                 href={WHATSAPP_HREF}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full border border-[#6c1710] bg-[#6c1710] px-4 py-3 text-center text-xs font-medium uppercase tracking-wide text-white transition hover:bg-transparent hover:text-[#6c1710] sm:px-6 sm:text-sm"
+                className="inline-flex items-center justify-center rounded-full border border-[#6c1710] bg-[#6c1710] px-6 py-3 text-center text-sm font-medium uppercase tracking-wide text-white transition hover:bg-transparent hover:text-[#6c1710]"
               >
                 Hablar por WhatsApp
               </a>
 
               <a
                 href="#habitaciones"
-                className="inline-flex items-center justify-center rounded-full border border-[#6c1710] px-4 py-3 text-center text-xs font-medium uppercase tracking-wide text-[#6c1710] transition hover:bg-[#6c1710] hover:text-[#FFFFFF] sm:px-6 sm:text-sm"
+                className="inline-flex items-center justify-center rounded-full border border-[#6c1710] px-6 py-3 text-center text-sm font-medium uppercase tracking-wide text-[#6c1710] transition hover:bg-[#6c1710] hover:text-[#FFFFFF]"
               >
                 Ver habitaciones
               </a>
@@ -209,72 +275,6 @@ export default function Hero() {
           </div>
         </div>
       </div>
-
-      {/* Controles del carrusel: arriba a la derecha en mobile (abajo está la
-          tarjeta), abajo a la derecha desde md. */}
-      <div className="absolute right-4 top-28 z-20 flex items-center gap-1 rounded-full bg-black/35 px-2 py-1 backdrop-blur-sm md:bottom-8 md:right-28 md:top-auto">
-        <button
-          type="button"
-          onClick={scrollPrev}
-          aria-label="Imagen anterior"
-          className="hidden h-9 w-9 items-center justify-center rounded-full text-white transition hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:flex"
-        >
-          <ChevronLeft size={20} />
-        </button>
-
-        {HERO_IMAGES.map((image, index) => (
-          <button
-            key={image.src}
-            type="button"
-            onClick={() => scrollTo(index)}
-            aria-label={`Ir a la imagen ${index + 1}`}
-            aria-current={selectedIndex === index ? "true" : undefined}
-            // El punto visible sigue midiendo 10px, pero el área
-            // clickeable llega a 24x24 (WCAG 2.5.8).
-            className="group flex h-6 items-center justify-center px-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-          >
-            <span
-              className={`block h-2.5 rounded-full transition-all ${
-                selectedIndex === index
-                  ? "w-8 bg-white"
-                  : "w-2.5 bg-white/60 group-hover:bg-white/80"
-              }`}
-            />
-          </button>
-        ))}
-
-        <button
-          type="button"
-          onClick={toggleAutoplay}
-          aria-label={
-            isPlaying ? "Pausar el cambio automático de imágenes" : "Reanudar el cambio automático de imágenes"
-          }
-          className="flex h-7 w-7 items-center justify-center rounded-full text-white transition hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-        >
-          {isPlaying ? <Pause size={13} /> : <Play size={13} />}
-        </button>
-
-        <button
-          type="button"
-          onClick={scrollNext}
-          aria-label="Siguiente imagen"
-          className="hidden h-9 w-9 items-center justify-center rounded-full text-white transition hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:flex"
-        >
-          <ChevronRight size={20} />
-        </button>
-      </div>
-
-      {/* Indicador de scroll hacia la primera sección. */}
-      <a
-        href="#nosotros"
-        aria-label="Bajar a Acerca de nosotros"
-        className="hero-parallax-content absolute bottom-6 left-1/2 z-20 hidden -translate-x-1/2 flex-col items-center gap-2 text-[11px] uppercase tracking-[0.3em] text-white/90 transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white md:flex"
-      >
-        <span aria-hidden="true">Descubrí más</span>
-        <span aria-hidden="true" className="flex h-9 w-5 justify-center rounded-full border-2 border-white/80 pt-1.5">
-          <span className="hero-scroll-dot block h-2 w-1 rounded-full bg-white" />
-        </span>
-      </a>
     </section>
   );
 }
