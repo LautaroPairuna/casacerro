@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useCallback, useRef, useState } from "react";
-import { House } from "lucide-react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { useFocusTrap } from "@/lib/use-focus-trap";
 
 type LinkItem = { href: string; label: string };
@@ -27,45 +27,89 @@ export default function Header() {
   // puede seguir viajando por los enlaces de abajo.
   useFocusTrap(menuRef, menuOpen, closeMenu);
 
+  // El logo de la barra aparece recién cuando el hero (que ya muestra el
+  // logo grande) quedó entero por debajo de la barra fija (h-16 = 64px).
+  const [pastHero, setPastHero] = useState(false);
+  useEffect(() => {
+    const hero = document.getElementById("inicio");
+    if (!hero) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setPastHero(!entry.isIntersecting),
+      { rootMargin: "-64px 0px 0px 0px" }
+    );
+    observer.observe(hero);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <nav
-      className="fixed top-0 left-0 w-full bg-[#FFF8e7] text-black py-4 px-4 md:px-6 z-40 shadow-md"
+      className="fixed top-0 left-0 z-40 flex h-16 w-full items-center bg-[#FFF8e7] px-4 text-black shadow-md md:px-6"
       aria-label="Navegación principal"
     >
-      <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between xl:justify-center">
-        {/* Menú desktop: visible por CSS, no por estado de React. Así el HTML
-            inicial ya trae los enlaces (los ve el crawler) y no hay salto de
-            layout al hidratar. "Inicio" lleva ícono para distinguirse. */}
-        <ul className="hidden items-center justify-center p-0 xl:flex">
+      <div className="relative mx-auto flex w-full max-w-[1400px] items-center justify-between gap-6">
+        {/* Izquierda: en el hero, el botón "Inicio" (sólo móvil); al salir
+            del hero, el logo de CasaCerro. Comparten la misma celda para que
+            el cambio sea un fundido sin salto de layout. */}
+        <div className="grid items-center *:col-start-1 *:row-start-1">
+          <a
+            href="#inicio"
+            inert={pastHero}
+            className={`inline-flex items-center justify-self-start rounded-full border border-[#6c1710] px-4 py-1.5 text-sm font-medium uppercase tracking-wide text-[#6c1710] transition duration-300 hover:bg-[#6c1710] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6c1710] motion-reduce:transition-none xl:hidden ${
+              pastHero ? "pointer-events-none opacity-0" : "opacity-100"
+            }`}
+          >
+            Inicio
+          </a>
+
+          <a
+            href="#inicio"
+            aria-label="CasaCerro, volver al inicio"
+            inert={!pastHero}
+            className={`block rounded-sm transition duration-700 ease-[cubic-bezier(0.45,0,0.2,1)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6c1710] motion-reduce:transition-none ${
+              pastHero
+                ? "translate-x-0 opacity-100"
+                : "pointer-events-none -translate-x-2 opacity-0"
+            }`}
+          >
+            <Image
+              src="/logo-casacerro.svg"
+              alt=""
+              width={95}
+              height={36}
+              className="h-8 w-auto xl:h-9"
+            />
+          </a>
+        </div>
+
+        {/* Menú desktop: visible por CSS, no por estado de React. Así el
+            HTML inicial ya trae los enlaces (los ve el crawler) y no hay
+            salto de layout al hidratar. En el hero va centrado; al aparecer
+            el logo se desliza a la derecha (left + translate sí se animan,
+            un margin auto no). */}
+        <ul
+          className={`absolute top-1/2 hidden w-max -translate-y-1/2 items-center p-0 transition-[left,translate] duration-700 ease-[cubic-bezier(0.45,0,0.2,1)] motion-reduce:transition-none xl:flex ${
+            pastHero ? "left-full -translate-x-full" : "left-1/2 -translate-x-1/2"
+          }`}
+        >
           {MENU_ITEMS.map((item, index) => (
             <React.Fragment key={item.href}>
               <li className="whitespace-nowrap">
                 <a
                   href={item.href}
-                  className="relative group inline-flex items-center gap-1.5 py-1 font-sans font-medium text-base uppercase transition-colors duration-300 hover:text-gray-800"
+                  className="relative group inline-flex items-center py-1 font-sans font-medium text-base uppercase transition-colors duration-300 hover:text-gray-800"
                 >
-                  {index === 0 && <House size={17} aria-hidden="true" className="text-[#6c1710]" />}
                   {item.label}
                   <span className="absolute left-1/2 bottom-0 h-[1px] w-0 bg-black transition-all duration-300 group-hover:w-full group-hover:left-0" />
                 </a>
               </li>
               {index < MENU_ITEMS.length - 1 && (
-                <li aria-hidden="true" className="flex items-center mx-6">
+                <li aria-hidden="true" className="mx-4 flex items-center 2xl:mx-5">
                   <span className="text-lg">•</span>
                 </li>
               )}
             </React.Fragment>
           ))}
         </ul>
-
-        {/* Móvil: botón de inicio a la izquierda y el menú a la derecha. */}
-        <a
-          href="#inicio"
-          className="inline-flex items-center gap-2 rounded-full border border-[#6c1710] px-4 py-1.5 text-sm font-medium uppercase tracking-wide text-[#6c1710] transition hover:bg-[#6c1710] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6c1710] xl:hidden"
-        >
-          <House size={16} aria-hidden="true" />
-          Inicio
-        </a>
 
         <button
           type="button"

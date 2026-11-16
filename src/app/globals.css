@@ -40,6 +40,13 @@ section[id] {
   scroll-margin-top: 4.5rem;
 }
 
+/* "Nosotros" va pegado al hero: con 4.5rem quedaba una franjita del hero
+   asomando bajo el header (h-16 = 4rem). Un poco menos que el header la
+   esconde entera; el py-12 de la sección deja el título bien visible. */
+#nosotros {
+  scroll-margin-top: 3.875rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

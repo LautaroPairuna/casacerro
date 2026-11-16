@@ -37,7 +37,10 @@ export default function Tarifas({
           </p>
         </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+        {/* Dos columnas recién desde lg: en tablet (768–1023px) no entran el
+            título, la etiqueta y los tres precios lado a lado. items-stretch
+            iguala las alturas y el flex-1 del medio alinea los botones. */}
+        <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
           {habitaciones.map((hab, cardIndex) => (
             <Reveal
               key={hab.id}
