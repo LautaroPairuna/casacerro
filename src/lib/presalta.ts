@@ -26,9 +26,6 @@ export const PRESALTA = {
   url: "https://www.presalta.ar",
 } as const;
 
-/** Cookie de sesión que marca el banner como cerrado (sin max-age: muere al cerrar el navegador). */
-export const PRESALTA_DISMISS_COOKIE = "presalta_banner_cerrado";
-
 /** `?presalta=preview` muestra el banner fuera de fecha, para revisarlo antes del lanzamiento. */
 export const PRESALTA_PREVIEW_PARAM = "presalta";
 

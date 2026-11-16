@@ -4,14 +4,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronDown, MessageCircle, X } from "lucide-react";
 import { whatsappHref } from "@/lib/site";
-import { PRESALTA, PRESALTA_DISMISS_COOKIE } from "@/lib/presalta";
+import { PRESALTA } from "@/lib/presalta";
 import { useFocusTrap } from "@/lib/use-focus-trap";
 
 const WHATSAPP_HREF = whatsappHref(
   "Hola, quiero reservar con PRE SALTA. ¿Me pasan disponibilidad y tarifas para mis fechas?"
 );
 
-// Igual a la duración de la transición de salida en las clases de abajo.
+// Igual a la duración del fundido de salida (duration-700 en las clases de abajo).
 const EXIT_MS = 700;
 
 // Teclas que en una página normal la desplazan hacia abajo.
@@ -19,13 +19,13 @@ const SCROLL_KEYS = new Set(["ArrowDown", "PageDown", " ", "Spacebar", "End"]);
 
 /**
  * Portada a pantalla completa de PRE SALTA. Se monta encima de la web (fixed)
- * y se va con cualquier gesto de scroll, con el botón de cierre o con Escape;
- * después la página queda exactamente como siempre.
+ * y se va con un fundido ante cualquier gesto de scroll, el botón de cierre o
+ * Escape; después la página queda exactamente como siempre. Vuelve a
+ * aparecer en cada carga de la página.
  *
  * Mientras está abierta frena el scroll de la página (para que al cerrarla el
  * visitante arranque desde el hero y no a mitad de "Nosotros") y retiene el
- * foco como un modal. Al cerrarla deja una cookie de sesión: el servidor ya no
- * la renderiza en las siguientes páginas vistas, así no hay parpadeo.
+ * foco como un modal.
  *
  * Composición según el manual de marca PRE SALTA ("Comprá / Viajá" sobre
  * imagen): sello oficial sin modificar, rojo institucional #A80003 y
@@ -43,7 +43,6 @@ export default function PreSaltaBanner() {
 
   useEffect(() => {
     if (state === "closing") {
-      document.cookie = `${PRESALTA_DISMISS_COOKIE}=1; path=/; SameSite=Lax`;
       const timeout = window.setTimeout(() => setState("closed"), EXIT_MS);
       return () => window.clearTimeout(timeout);
     }
@@ -105,17 +104,17 @@ export default function PreSaltaBanner() {
       aria-labelledby="presalta-titulo"
       aria-describedby="presalta-descripcion"
       tabIndex={-1}
-      className={`presalta-banner fixed inset-0 z-[60] flex h-svh flex-col overflow-hidden bg-[#3a1a10] text-white outline-none transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.7,0,0.3,1)] motion-reduce:transition-none ${
-        closing ? "-translate-y-full opacity-0" : "translate-y-0 opacity-100"
+      className={`presalta-banner fixed inset-0 z-[60] flex h-svh flex-col overflow-hidden bg-[#3a1a10] text-white outline-none transition-[opacity,scale] duration-700 ease-out motion-reduce:transition-none ${
+        closing ? "pointer-events-none scale-[1.04] opacity-0" : "scale-100 opacity-100"
       }`}
     >
       <Image
-        src="/image/presalta/fondo-presalta.jpg"
+        src="/image/presalta/fondo-teleferico.jpg"
         alt=""
         fill
         priority
         sizes="100vw"
-        className="presalta-banner__bg object-cover"
+        className="presalta-banner__bg object-cover object-[100%_center] md:object-center"
       />
       <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/35 to-black/60" />
 

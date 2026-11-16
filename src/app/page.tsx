@@ -12,12 +12,10 @@ import Servicios from "@/components/Servicios";
 import Footer from "@/components/Footer";
 import PreSaltaBanner from "@/components/PreSaltaBanner";
 import { connection } from "next/server";
-import { cookies } from "next/headers";
 import { buildJsonLd } from "@/lib/seo";
 import { loadTariffData } from "@/lib/tariffs";
 import {
   isPreSaltaPurchaseOpen,
-  PRESALTA_DISMISS_COOKIE,
   PRESALTA_PREVIEW_PARAM,
 } from "@/lib/presalta";
 
@@ -70,17 +68,14 @@ export default async function Home({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   await connection();
-  const [{ habitaciones, tariffInfo }, params, cookieStore] = await Promise.all([
+  const [{ habitaciones, tariffInfo }, params] = await Promise.all([
     loadTariffData(),
     searchParams,
-    cookies(),
   ]);
   // El banner de PRE SALTA sólo existe durante el período de compras (o con
-  // ?presalta=preview para revisarlo antes) y no vuelve a aparecer en la misma
-  // sesión una vez que el visitante lo cerró.
+  // ?presalta=preview para revisarlo antes). Aparece en cada carga de la home.
   const showPreSalta =
-    (isPreSaltaPurchaseOpen() || params[PRESALTA_PREVIEW_PARAM] === "preview") &&
-    !cookieStore.has(PRESALTA_DISMISS_COOKIE);
+    isPreSaltaPurchaseOpen() || params[PRESALTA_PREVIEW_PARAM] === "preview";
   const jsonLd = buildJsonLd(habitaciones);
 
   return (
