@@ -17,7 +17,35 @@ const MENU_ITEMS: LinkItem[] = [
   { href: "#contacto", label: "Contacto" },
 ];
 
-export default function Header() {
+/** Píldora roja que lleva a la sección PRE SALTA (barra desktop, barra móvil y menú). */
+function PreSaltaPill({
+  size = "md",
+  onClick,
+}: {
+  size?: "sm" | "md" | "lg";
+  onClick?: () => void;
+}) {
+  const sizes = {
+    sm: { pill: "gap-1.5 pl-3 pr-1 text-xs", badge: "px-1.5 text-[11px]" },
+    md: { pill: "gap-2 pl-3.5 pr-1 text-sm", badge: "px-2 text-xs" },
+    lg: { pill: "gap-2 py-1.5 pl-5 pr-1.5 text-lg", badge: "px-2.5 text-sm" },
+  }[size];
+  return (
+    <a
+      href="#presalta"
+      onClick={onClick}
+      className={`presalta-font inline-flex items-center rounded-full bg-[#A80003] py-1 font-bold uppercase tracking-wide text-white shadow-sm transition hover:bg-[#8d0003] hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A80003] ${sizes.pill}`}
+    >
+      PreSalta
+      <span className={`rounded-full bg-white py-0.5 font-bold text-[#A80003] ${sizes.badge}`}>
+        50%
+      </span>
+    </a>
+  );
+}
+
+/** `preSalta`: suma el acceso a la sección PRE SALTA mientras dura el programa. */
+export default function Header({ preSalta = false }: { preSalta?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -102,8 +130,21 @@ export default function Header() {
                   <span className="absolute left-1/2 bottom-0 h-[1px] w-0 bg-black transition-all duration-300 group-hover:w-full group-hover:left-0" />
                 </a>
               </li>
+              {/* PRE SALTA va entre "Inicio" y "Nosotros". */}
+              {preSalta && index === 0 && (
+                <>
+                  <li aria-hidden="true" className="mx-3 flex items-center 2xl:mx-5">
+                    <span className="text-lg">•</span>
+                  </li>
+                  <li className="whitespace-nowrap">
+                    <PreSaltaPill />
+                  </li>
+                </>
+              )}
               {index < MENU_ITEMS.length - 1 && (
-                <li aria-hidden="true" className="mx-4 flex items-center 2xl:mx-5">
+                // mx-3 en xl: con la píldora de PRE SALTA y el logo, a 1280px
+                // el menú no entra con más aire.
+                <li aria-hidden="true" className="mx-3 flex items-center 2xl:mx-5">
                   <span className="text-lg">•</span>
                 </li>
               )}
@@ -111,16 +152,19 @@ export default function Header() {
           ))}
         </ul>
 
-        <button
-          type="button"
-          className="flex items-center rounded-sm text-3xl leading-none text-[#6c1710] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6c1710] xl:hidden"
-          onClick={() => setMenuOpen((prev) => !prev)}
-          aria-expanded={menuOpen}
-          aria-controls="menu-movil"
-          aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
-        >
-          ☰
-        </button>
+        <div className="flex items-center gap-3 xl:hidden">
+          {preSalta && <PreSaltaPill size="sm" />}
+          <button
+            type="button"
+            className="flex items-center rounded-sm text-3xl leading-none text-[#6c1710] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6c1710]"
+            onClick={() => setMenuOpen((prev) => !prev)}
+            aria-expanded={menuOpen}
+            aria-controls="menu-movil"
+            aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+          >
+            ☰
+          </button>
+        </div>
       </div>
 
       {/* Menú móvil */}
@@ -141,17 +185,24 @@ export default function Header() {
           </button>
 
           <ul className="text-xl space-y-6 text-center">
-            {MENU_ITEMS.map((item) => (
-              <li key={item.href}>
-                <a
-                  href={item.href}
-                  onClick={closeMenu}
-                  className="relative group font-sans transition-colors duration-300 hover:text-gray-800 uppercase"
-                >
-                  {item.label}
-                  <span className="absolute left-1/2 bottom-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full group-hover:left-0" />
-                </a>
-              </li>
+            {MENU_ITEMS.map((item, index) => (
+              <React.Fragment key={item.href}>
+                <li>
+                  <a
+                    href={item.href}
+                    onClick={closeMenu}
+                    className="relative group font-sans transition-colors duration-300 hover:text-gray-800 uppercase"
+                  >
+                    {item.label}
+                    <span className="absolute left-1/2 bottom-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full group-hover:left-0" />
+                  </a>
+                </li>
+                {preSalta && index === 0 && (
+                  <li>
+                    <PreSaltaPill size="lg" onClick={closeMenu} />
+                  </li>
+                )}
+              </React.Fragment>
             ))}
           </ul>
         </div>

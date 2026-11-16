@@ -40,9 +40,12 @@ section[id] {
   scroll-margin-top: 4.5rem;
 }
 
-/* "Nosotros" va pegado al hero: con 4.5rem quedaba una franjita del hero
-   asomando bajo el header (h-16 = 4rem). Un poco menos que el header la
-   esconde entera; el py-12 de la sección deja el título bien visible. */
+/* La sección que va pegada al hero ("Nosotros", o "PRE SALTA" mientras dura
+   el programa): con 4.5rem quedaba una franjita del hero asomando bajo el
+   header (h-16 = 4rem). Un poco menos que el header la esconde entera; el
+   padding de arriba de cada sección deja el título bien visible. Sin esto,
+   esa franjita además hace creer al header que todavía estás en el hero. */
+#presalta,
 #nosotros {
   scroll-margin-top: 3.875rem;
 }
@@ -143,32 +146,30 @@ section[id] {
   }
 }
 
-/* ---------- PRE SALTA (banner de portada) ---------- */
+/* ---------- PRE SALTA (sección promocional) ---------- */
 /* Trebuchet MS es la tipografía del manual de marca del programa: viene en
    Windows/macOS, así que no suma descargas. */
 .presalta-font {
   font-family: "Trebuchet MS", "Lucida Grande", "Segoe UI", sans-serif;
 }
 
-@keyframes presalta-zoom {
-  from { transform: scale(1.12); }
-  to { transform: scale(1); }
-}
-@keyframes presalta-pop {
-  from { opacity: 0; transform: scale(0.7); }
-  to { opacity: 1; transform: scale(1); }
-}
-@keyframes presalta-bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(6px); }
+/* Rojo institucional con "ondas" como las piezas oficiales, sólo con
+   gradientes (no suma imágenes). */
+.presalta-bg {
+  background:
+    radial-gradient(60% 45% at 8% 12%, rgba(214, 30, 36, 0.55), transparent 70%),
+    radial-gradient(55% 50% at 95% 30%, rgba(90, 4, 6, 0.65), transparent 70%),
+    radial-gradient(70% 55% at 30% 105%, rgba(70, 3, 5, 0.7), transparent 70%),
+    radial-gradient(40% 30% at 70% 85%, rgba(200, 20, 26, 0.45), transparent 70%),
+    linear-gradient(160deg, #8d0003 0%, #a80003 45%, #74020a 100%);
 }
 
-.presalta-banner__bg { animation: presalta-zoom 9s ease-out both; }
-/* El sello va dentro de un wrapper que en desktop ya usa transform para
-   centrarse: la animación se aplica a la imagen, no al wrapper. */
-.presalta-pop > * { animation: presalta-pop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both; }
-.presalta-rise { animation: cc-fade-up 0.6s ease-out var(--presalta-delay, 0s) both; }
-.presalta-bounce { animation: presalta-bounce 1.6s ease-in-out infinite; }
+/* El "50%" en relieve, como en el posteo oficial. */
+.presalta-50 {
+  line-height: 0.82;
+  letter-spacing: -0.04em;
+  text-shadow: 0 4px 0 #6e0003, 0 8px 0 #5a0003, 0 14px 30px rgba(0, 0, 0, 0.35);
+}
 
 /* ---------- Hero ---------- */
 /* El hero publica su avance de scroll en --hero-progress (0 arriba, 1 cuando
@@ -196,10 +197,6 @@ section[id] {
 .hero-scroll-dot { animation: hero-scroll-dot 1.8s ease-in-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
-  .presalta-banner__bg,
-  .presalta-pop > *,
-  .presalta-rise,
-  .presalta-bounce,
   .hero-scroll-dot,
   .hero-parallax-bg,
   .hero-parallax-content {

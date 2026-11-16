@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
-import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { whatsappHref } from "@/lib/site";
 import { useAutoplayControl } from "@/lib/use-autoplay-control";
 
@@ -20,6 +20,12 @@ type HeroImage = {
 
 const HERO_IMAGES: HeroImage[] = [
   {
+    src: "/image/hero/foto-hero-4.jpeg",
+    alt: "Balcón con plantas y cerco de cañas en CasaCerro, Salta",
+    focusMobile: "50% 40%",
+    focusDesktop: "50% 35%",
+  },
+  {
     src: "/image/hero/foto-hero-2.jpeg",
     alt: "Apartamento de CasaCerro con cama, escritorio, TV y ventanal al patio",
     focusMobile: "38% 55%",
@@ -31,26 +37,16 @@ const HERO_IMAGES: HeroImage[] = [
     focusMobile: "80% 60%",
     focusDesktop: "75% 55%",
   },
-  {
-    src: "/image/hero/foto-hero-4.jpeg",
-    alt: "Balcón con plantas y cerco de cañas en CasaCerro, Salta",
-    focusMobile: "50% 40%",
-    focusDesktop: "50% 35%",
-  },
 ];
 
 const WHATSAPP_HREF = whatsappHref(
   "Hola, me gustaría consultar por disponibilidad y tarifas en Casa Cerro."
 );
 
-const PRESALTA_WHATSAPP_HREF = whatsappHref(
-  "Hola, quiero reservar con PRE SALTA. ¿Me pasan disponibilidad y tarifas para mis fechas?"
-);
-
 /**
- * `preSalta`: mientras dura el período de compras de PRE SALTA el segundo
- * botón de la tarjeta pasa a ser "Reservar con PRE SALTA" (rojo apenas más vivo que el del banner) en
- * lugar de "Ver habitaciones"; al terminar el programa vuelve solo.
+ * `preSalta`: mientras dura el período de compras de PRE SALTA la tarjeta
+ * lleva arriba una franja roja que baja a la sección del programa; los dos
+ * botones no cambian. Al terminar el programa la franja desaparece sola.
  */
 export default function Hero({ preSalta = false }: { preSalta?: boolean }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -59,7 +55,7 @@ export default function Hero({ preSalta = false }: { preSalta?: boolean }) {
   const autoplay = useMemo(
     () =>
       Autoplay({
-        delay: 5000,
+        delay: 6000,
         stopOnInteraction: false,
         stopOnMouseEnter: true,
       }),
@@ -249,9 +245,37 @@ export default function Hero({ preSalta = false }: { preSalta?: boolean }) {
       <div className="relative z-10 -mt-8 xl:mx-auto xl:mt-0 xl:flex xl:h-full xl:max-w-[1400px] xl:items-center xl:px-6">
         <div className="hero-parallax-content w-full xl:max-w-md">
           <div
-            className="cc-anim-fade-up rounded-t-3xl bg-[#f5ecd7] px-6 pb-24 pt-6 sm:px-10 sm:pb-10 sm:pt-8 xl:rounded-3xl xl:bg-[#f5ecd7]/95 xl:p-10 xl:shadow-xl xl:backdrop-blur-sm"
+            className="cc-anim-fade-up overflow-hidden rounded-t-3xl bg-[#f5ecd7] px-6 pb-24 pt-6 sm:px-10 sm:pb-10 sm:pt-8 xl:rounded-3xl xl:bg-[#f5ecd7]/95 xl:p-10 xl:shadow-xl xl:backdrop-blur-sm"
             style={{ ["--anim-duration" as string]: "0.7s", ["--anim-delay" as string]: "0.1s" }}
           >
+            {/* Franja PRE SALTA pegada al borde de arriba: los márgenes
+                negativos anulan el padding de la tarjeta en cada tamaño. */}
+            {preSalta && (
+              <a
+                href="#presalta"
+                className="presalta-font group -mx-6 -mt-6 mb-5 flex items-center gap-3 bg-[#A80003] px-5 py-2.5 text-white transition hover:bg-[#8d0003] focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white sm:-mx-10 sm:-mt-8 sm:mb-6 sm:px-8 xl:-mt-10 xl:px-6"
+              >
+                <Image
+                  src="/presalta/sello-presalta-blanco.png"
+                  alt="PRE SALTA"
+                  width={120}
+                  height={120}
+                  unoptimized
+                  className="h-10 w-10 shrink-0 rounded-full shadow-sm"
+                />
+                <span className="flex-1 leading-tight">
+                  <span className="block text-base font-bold uppercase tracking-wide">
+                    50% de reintegro
+                  </span>
+                  <span className="block text-xs text-white/85">en crédito para disfrutar Salta</span>
+                </span>
+                <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-white px-3 py-1 text-xs font-bold uppercase tracking-wide text-[#A80003] transition group-hover:translate-x-0.5 motion-reduce:transition-none">
+                  Ver cómo
+                  <ArrowRight size={14} strokeWidth={2.6} aria-hidden="true" />
+                </span>
+              </a>
+            )}
+
             <span className="mb-3 block text-center text-xs uppercase tracking-[0.25em] text-neutral-600 sm:mb-6 sm:text-sm">
               Bienvenidos a...
             </span>
@@ -276,32 +300,23 @@ export default function Hero({ preSalta = false }: { preSalta?: boolean }) {
             </p>
 
             <div className="mx-auto mt-5 grid max-w-xl grid-cols-1 gap-2.5 sm:mt-8 sm:grid-cols-2 sm:gap-4 xl:grid-cols-1">
+              {/* WhatsApp es la acción principal (relleno); habitaciones, la
+                  secundaria (borde). */}
               <a
                 href={WHATSAPP_HREF}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full border border-[#6c1710] px-6 py-2.5 text-center text-sm sm:py-3 font-medium uppercase tracking-wide text-[#6c1710] transition hover:bg-[#6c1710] hover:text-[#FFFFFF]"
+                className="inline-flex items-center justify-center rounded-full border border-[#6c1710] bg-[#6c1710] px-6 py-2.5 text-center text-sm sm:py-3 font-medium uppercase tracking-wide text-white transition hover:bg-transparent hover:text-[#6c1710]"
               >
                 Hablar por WhatsApp
               </a>
 
-              {preSalta ? (
-                <a
-                  href={PRESALTA_WHATSAPP_HREF}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center rounded-full border border-[#C2080C] bg-[#C2080C] px-6 py-2.5 text-center text-sm sm:py-3 font-medium uppercase tracking-wide text-white transition hover:bg-transparent hover:text-[#C2080C]"
-                >
-                  Reservar con PRE SALTA
-                </a>
-              ) : (
-                <a
-                  href="#habitaciones"
-                  className="inline-flex items-center justify-center rounded-full border border-[#6c1710] bg-[#6c1710] px-6 py-2.5 text-center text-sm sm:py-3 font-medium uppercase tracking-wide text-white transition hover:bg-transparent hover:text-[#6c1710]"
-                >
-                  Ver habitaciones
-                </a>
-              )}
+              <a
+                href="#habitaciones"
+                className="inline-flex items-center justify-center rounded-full border border-[#6c1710] px-6 py-2.5 text-center text-sm sm:py-3 font-medium uppercase tracking-wide text-[#6c1710] transition hover:bg-[#6c1710] hover:text-[#FFFFFF]"
+              >
+                Ver habitaciones
+              </a>
             </div>
           </div>
         </div>
@@ -309,8 +324,8 @@ export default function Hero({ preSalta = false }: { preSalta?: boolean }) {
 
       {/* Indicador de scroll hacia la primera sección (desktop). */}
       <a
-        href="#nosotros"
-        aria-label="Bajar a Acerca de nosotros"
+        href={preSalta ? "#presalta" : "#nosotros"}
+        aria-label={preSalta ? "Bajar a la promoción PRE SALTA" : "Bajar a Acerca de nosotros"}
         className="hero-parallax-content absolute bottom-6 left-1/2 z-20 hidden -translate-x-1/2 flex-col items-center gap-2 text-[11px] uppercase tracking-[0.3em] text-white/90 transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white xl:flex"
       >
         <span aria-hidden="true">Descubrí más</span>

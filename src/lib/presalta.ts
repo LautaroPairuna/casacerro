@@ -11,22 +11,26 @@
  */
 export const PRESALTA = {
   // Instantes en hora de Salta (UTC-3, sin horario de verano).
-  // El banner se muestra desde ya (pedido del cliente), antes del inicio
+  // La promoción se muestra desde ya (pedido del cliente), antes del inicio
   // oficial de compras del 20/11: los textos siguen diciendo las fechas
   // reales del programa.
   purchaseStart: new Date("2026-11-15T00:00:00-03:00"),
-  // Exclusivo: el banner se apaga al terminar el 13/12.
+  // Exclusivo: la promoción se apaga al terminar el 13/12.
   purchaseEnd: new Date("2026-12-14T00:00:00-03:00"),
-  // Partidas en dos renglones como en las piezas del manual; `short` es para mobile.
-  purchaseLines: ["Del 20 de noviembre", "al 13 de diciembre"],
+  purchaseFrom: "20 de noviembre",
+  purchaseTo: "13 de diciembre",
   purchaseShort: "20/11 al 13/12",
-  travelLines: ["Entre el 4 de enero", "y el 5 de marzo"],
-  travelShort: "4/1 al 5/3",
+  travelFrom: "4 de enero",
+  travelTo: "5 de marzo",
+  // Último día para cargar facturas en presalta.ar (manual para viajeros).
+  invoiceDeadline: "21 de diciembre",
   maxCreditLabel: "$150.000",
+  maxPurchaseLabel: "$300.000",
+  minInvoiceLabel: "$60.000",
   url: "https://www.presalta.ar",
 } as const;
 
-/** `?presalta=preview` muestra el banner fuera de fecha, para revisarlo antes del lanzamiento. */
+/** `?presalta=preview` muestra la promoción fuera de fecha, para revisarla antes del lanzamiento. */
 export const PRESALTA_PREVIEW_PARAM = "presalta";
 
 export function isPreSaltaPurchaseOpen(now: Date = new Date()): boolean {

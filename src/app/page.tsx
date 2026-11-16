@@ -10,7 +10,7 @@ import Habitaciones from "@/components/Habitaciones";
 import Empresas from "@/components/Empresas";
 import Servicios from "@/components/Servicios";
 import Footer from "@/components/Footer";
-import PreSaltaBanner from "@/components/PreSaltaBanner";
+import PreSalta from "@/components/PreSalta";
 import { connection } from "next/server";
 import { buildJsonLd } from "@/lib/seo";
 import { loadTariffData } from "@/lib/tariffs";
@@ -72,8 +72,9 @@ export default async function Home({
     loadTariffData(),
     searchParams,
   ]);
-  // El banner de PRE SALTA sólo existe durante el período de compras (o con
-  // ?presalta=preview para revisarlo antes). Aparece en cada carga de la home.
+  // La promoción de PRE SALTA (píldora en la barra, franja en el hero y su
+  // sección) sólo existe durante el período de compras, o con
+  // ?presalta=preview para revisarla antes.
   const showPreSalta =
     isPreSaltaPurchaseOpen() || params[PRESALTA_PREVIEW_PARAM] === "preview";
   const jsonLd = buildJsonLd(habitaciones);
@@ -90,10 +91,10 @@ export default async function Home({
       >
         Saltar al contenido
       </a>
-      {showPreSalta && <PreSaltaBanner />}
-      <Header />
+      <Header preSalta={showPreSalta} />
       <main id="contenido" tabIndex={-1}>
         <Hero preSalta={showPreSalta} />
+        {showPreSalta && <PreSalta />}
         <Nosotros />
         <Resenas />
         <Servicios />
