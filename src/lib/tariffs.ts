@@ -11,7 +11,6 @@ export type Habitacion = {
   tipo: string;
   badge: string;
   descripcion: string;
-  gridCols: string;
   precios: PrecioItem[];
 };
 
@@ -29,7 +28,6 @@ const INITIAL_HABITACIONES: Habitacion[] = [
     badge: "Hasta 4 personas",
     descripcion:
       "Ambiente integrado con todo lo necesario para una estadía cómoda y agradable.",
-    gridCols: "grid-cols-2",
     precios: [
       { personas: 2, label: "Single / Doble Standard", precio: 69000 },
       { personas: 2, label: "Single / Doble Superior", precio: 79000 },
@@ -43,7 +41,6 @@ const INITIAL_HABITACIONES: Habitacion[] = [
     badge: "Hasta 4 personas",
     descripcion:
       "Ambientes separados, mayor privacidad y espacio. Ideal para familias o grupos.",
-    gridCols: "grid-cols-2 sm:grid-cols-3",
     precios: [
       { personas: 2, label: "Doble Superior", precio: 85000 },
       { personas: 3, label: "Triple", precio: 95000 },
@@ -82,8 +79,6 @@ export async function loadTariffData(): Promise<{
             tipo: roomType.name,
             badge: roomType.badge,
             descripcion: roomType.description,
-            gridCols:
-              roomType.rates.length === 3 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2",
             precios: roomType.rates.map((rate) => ({
               personas: rate.people,
               label: rate.label,
