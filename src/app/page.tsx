@@ -10,9 +10,16 @@ import Habitaciones from "@/components/Habitaciones";
 import Empresas from "@/components/Empresas";
 import Servicios from "@/components/Servicios";
 import Footer from "@/components/Footer";
+import PreSaltaBanner from "@/components/PreSaltaBanner";
 import { connection } from "next/server";
+import { cookies } from "next/headers";
 import { buildJsonLd } from "@/lib/seo";
 import { loadTariffData } from "@/lib/tariffs";
+import {
+  isPreSaltaPurchaseOpen,
+  PRESALTA_DISMISS_COOKIE,
+  PRESALTA_PREVIEW_PARAM,
+} from "@/lib/presalta";
 
 // La página se renderiza en cada request (connection() la fuerza a dinámica),
 // pero eso no pega contra la base en cada visita: getTariffCatalog() está
@@ -57,9 +64,23 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   await connection();
-  const { habitaciones, tariffInfo } = await loadTariffData();
+  const [{ habitaciones, tariffInfo }, params, cookieStore] = await Promise.all([
+    loadTariffData(),
+    searchParams,
+    cookies(),
+  ]);
+  // El banner de PRE SALTA sólo existe durante el período de compras (o con
+  // ?presalta=preview para revisarlo antes) y no vuelve a aparecer en la misma
+  // sesión una vez que el visitante lo cerró.
+  const showPreSalta =
+    (isPreSaltaPurchaseOpen() || params[PRESALTA_PREVIEW_PARAM] === "preview") &&
+    !cookieStore.has(PRESALTA_DISMISS_COOKIE);
   const jsonLd = buildJsonLd(habitaciones);
 
   return (
@@ -74,6 +95,7 @@ export default async function Home() {
       >
         Saltar al contenido
       </a>
+      {showPreSalta && <PreSaltaBanner />}
       <Header />
       <main id="contenido" tabIndex={-1}>
         <Hero />
