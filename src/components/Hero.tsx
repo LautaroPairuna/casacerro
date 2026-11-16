@@ -148,13 +148,13 @@ export default function Hero({ preSalta = false }: { preSalta?: boolean }) {
       id="inicio"
       ref={sectionRef}
       aria-label="Bienvenida"
-      className="relative isolate w-full bg-[#f5ecd7] pt-16 xl:h-svh xl:min-h-[640px] xl:overflow-hidden xl:bg-[#2b1a12]"
+      className="relative isolate flex h-svh min-h-[560px] w-full flex-col bg-[#f5ecd7] pt-16 xl:block xl:min-h-[640px] xl:overflow-hidden xl:bg-[#2b1a12]"
     >
-      {/* Fotos: en mobile ocupan la franja de arriba (a pantalla completa una
-          foto horizontal quedaría reducida a una tira del centro); en desktop
-          son el fondo de todo el hero. La primera foto es el elemento LCP: se
+      {/* Fotos: en mobile ocupan el espacio que deja la tarjeta (que siempre
+          se ve completa en la primera pantalla); en desktop son el fondo de
+          todo el hero. La primera foto es el elemento LCP: se
           pinta sin animación de entrada ni espera de hidratación. */}
-      <div className="relative h-[56svh] min-h-[320px] overflow-hidden xl:absolute xl:inset-0 xl:h-auto">
+      <div className="relative min-h-[150px] flex-1 overflow-hidden xl:absolute xl:inset-0">
         <div className="hero-parallax-bg h-full">
           <div className="h-full overflow-hidden" ref={emblaRef}>
             <div className="flex h-full">
@@ -189,7 +189,7 @@ export default function Hero({ preSalta = false }: { preSalta?: boolean }) {
           className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent xl:bg-gradient-to-r xl:from-black/40 xl:via-black/5 xl:to-transparent"
         />
 
-        <div className="absolute bottom-12 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 rounded-full bg-black/35 px-2 py-1 backdrop-blur-sm xl:bottom-8 xl:left-auto xl:right-28 xl:translate-x-0">
+        <div className="absolute bottom-11 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 rounded-full bg-black/35 px-2 py-1 backdrop-blur-sm xl:bottom-8 xl:left-auto xl:right-28 xl:translate-x-0">
           <button
             type="button"
             onClick={scrollPrev}
@@ -249,10 +249,10 @@ export default function Hero({ preSalta = false }: { preSalta?: boolean }) {
       <div className="relative z-10 -mt-8 xl:mx-auto xl:mt-0 xl:flex xl:h-full xl:max-w-[1400px] xl:items-center xl:px-6">
         <div className="hero-parallax-content w-full xl:max-w-md">
           <div
-            className="cc-anim-fade-up rounded-t-3xl bg-[#f5ecd7] px-6 pb-10 pt-8 sm:px-10 xl:rounded-3xl xl:bg-[#f5ecd7]/95 xl:p-10 xl:shadow-xl xl:backdrop-blur-sm"
+            className="cc-anim-fade-up rounded-t-3xl bg-[#f5ecd7] px-6 pb-24 pt-6 sm:px-10 sm:pb-10 sm:pt-8 xl:rounded-3xl xl:bg-[#f5ecd7]/95 xl:p-10 xl:shadow-xl xl:backdrop-blur-sm"
             style={{ ["--anim-duration" as string]: "0.7s", ["--anim-delay" as string]: "0.1s" }}
           >
-            <span className="mb-4 block text-center text-xs uppercase tracking-[0.25em] text-neutral-600 sm:mb-6 sm:text-sm">
+            <span className="mb-3 block text-center text-xs uppercase tracking-[0.25em] text-neutral-600 sm:mb-6 sm:text-sm">
               Bienvenidos a...
             </span>
 
@@ -263,24 +263,24 @@ export default function Hero({ preSalta = false }: { preSalta?: boolean }) {
                 width={250}
                 height={125}
                 loading="eager"
-                className="mx-auto mb-3 h-auto w-48 sm:mb-4 sm:w-[250px]"
+                className="mx-auto mb-2 h-auto w-40 sm:mb-4 sm:w-[250px]"
               />
-              <span className="block text-lg leading-7 tracking-[0.06em] text-neutral-800 sm:text-xl sm:leading-8 md:text-2xl">
+              <span className="block text-base leading-6 tracking-[0.06em] text-neutral-800 sm:text-xl sm:leading-8 md:text-2xl">
                 Apartamentos en Salta, a 50 metros del Shopping Alto Noa
               </span>
             </h1>
 
-            <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-neutral-700 md:mt-5 md:text-lg">
+            <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-neutral-700 sm:text-base sm:leading-7 md:mt-5 md:text-lg [@media(max-height:740px)]:hidden xl:[@media(max-height:740px)]:block">
               Un espacio pensado para disfrutar Salta con comodidad, calidez y
               una experiencia tranquila cerca de todo lo importante.
             </p>
 
-            <div className="mx-auto mt-6 grid max-w-xl grid-cols-1 gap-3 sm:mt-8 sm:grid-cols-2 sm:gap-4 xl:grid-cols-1">
+            <div className="mx-auto mt-5 grid max-w-xl grid-cols-1 gap-2.5 sm:mt-8 sm:grid-cols-2 sm:gap-4 xl:grid-cols-1">
               <a
                 href={WHATSAPP_HREF}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full border border-[#6c1710] px-6 py-3 text-center text-sm font-medium uppercase tracking-wide text-[#6c1710] transition hover:bg-[#6c1710] hover:text-[#FFFFFF]"
+                className="inline-flex items-center justify-center rounded-full border border-[#6c1710] px-6 py-2.5 text-center text-sm sm:py-3 font-medium uppercase tracking-wide text-[#6c1710] transition hover:bg-[#6c1710] hover:text-[#FFFFFF]"
               >
                 Hablar por WhatsApp
               </a>
@@ -290,14 +290,14 @@ export default function Hero({ preSalta = false }: { preSalta?: boolean }) {
                   href={PRESALTA_WHATSAPP_HREF}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center rounded-full border border-[#6c1710] bg-[#6c1710] px-6 py-3 text-center text-sm font-medium uppercase tracking-wide text-white transition hover:bg-transparent hover:text-[#6c1710]"
+                  className="inline-flex items-center justify-center rounded-full border border-[#6c1710] bg-[#6c1710] px-6 py-2.5 text-center text-sm sm:py-3 font-medium uppercase tracking-wide text-white transition hover:bg-transparent hover:text-[#6c1710]"
                 >
                   Reservar con PRE SALTA
                 </a>
               ) : (
                 <a
                   href="#habitaciones"
-                  className="inline-flex items-center justify-center rounded-full border border-[#6c1710] bg-[#6c1710] px-6 py-3 text-center text-sm font-medium uppercase tracking-wide text-white transition hover:bg-transparent hover:text-[#6c1710]"
+                  className="inline-flex items-center justify-center rounded-full border border-[#6c1710] bg-[#6c1710] px-6 py-2.5 text-center text-sm sm:py-3 font-medium uppercase tracking-wide text-white transition hover:bg-transparent hover:text-[#6c1710]"
                 >
                   Ver habitaciones
                 </a>
