@@ -11,7 +11,10 @@
  */
 export const PRESALTA = {
   // Instantes en hora de Salta (UTC-3, sin horario de verano).
-  purchaseStart: new Date("2026-11-20T00:00:00-03:00"),
+  // El banner se muestra desde ya (pedido del cliente), antes del inicio
+  // oficial de compras del 20/11: los textos siguen diciendo las fechas
+  // reales del programa.
+  purchaseStart: new Date("2026-11-16T00:00:00-03:00"),
   // Exclusivo: el banner se apaga al terminar el 13/12.
   purchaseEnd: new Date("2026-12-14T00:00:00-03:00"),
   // Partidas en dos renglones como en las piezas del manual; `short` es para mobile.
