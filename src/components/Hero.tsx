@@ -280,7 +280,7 @@ export default function Hero({ preSalta = false }: { preSalta?: boolean }) {
                 href={WHATSAPP_HREF}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full border border-[#6c1710] bg-[#6c1710] px-6 py-3 text-center text-sm font-medium uppercase tracking-wide text-white transition hover:bg-transparent hover:text-[#6c1710]"
+                className="inline-flex items-center justify-center rounded-full border border-[#6c1710] px-6 py-3 text-center text-sm font-medium uppercase tracking-wide text-[#6c1710] transition hover:bg-[#6c1710] hover:text-[#FFFFFF]"
               >
                 Hablar por WhatsApp
               </a>
@@ -290,14 +290,14 @@ export default function Hero({ preSalta = false }: { preSalta?: boolean }) {
                   href={PRESALTA_WHATSAPP_HREF}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center rounded-full border border-[#6c1710] px-6 py-3 text-center text-sm font-medium uppercase tracking-wide text-[#6c1710] transition hover:bg-[#6c1710] hover:text-[#FFFFFF]"
+                  className="inline-flex items-center justify-center rounded-full border border-[#6c1710] bg-[#6c1710] px-6 py-3 text-center text-sm font-medium uppercase tracking-wide text-white transition hover:bg-transparent hover:text-[#6c1710]"
                 >
                   Reservar con PRE SALTA
                 </a>
               ) : (
                 <a
                   href="#habitaciones"
-                  className="inline-flex items-center justify-center rounded-full border border-[#6c1710] px-6 py-3 text-center text-sm font-medium uppercase tracking-wide text-[#6c1710] transition hover:bg-[#6c1710] hover:text-[#FFFFFF]"
+                  className="inline-flex items-center justify-center rounded-full border border-[#6c1710] bg-[#6c1710] px-6 py-3 text-center text-sm font-medium uppercase tracking-wide text-white transition hover:bg-transparent hover:text-[#6c1710]"
                 >
                   Ver habitaciones
                 </a>
