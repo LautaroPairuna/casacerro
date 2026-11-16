@@ -49,7 +49,7 @@ const PRESALTA_WHATSAPP_HREF = whatsappHref(
 
 /**
  * `preSalta`: mientras dura el período de compras de PRE SALTA el segundo
- * botón de la tarjeta pasa a ser "Reservar con PRE SALTA" (mismo estilo) en
+ * botón de la tarjeta pasa a ser "Reservar con PRE SALTA" (rojo apenas más vivo que el del banner) en
  * lugar de "Ver habitaciones"; al terminar el programa vuelve solo.
  */
 export default function Hero({ preSalta = false }: { preSalta?: boolean }) {
@@ -290,7 +290,7 @@ export default function Hero({ preSalta = false }: { preSalta?: boolean }) {
                   href={PRESALTA_WHATSAPP_HREF}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center rounded-full border border-[#6c1710] bg-[#6c1710] px-6 py-2.5 text-center text-sm sm:py-3 font-medium uppercase tracking-wide text-white transition hover:bg-transparent hover:text-[#6c1710]"
+                  className="inline-flex items-center justify-center rounded-full border border-[#C2080C] bg-[#C2080C] px-6 py-2.5 text-center text-sm sm:py-3 font-medium uppercase tracking-wide text-white transition hover:bg-transparent hover:text-[#C2080C]"
                 >
                   Reservar con PRE SALTA
                 </a>
