@@ -8,6 +8,9 @@ const WHATSAPP_HREF = whatsappHref(
   "Hola, quiero reservar con PRE SALTA. Viajaríamos del _ al _ y somos __ personas. ¿Me pasan disponibilidad y tarifas?"
 );
 
+/** "presalta.ar" remarcado en el rojo del programa, para que se lea de un vistazo. */
+const PRESALTA_DOMINIO = "font-bold text-[#A80003]";
+
 const PASOS = [
   {
     titulo: "Reservá en CasaCerro",
@@ -22,11 +25,23 @@ const PASOS = [
     ),
   },
   {
-    titulo: "Cargá tu factura en presalta.ar",
+    titulo: (
+      <>
+        Cargá tu factura en <span className={PRESALTA_DOMINIO}>presalta.ar</span>
+      </>
+    ),
     texto: (
       <>
-        Te damos factura B o C a tu nombre y DNI. La subís con tu cuenta de Mi
-        Argentina hasta el <strong>{PRESALTA.invoiceDeadline}</strong>.
+        Te damos factura B a tu nombre y DNI. Te registrás en la página de{" "}
+        <a
+          href={PRESALTA.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`${PRESALTA_DOMINIO} underline decoration-[#A80003]/40 underline-offset-2 transition hover:decoration-[#A80003]`}
+        >
+          presalta.ar
+        </a>{" "}
+        hasta el <strong>{PRESALTA.invoiceDeadline}</strong> y la subís.
       </>
     ),
   },
@@ -34,7 +49,7 @@ const PASOS = [
     titulo: "Viajá y usá tu crédito",
     texto: (
       <>
-        Desde el <strong>{PRESALTA.travelFrom}</strong> lo tenés en MODO para
+        Desde el <strong>{PRESALTA.travelFrom}</strong> hasta el <strong>{PRESALTA.travelTo}</strong> lo tenés en MODO para
         pagar con QR en comercios turísticos adheridos de toda Salta.
       </>
     ),
@@ -134,7 +149,7 @@ export default function PreSalta() {
 
             <ol className="space-y-4">
               {PASOS.map((paso, index) => (
-                <li key={paso.titulo} className="flex gap-4">
+                <li key={index} className="flex gap-4">
                   <span
                     aria-hidden="true"
                     className="presalta-font flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#A80003] text-lg font-bold text-white"
@@ -157,14 +172,6 @@ export default function PreSalta() {
             >
               <MessageCircle size={18} aria-hidden="true" />
               Reservar con PRE SALTA
-            </a>
-            <a
-              href={PRESALTA.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 block text-center text-sm font-medium text-[#6c1710] underline-offset-4 hover:underline"
-            >
-              Cómo cargar mi factura en presalta.ar →
             </a>
           </Reveal>
         </div>
