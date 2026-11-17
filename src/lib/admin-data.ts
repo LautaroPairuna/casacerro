@@ -28,9 +28,10 @@ const DEFAULT_ROOM_TYPES: SeedRoomType[] = [
       "Ambiente integrado con todo lo necesario para una estadía cómoda y agradable.",
     displayOrder: 1,
     rates: [
-      { label: "Single / Doble", people: 2, price: 59000, displayOrder: 1 },
-      { label: "Triple", people: 3, price: 69000, displayOrder: 2 },
-      { label: "Cuádruple", people: 4, price: 78000, displayOrder: 3 },
+      { label: "Single / Doble Standard", people: 2, price: 69000, displayOrder: 1 },
+      { label: "Single / Doble Superior", people: 2, price: 79000, displayOrder: 2 },
+      { label: "Triple", people: 3, price: 89000, displayOrder: 3 },
+      { label: "Cuádruple", people: 4, price: 98000, displayOrder: 4 },
     ],
   },
   {
@@ -41,8 +42,9 @@ const DEFAULT_ROOM_TYPES: SeedRoomType[] = [
       "Ambientes separados, mayor privacidad y espacio. Ideal para familias o grupos.",
     displayOrder: 2,
     rates: [
-      { label: "Triple", people: 3, price: 75000, displayOrder: 1 },
-      { label: "Cuádruple", people: 4, price: 88000, displayOrder: 2 },
+      { label: "Doble Superior", people: 2, price: 85000, displayOrder: 1 },
+      { label: "Triple", people: 3, price: 95000, displayOrder: 2 },
+      { label: "Cuádruple", people: 4, price: 118000, displayOrder: 3 },
     ],
   },
 ];
@@ -55,10 +57,31 @@ const DEFAULT_TARIFF_INFO = {
   extraNotes: [] as string[],
 };
 
+// Campos editables de una fila del tarifario. El nombre es único dentro de
+// cada tipo de habitación (índice único en la base).
+const RATE_LABEL = z.string().trim().min(2).max(100);
+const RATE_PEOPLE = z.int().min(1).max(10);
+const RATE_PRICE = z.int().positive().max(999999999);
+
 const UPDATE_RATE_SCHEMA = z.object({
   roomTypeId: z.int().positive(),
   rateId: z.int().positive(),
-  price: z.int().positive().max(999999999),
+  price: RATE_PRICE,
+  // Opcionales: si no vienen, se conservan los actuales.
+  label: RATE_LABEL.optional(),
+  people: RATE_PEOPLE.optional(),
+});
+
+const CREATE_RATE_SCHEMA = z.object({
+  roomTypeId: z.int().positive(),
+  label: RATE_LABEL,
+  people: RATE_PEOPLE,
+  price: RATE_PRICE,
+});
+
+const MOVE_RATE_SCHEMA = z.object({
+  rateId: z.int().positive(),
+  direction: z.enum(["up", "down"]),
 });
 
 const UPDATE_TARIFF_INFO_SCHEMA = z.object({
@@ -71,6 +94,33 @@ const UPDATE_TARIFF_INFO_SCHEMA = z.object({
 type TxClient = Omit<typeof prisma, "$connect" | "$disconnect" | "$on" | "$use" | "$extends">;
 
 export type UpdateRatePayload = z.infer<typeof UPDATE_RATE_SCHEMA>;
+export type CreateRatePayload = z.infer<typeof CREATE_RATE_SCHEMA>;
+export type MoveRatePayload = z.infer<typeof MOVE_RATE_SCHEMA>;
+
+/** Ya existe otra tarifa con ese nombre en el mismo tipo de habitación. */
+export class DuplicateRateLabelError extends Error {
+  constructor(label: string) {
+    super(`Ya existe una tarifa llamada "${label}" en esta habitación.`);
+    this.name = "DuplicateRateLabelError";
+  }
+}
+
+function isUniqueViolation(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code?: unknown }).code === "P2002"
+  );
+}
+
+export function parseCreateRatePayload(input: unknown): CreateRatePayload {
+  return CREATE_RATE_SCHEMA.parse(input);
+}
+
+export function parseMoveRatePayload(input: unknown): MoveRatePayload {
+  return MOVE_RATE_SCHEMA.parse(input);
+}
 export type UpdateTariffInfoPayload = z.infer<typeof UPDATE_TARIFF_INFO_SCHEMA>;
 
 export function parseUpdateRatePayload(input: unknown): UpdateRatePayload {
@@ -216,7 +266,7 @@ async function findRoomTypesWithRates() {
       badge: true,
       description: true,
       rates: {
-        orderBy: { displayOrder: "asc" },
+        orderBy: [{ displayOrder: "asc" }, { id: "asc" }],
         select: {
           id: true,
           label: true,
@@ -278,52 +328,189 @@ export async function getTariffCatalog() {
   return getCachedTariffCatalog();
 }
 
+/**
+ * Lectura sin caché, para el panel de admin: después de agregar, mover o
+ * borrar una tarifa el panel vuelve a pedir el catálogo y tiene que ver el
+ * cambio ya. La caché pública se revalida con perfil "max" (sirve el valor
+ * anterior una vez mientras se actualiza), que para la web está bien pero
+ * en el admin mostraría la lista vieja.
+ */
+export async function getTariffCatalogFresh() {
+  await ensureTariffBootstrap();
+  const [roomTypes, tariffInfo] = await Promise.all([
+    findRoomTypesWithRates(),
+    findTariffInfo(),
+  ]);
+  return { roomTypes, tariffInfo };
+}
+
 export async function getRoomTypesWithRates() {
   await ensureTariffBootstrap();
   const catalog = await getCachedTariffCatalog();
   return catalog.roomTypes;
 }
 
-export async function updateRatePrice(input: UpdateRatePayload, actorEmail: string) {
+const RATE_SELECT = {
+  id: true,
+  roomTypeId: true,
+  label: true,
+  people: true,
+  price: true,
+} as const;
+
+export async function updateRate(input: UpdateRatePayload, actorEmail: string) {
+  try {
+    return await prisma.$transaction(async (tx: TxClient) => {
+      const rate = await tx.roomRate.findUnique({
+        where: { id: input.rateId },
+        select: RATE_SELECT,
+      });
+
+      if (!rate || rate.roomTypeId !== input.roomTypeId) {
+        return null;
+      }
+
+      const updated = await tx.roomRate.update({
+        where: { id: input.rateId },
+        data: {
+          price: input.price,
+          label: input.label ?? rate.label,
+          people: input.people ?? rate.people,
+        },
+        select: RATE_SELECT,
+      });
+
+      await tx.auditLog.create({
+        data: {
+          actorEmail,
+          action: "ACTUALIZAR",
+          entity: "tarifa_habitacion",
+          entityId: String(updated.id),
+          previousData: { precio: rate.price, etiqueta: rate.label, personas: rate.people },
+          nextData: { precio: updated.price, etiqueta: updated.label, personas: updated.people },
+        },
+      });
+
+      return updated;
+    });
+  } catch (error) {
+    if (isUniqueViolation(error)) throw new DuplicateRateLabelError(input.label ?? "");
+    throw error;
+  }
+}
+
+/** Agrega una fila al final del tarifario de ese tipo de habitación. */
+export async function createRate(input: CreateRatePayload, actorEmail: string) {
+  try {
+    return await prisma.$transaction(async (tx: TxClient) => {
+      const roomType = await tx.roomType.findUnique({
+        where: { id: input.roomTypeId },
+        select: { id: true, name: true },
+      });
+      if (!roomType) return null;
+
+      const last = await tx.roomRate.findFirst({
+        where: { roomTypeId: input.roomTypeId },
+        orderBy: { displayOrder: "desc" },
+        select: { displayOrder: true },
+      });
+
+      const created = await tx.roomRate.create({
+        data: {
+          roomTypeId: input.roomTypeId,
+          label: input.label,
+          people: input.people,
+          price: input.price,
+          displayOrder: (last?.displayOrder ?? 0) + 1,
+        },
+        select: RATE_SELECT,
+      });
+
+      await tx.auditLog.create({
+        data: {
+          actorEmail,
+          action: "CREAR",
+          entity: "tarifa_habitacion",
+          entityId: String(created.id),
+          nextData: {
+            habitacion: roomType.name,
+            etiqueta: created.label,
+            personas: created.people,
+            precio: created.price,
+          },
+        },
+      });
+
+      return created;
+    });
+  } catch (error) {
+    if (isUniqueViolation(error)) throw new DuplicateRateLabelError(input.label);
+    throw error;
+  }
+}
+
+export async function deleteRate(rateId: number, actorEmail: string) {
+  return prisma.$transaction(async (tx: TxClient) => {
+    const rate = await tx.roomRate.findUnique({ where: { id: rateId }, select: RATE_SELECT });
+    if (!rate) return null;
+
+    await tx.roomRate.delete({ where: { id: rateId } });
+
+    await tx.auditLog.create({
+      data: {
+        actorEmail,
+        action: "ELIMINAR",
+        entity: "tarifa_habitacion",
+        entityId: String(rate.id),
+        previousData: { etiqueta: rate.label, personas: rate.people, precio: rate.price },
+      },
+    });
+
+    return rate;
+  });
+}
+
+/**
+ * Sube o baja una fila un lugar dentro de su tipo de habitación. Reescribe el
+ * orden completo (1..n) en vez de intercambiar dos valores: así también
+ * corrige órdenes repetidos o con huecos que hayan quedado de antes.
+ */
+export async function moveRate(input: MoveRatePayload, actorEmail: string) {
   return prisma.$transaction(async (tx: TxClient) => {
     const rate = await tx.roomRate.findUnique({
       where: { id: input.rateId },
-      select: {
-        id: true,
-        price: true,
-        roomTypeId: true,
-        label: true,
-      },
+      select: { id: true, roomTypeId: true, label: true },
+    });
+    if (!rate) return null;
+
+    const siblings = await tx.roomRate.findMany({
+      where: { roomTypeId: rate.roomTypeId },
+      orderBy: [{ displayOrder: "asc" }, { id: "asc" }],
+      select: { id: true },
     });
 
-    if (!rate || rate.roomTypeId !== input.roomTypeId) {
-      return null;
+    const ids = siblings.map((item) => item.id);
+    const from = ids.indexOf(rate.id);
+    const to = input.direction === "up" ? from - 1 : from + 1;
+    if (to < 0 || to >= ids.length) return { moved: false };
+
+    [ids[from], ids[to]] = [ids[to], ids[from]];
+    for (const [index, id] of ids.entries()) {
+      await tx.roomRate.update({ where: { id }, data: { displayOrder: index + 1 } });
     }
-
-    const updated = await tx.roomRate.update({
-      where: { id: input.rateId },
-      data: { price: input.price },
-      select: {
-        id: true,
-        roomTypeId: true,
-        label: true,
-        people: true,
-        price: true,
-      },
-    });
 
     await tx.auditLog.create({
       data: {
         actorEmail,
         action: "ACTUALIZAR",
         entity: "tarifa_habitacion",
-        entityId: String(updated.id),
-        previousData: { precio: rate.price, etiqueta: rate.label },
-        nextData: { precio: updated.price, etiqueta: updated.label },
+        entityId: String(rate.id),
+        previousData: { etiqueta: rate.label, posicion: from + 1 },
+        nextData: { etiqueta: rate.label, posicion: to + 1 },
       },
     });
 
-    return updated;
+    return { moved: true };
   });
 }
 

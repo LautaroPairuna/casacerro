@@ -37,9 +37,8 @@ export default function Tarifas({
           </p>
         </Reveal>
 
-        {/* Dos columnas recién desde lg: en tablet (768–1023px) no entran el
-            título, la etiqueta y los tres precios lado a lado. items-stretch
-            iguala las alturas y el flex-1 del medio alinea los botones. */}
+        {/* Dos columnas desde lg. items-stretch iguala las alturas y el
+            flex-1 de la lista alinea los botones de las dos tarjetas. */}
         <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
           {habitaciones.map((hab, cardIndex) => (
             <Reveal
@@ -63,33 +62,36 @@ export default function Tarifas({
                 </p>
               </div>
 
-              <div className="px-6 pt-5 pb-4 flex-1">
-                <p className="text-[11px] uppercase tracking-[0.2em] text-neutral-500 mb-3">
+              {/* Lista de precios: un renglón por opción. A diferencia de la
+                  grilla de cajitas, se adapta a cualquier cantidad de tarifas
+                  que se carguen desde el admin. Los renglones se estiran
+                  (flex-1) para llenar el alto de la tarjeta: si una tiene
+                  menos opciones que la otra, no queda espacio en blanco. */}
+              <div className="flex flex-1 flex-col px-6 pt-5 pb-4">
+                <p className="text-[11px] uppercase tracking-[0.2em] text-neutral-500 mb-2">
                   Opciones disponibles
                 </p>
-                <div className={`grid ${hab.gridCols} gap-3`}>
-                  {hab.precios.map((p, idx) => (
-                    <div
+                <ul className="flex flex-1 flex-col divide-y divide-[#efe4d0]">
+                  {hab.precios.map((p) => (
+                    <li
                       key={p.label}
-                      className={`rounded-xl border border-[#e8d9c0] bg-[#FFFAF3] px-4 py-3 hover:border-[#FCB040] hover:bg-[#FFF5E5] transition-colors duration-200 cursor-default${
-                        hab.precios.length === 3 && idx === 2
-                          ? " col-span-2 w-1/2 mx-auto sm:col-span-1 sm:w-auto sm:mx-0"
-                          : ""
-                      }`}
+                      className="-mx-3 flex flex-1 items-center justify-between gap-4 rounded-xl px-3 py-3.5 transition-colors duration-200 hover:bg-[#FFF5E5]"
                     >
-                      <PersonasIcons count={p.personas} />
-                      <p className="text-[11px] text-neutral-500 mt-1.5 uppercase tracking-wide leading-tight">
-                        {p.label}
+                      <div className="min-w-0">
+                        <PersonasIcons count={p.personas} />
+                        <p className="mt-1 text-sm font-medium uppercase tracking-wide text-neutral-800">
+                          {p.label}
+                        </p>
+                      </div>
+                      <p className="shrink-0 text-right">
+                        <span className="block text-xl font-bold leading-none text-[#6c1710] sm:text-2xl">
+                          {formatPrecio(p.precio)}
+                        </span>
+                        <span className="mt-1 block text-[11px] text-neutral-500">por noche</span>
                       </p>
-                      <p className="text-xl font-bold text-[#6c1710] mt-1 leading-none">
-                        {formatPrecio(p.precio)}
-                      </p>
-                      <p className="text-[11px] text-neutral-500 mt-0.5">
-                        por noche
-                      </p>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
 
               <div className="px-6 pb-6 pt-2">

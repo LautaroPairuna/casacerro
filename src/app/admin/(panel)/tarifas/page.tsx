@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ArrowDown, ArrowUp, Plus, Trash2 } from "lucide-react";
 
 type AdminRate = {
   id: number;
@@ -44,6 +45,28 @@ type ToastState = {
   message: string;
 } | null;
 
+type NewRateDraft = {
+  label: string;
+  people: string;
+  price: string;
+};
+
+const EMPTY_DRAFT: NewRateDraft = { label: "", people: "2", price: "" };
+
+const INPUT_CLASS =
+  "w-full rounded-xl border border-[#d9cdb6] bg-[#fffdf8] px-3 py-2.5 text-base outline-none ring-[#6c1710] transition focus:ring-2 disabled:cursor-not-allowed disabled:opacity-70";
+const ICON_BUTTON_CLASS =
+  "inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#d9cdb6] text-[#6c1710] transition hover:bg-[#6c1710] hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[#6c1710]";
+
+async function readError(response: Response, fallback: string): Promise<string> {
+  try {
+    const body = (await response.json()) as { message?: string };
+    return body.message ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 const TOAST_DURATION_MS = 3200;
 const INITIAL_TARIFF_INFO: TariffInfo = {
   parkingNote: "",
@@ -64,9 +87,15 @@ export default function AdminTarifasPage() {
   const [toast, setToast] = useState<ToastState>(null);
   const [tariffInfo, setTariffInfo] = useState<TariffInfo>(INITIAL_TARIFF_INFO);
   const [savingTariffInfo, setSavingTariffInfo] = useState(false);
+  // Fila (o tipo de habitación, para el alta) con una operación en curso.
+  const [busyKey, setBusyKey] = useState<string | null>(null);
+  const [drafts, setDrafts] = useState<Record<number, NewRateDraft>>({});
 
+  // Contador para que cada toast tenga id propio (reinicia la animación).
+  const toastSeq = useRef(0);
   const showToast = (type: "success" | "error", message: string) => {
-    setToast({ id: Date.now(), type, message });
+    toastSeq.current += 1;
+    setToast({ id: toastSeq.current, type, message });
   };
 
   const fetchData = async (isInitialLoad = false) => {
@@ -110,21 +139,25 @@ export default function AdminTarifasPage() {
     [roomTypes]
   );
 
-  const onChangePrice = (roomTypeId: number, rateId: number, value: string) => {
-    const nextValue = Number(value);
+  const onChangeRate = (
+    roomTypeId: number,
+    rateId: number,
+    field: "label" | "people" | "price",
+    value: string
+  ) => {
     setRoomTypes((current) =>
       current.map((roomType) =>
         roomType.id === roomTypeId
           ? {
               ...roomType,
-              rates: roomType.rates.map((rate) =>
-                rate.id === rateId
-                  ? {
-                      ...rate,
-                      price: Number.isFinite(nextValue) && nextValue >= 0 ? nextValue : rate.price,
-                    }
-                  : rate
-              ),
+              rates: roomType.rates.map((rate) => {
+                if (rate.id !== rateId) return rate;
+                if (field === "label") return { ...rate, label: value };
+                const nextValue = Number(value);
+                return Number.isFinite(nextValue) && nextValue >= 0
+                  ? { ...rate, [field]: nextValue }
+                  : rate;
+              }),
             }
           : roomType
       )
@@ -141,12 +174,13 @@ export default function AdminTarifasPage() {
         body: JSON.stringify({
           roomTypeId,
           price: rate.price,
+          label: rate.label,
+          people: rate.people,
         }),
       });
 
       if (!response.ok) {
-        const body = (await response.json()) as { message?: string };
-        throw new Error(body.message ?? "No se pudo guardar la tarifa.");
+        throw new Error(await readError(response, "No se pudo guardar la tarifa."));
       }
 
       const payload = (await response.json()) as UpdateRateResponse;
@@ -156,7 +190,7 @@ export default function AdminTarifasPage() {
             ? {
                 ...roomType,
                 rates: roomType.rates.map((item) =>
-                  item.id === payload.rate.id ? { ...item, price: payload.rate.price } : item
+                  item.id === payload.rate.id ? { ...item, ...payload.rate } : item
                 ),
               }
             : roomType
@@ -170,6 +204,80 @@ export default function AdminTarifasPage() {
       showToast("error", message);
     } finally {
       setSavingRateId(null);
+    }
+  };
+
+  const moveRate = async (rate: AdminRate, direction: "up" | "down") => {
+    setBusyKey(`rate-${rate.id}`);
+    try {
+      const response = await fetch(`/api/admin/tarifas/${rate.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ direction }),
+      });
+      if (!response.ok) {
+        throw new Error(await readError(response, "No se pudo cambiar el orden."));
+      }
+      await fetchData();
+    } catch (error) {
+      showToast("error", error instanceof Error ? error.message : "No se pudo cambiar el orden.");
+    } finally {
+      setBusyKey(null);
+    }
+  };
+
+  const deleteRate = async (rate: AdminRate) => {
+    if (!window.confirm(`¿Eliminar la tarifa "${rate.label}"? Deja de mostrarse en la web.`)) {
+      return;
+    }
+    setBusyKey(`rate-${rate.id}`);
+    try {
+      const response = await fetch(`/api/admin/tarifas/${rate.id}`, { method: "DELETE" });
+      if (!response.ok) {
+        throw new Error(await readError(response, "No se pudo eliminar la tarifa."));
+      }
+      await fetchData();
+      showToast("success", `Tarifa "${rate.label}" eliminada.`);
+    } catch (error) {
+      showToast("error", error instanceof Error ? error.message : "No se pudo eliminar la tarifa.");
+    } finally {
+      setBusyKey(null);
+    }
+  };
+
+  const draftFor = (roomTypeId: number) => drafts[roomTypeId] ?? EMPTY_DRAFT;
+
+  const onChangeDraft = (roomTypeId: number, field: keyof NewRateDraft, value: string) => {
+    setDrafts((current) => ({
+      ...current,
+      [roomTypeId]: { ...(current[roomTypeId] ?? EMPTY_DRAFT), [field]: value },
+    }));
+  };
+
+  const createRate = async (roomTypeId: number) => {
+    const draft = draftFor(roomTypeId);
+    setBusyKey(`new-${roomTypeId}`);
+    try {
+      const response = await fetch("/api/admin/tarifas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          roomTypeId,
+          label: draft.label,
+          people: Number(draft.people),
+          price: Number(draft.price),
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(await readError(response, "No se pudo agregar la tarifa."));
+      }
+      await fetchData();
+      setDrafts((current) => ({ ...current, [roomTypeId]: EMPTY_DRAFT }));
+      showToast("success", `Tarifa "${draft.label.trim()}" agregada.`);
+    } catch (error) {
+      showToast("error", error instanceof Error ? error.message : "No se pudo agregar la tarifa.");
+    } finally {
+      setBusyKey(null);
     }
   };
 
@@ -246,7 +354,8 @@ export default function AdminTarifasPage() {
         <h2 className="text-4xl font-medium text-[#20160a] md:text-5xl">Tarifas</h2>
         <div className="mt-4 h-0.5 w-24 bg-[#fcb040]" />
         <p className="mt-4 max-w-2xl text-sm text-neutral-600 md:text-base">
-          Editá los valores por tipo de habitación y cantidad de personas.
+          Editá, agregá, ordená o eliminá las tarifas de cada tipo de habitación. Los
+          cambios se ven en la web apenas se guardan.
         </p>
         <p className="mt-3 text-xs uppercase tracking-[0.2em] text-[#a87b51] md:text-sm">
           Total de filas configuradas: {rowCount}
@@ -395,64 +504,191 @@ export default function AdminTarifasPage() {
           </div>
 
           <div className="overflow-x-auto px-5 py-4 md:px-6">
-            <table className="w-full min-w-[620px] text-left text-sm">
+            <table className="w-full min-w-[820px] text-left text-sm">
               <thead>
                 <tr className="border-b border-[#eadcc2] text-[11px] uppercase tracking-[0.12em] text-[#9d7b58] md:text-xs">
+                  <th className="w-24 px-3 py-3 font-semibold">Orden</th>
                   <th className="px-3 py-3 font-semibold">Tipo</th>
-                  <th className="px-3 py-3 font-semibold">Personas</th>
-                  <th className="px-3 py-3 font-semibold">Precio (ARS)</th>
-                  <th className="px-3 py-3 font-semibold">Acción</th>
+                  <th className="w-28 px-3 py-3 font-semibold">Personas</th>
+                  <th className="w-56 px-3 py-3 font-semibold">Precio (ARS)</th>
+                  <th className="w-48 px-3 py-3 font-semibold">Acción</th>
                 </tr>
               </thead>
               <tbody>
-                {roomType.rates.map((rate) => (
-                  <tr
-                    key={rate.id}
-                    className={`border-b border-[#f3ead9] last:border-b-0 ${
-                      savingRateId === rate.id ? "bg-[#fffaf0]" : ""
-                    }`}
-                  >
-                    <td className="px-3 py-4 text-base font-medium text-[#25170a]">{rate.label}</td>
-                    <td className="px-3 py-4 text-base text-neutral-700">{rate.people}</td>
-                    <td className="px-3 py-4">
-                      <input
-                        type="number"
-                        min={1}
-                        disabled={savingRateId === rate.id}
-                        value={rate.price}
-                        onChange={(event) =>
-                          onChangePrice(roomType.id, rate.id, event.target.value)
-                        }
-                        className={`w-full rounded-xl border border-[#d9cdb6] bg-[#fffdf8] px-3 py-2.5 text-base outline-none ring-[#6c1710] transition focus:ring-2 ${
-                          savingRateId === rate.id ? "cursor-not-allowed opacity-70" : ""
-                        }`}
-                      />
-                      <p className="mt-1.5 text-xs text-neutral-500 md:text-sm">
-                        Formateado: ${formatCurrency(rate.price)}
-                      </p>
-                    </td>
-                    <td className="px-3 py-4">
-                      <button
-                        type="button"
-                        disabled={savingRateId === rate.id}
-                        onClick={() => saveRate(roomType.id, rate)}
-                        className="inline-flex items-center justify-center gap-2 rounded-full border border-[#6c1710] px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-[#6c1710] transition hover:bg-[#6c1710] hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
-                      >
-                        {savingRateId === rate.id ? (
-                          <>
-                            <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-[#6c1710] border-t-transparent" />
-                            Guardando...
-                          </>
-                        ) : (
-                          "Guardar"
-                        )}
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {roomType.rates.map((rate, index) => {
+                  const saving = savingRateId === rate.id;
+                  const busy = saving || busyKey === `rate-${rate.id}`;
+                  return (
+                    <tr
+                      key={rate.id}
+                      className={`border-b border-[#f3ead9] align-top last:border-b-0 ${
+                        busy ? "bg-[#fffaf0]" : ""
+                      }`}
+                    >
+                      <td className="px-3 py-4">
+                        <div className="flex gap-1.5">
+                          <button
+                            type="button"
+                            aria-label={`Subir "${rate.label}"`}
+                            title="Subir"
+                            disabled={busy || index === 0}
+                            onClick={() => moveRate(rate, "up")}
+                            className={ICON_BUTTON_CLASS}
+                          >
+                            <ArrowUp size={16} />
+                          </button>
+                          <button
+                            type="button"
+                            aria-label={`Bajar "${rate.label}"`}
+                            title="Bajar"
+                            disabled={busy || index === roomType.rates.length - 1}
+                            onClick={() => moveRate(rate, "down")}
+                            className={ICON_BUTTON_CLASS}
+                          >
+                            <ArrowDown size={16} />
+                          </button>
+                        </div>
+                      </td>
+                      <td className="px-3 py-4">
+                        <input
+                          type="text"
+                          aria-label="Nombre de la tarifa"
+                          maxLength={100}
+                          disabled={busy}
+                          value={rate.label}
+                          onChange={(event) =>
+                            onChangeRate(roomType.id, rate.id, "label", event.target.value)
+                          }
+                          className={`${INPUT_CLASS} font-medium text-[#25170a]`}
+                        />
+                      </td>
+                      <td className="px-3 py-4">
+                        <input
+                          type="number"
+                          aria-label="Cantidad de personas"
+                          min={1}
+                          max={10}
+                          disabled={busy}
+                          value={rate.people}
+                          onChange={(event) =>
+                            onChangeRate(roomType.id, rate.id, "people", event.target.value)
+                          }
+                          className={INPUT_CLASS}
+                        />
+                      </td>
+                      <td className="px-3 py-4">
+                        <input
+                          type="number"
+                          aria-label="Precio por noche"
+                          min={1}
+                          disabled={busy}
+                          value={rate.price}
+                          onChange={(event) =>
+                            onChangeRate(roomType.id, rate.id, "price", event.target.value)
+                          }
+                          className={INPUT_CLASS}
+                        />
+                        <p className="mt-1.5 text-xs text-neutral-500 md:text-sm">
+                          Formateado: ${formatCurrency(rate.price)}
+                        </p>
+                      </td>
+                      <td className="px-3 py-4">
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            disabled={busy}
+                            onClick={() => saveRate(roomType.id, rate)}
+                            className="inline-flex items-center justify-center gap-2 rounded-full border border-[#6c1710] px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-[#6c1710] transition hover:bg-[#6c1710] hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
+                          >
+                            {saving ? (
+                              <>
+                                <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-[#6c1710] border-t-transparent" />
+                                Guardando...
+                              </>
+                            ) : (
+                              "Guardar"
+                            )}
+                          </button>
+                          <button
+                            type="button"
+                            aria-label={`Eliminar "${rate.label}"`}
+                            title="Eliminar"
+                            disabled={busy}
+                            onClick={() => deleteRate(rate)}
+                            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-red-300 text-red-700 transition hover:bg-red-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
+
+          {/* Alta de una tarifa nueva: se agrega al final; después se puede
+              mover con las flechas. */}
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              void createRate(roomType.id);
+            }}
+            className="border-t border-[#eadcc2] bg-[#fdf9f0] px-5 py-5 md:px-6"
+          >
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#9d7b58]">
+              Agregar tarifa en {roomType.name}
+            </p>
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_7rem_12rem_auto] md:items-end">
+              <label className="block space-y-1.5">
+                <span className="text-xs text-neutral-600">Nombre (ej.: Doble Superior)</span>
+                <input
+                  type="text"
+                  required
+                  minLength={2}
+                  maxLength={100}
+                  disabled={busyKey === `new-${roomType.id}`}
+                  value={draftFor(roomType.id).label}
+                  onChange={(event) => onChangeDraft(roomType.id, "label", event.target.value)}
+                  className={INPUT_CLASS}
+                />
+              </label>
+              <label className="block space-y-1.5">
+                <span className="text-xs text-neutral-600">Personas</span>
+                <input
+                  type="number"
+                  required
+                  min={1}
+                  max={10}
+                  disabled={busyKey === `new-${roomType.id}`}
+                  value={draftFor(roomType.id).people}
+                  onChange={(event) => onChangeDraft(roomType.id, "people", event.target.value)}
+                  className={INPUT_CLASS}
+                />
+              </label>
+              <label className="block space-y-1.5">
+                <span className="text-xs text-neutral-600">Precio por noche</span>
+                <input
+                  type="number"
+                  required
+                  min={1}
+                  disabled={busyKey === `new-${roomType.id}`}
+                  value={draftFor(roomType.id).price}
+                  onChange={(event) => onChangeDraft(roomType.id, "price", event.target.value)}
+                  className={INPUT_CLASS}
+                />
+              </label>
+              <button
+                type="submit"
+                disabled={busyKey === `new-${roomType.id}`}
+                className="inline-flex h-[46px] items-center justify-center gap-2 rounded-full bg-[#6c1710] px-5 text-xs font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-[#53110b] disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                <Plus size={16} />
+                Agregar
+              </button>
+            </div>
+          </form>
         </article>
       ))}
     </section>
