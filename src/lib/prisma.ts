@@ -45,19 +45,23 @@ function buildDatabaseUrl(rawUrl: string): string {
     parsed.searchParams.set("allowPublicKeyRetrieval", "true");
   }
 
+  // Pool de 5 que cierra lo que no usa: el driver, por defecto, abre 10 y las
+  // deja abiertas aunque no se usen (minimumIdle = connectionLimit). Así se
+  // cierran al minuto sin uso, porque la base es compartida con otros sitios.
+  const pool = { connectionLimit: "5", minimumIdle: "0", idleTimeout: "60" };
+  for (const [clave, valor] of Object.entries(pool)) {
+    if (!parsed.searchParams.has(clave)) parsed.searchParams.set(clave, valor);
+  }
+
   return parsed.toString();
 }
 
 const databaseUrl = buildDatabaseUrl(rawDatabaseUrl);
 const adapter = new PrismaMariaDb(databaseUrl);
 
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    adapter,
-    log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
-  });
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-}
+// También en producción: un solo pool por proceso aunque el módulo se cargue
+// desde más de un bundle.
+export const prisma = (globalForPrisma.prisma ??= new PrismaClient({
+  adapter,
+  log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
+}));
