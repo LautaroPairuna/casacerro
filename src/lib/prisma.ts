@@ -5,13 +5,10 @@ const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClient;
 };
 
-// Este fallback es sólo para desarrollo local sin un .env a mano. En
-// producción DATABASE_URL tiene que venir siempre del entorno de Dokploy: si
-// el deploy termina usando esta credencial hardcodeada es porque esa
-// variable no está configurada ahí, y vale la pena saberlo — apunta a un
-// hostname interno de Dokploy que puede no existir más.
-const LOCAL_DEV_FALLBACK_URL =
-  "mysql://casacerro:soslmyexoaumija9@casacerro-database-nxoer9:3306/casacerro";
+// Fallback solo para desarrollo local, sin credenciales: cada uno pone las suyas
+// en .env. En producción DATABASE_URL viene siempre de Dokploy; si falta, esta
+// URL no conecta y el error de abajo queda en los logs del servicio.
+const LOCAL_DEV_FALLBACK_URL = "mysql://root@127.0.0.1:3306/casacerro";
 
 function resolveDatabaseUrl(): string {
   const fromEnv = process.env.DATABASE_URL?.trim();
